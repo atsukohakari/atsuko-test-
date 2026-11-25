@@ -1,0 +1,16 @@
+# OS / editor leftovers
+.DS_Store
+Thumbs.db
+desktop.ini
+.trashed-*
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+
+# Relay (Cloudflare Wrangler)
+Relay/.wrangler/
+Relay/node_modules/
+Relay/.dev.vars

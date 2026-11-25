@@ -1,0 +1,863 @@
+--- a/TheSniper(Don't use this).lua
++++ b/TheSniper(Don't use this).lua
+@@ -7,11 +7,18 @@
+ 	and don't even add me in the credit, I'm too lazy to do it anyways
+ ]]
+ 
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
+ local FD = (function()
+ --!optimize 2
+ --no need to load the whole thing cuz u can use the last one
+ if _G.GenesisFDless then 
+-	game:FindFirstChildOfClass("StarterGui"):SetCore("SendNotification",{Title="FDLESS",Text="Using FDless loaded by previously executed scripts to prevent reanimate conflicts. Rejoin to update reanimate settings.",Duration=10})
+ 	return _G.GenesisFDless 
+ end
+ 
+@@ -368,7 +375,7 @@
+ local disguiscripts=disguiscripts~=false
+ local breakjointsmethod=(type(breakjointsmethod)=="number" and breakjointsmethod) or 1
+ if (breakjointsmethod==4) and not replicatesignal then
+-	SetCore(sg,"SendNotification",{Title="FDLESS SERVERBREAKJOINTS",Text="Your executor does not support ReplicateSignal! Please see #supported-clients channel."})
++	hubNotify("FDless", "This executor has no replicatesignal, break joints method 4 is off", "warn", 6)
+ 	breakjointsmethod=1
+ end
+ local simrad=simrad~=false
+@@ -2306,7 +2313,7 @@
+ 	end
+ 
+ 	function C.notify(title, text, dur)
+-		pcall(StarterGui.SetCore, StarterGui, "SendNotification", {Title = title, Text = text, Duration = dur or 5})
++		hubNotify(title, text, "info", dur)
+ 	end
+ 
+ 	local waiters = {}
+@@ -3277,143 +3284,37 @@
+ 	end
+ 	_G.LCFD_Stop = C.stop
+ 
+-	local function mk(class, props, parent)
+-		local o = Instance.new(class)
+-		for k, v in pairs(props) do
+-			o[k] = v
+-		end
+-		if parent then
+-			o.Parent = parent
+-		end
+-		return o
+-	end
+-	local function round(o, r)
+-		mk("UICorner", {CornerRadius = UDim.new(0, r or 6)}, o)
+-	end
+-	local COL = {
+-		bg = Color3.fromRGB(17, 18, 26), panel = Color3.fromRGB(31, 33, 46), line = Color3.fromRGB(58, 62, 86),
+-		text = Color3.fromRGB(236, 238, 248), muted = Color3.fromRGB(150, 156, 184), accent = Color3.fromRGB(122, 162, 255),
+-		good = Color3.fromRGB(96, 214, 150), bad = Color3.fromRGB(255, 110, 120), warn = Color3.fromRGB(255, 196, 92),
+-	}
+-	local KEYTXT = CFG.alignKeyText or string.upper(CFG.alignKey or "j")
+-	local BOLD, MED, REG = Enum.Font.GothamBold, Enum.Font.GothamMedium, Enum.Font.Gotham
+-
+ 	local TAB = {"Gun", "Muzzle", "Scope"}
+-	local onTouch = UIS.TouchEnabled and not UIS.KeyboardEnabled
+-	local HINT = onTouch and "type -align to open / close this" or (KEYTXT .. " or -align opens / closes this")
+-
+-	local gui = mk("ScreenGui", {Name = "LCGunAlign", ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 60, IgnoreGuiInset = false})
+-	C.gui = gui
+-	local solid = {}
+-	local function btn(props, parent)
+-		local b = mk("TextButton", {
+-			AutoButtonColor = true, BackgroundColor3 = COL.panel, BorderSizePixel = 0, Font = MED,
+-			TextColor3 = COL.text, TextSize = 13, Text = "",
+-		}, parent)
+-		for k, v in pairs(props) do
+-			b[k] = v
+-		end
+-		round(b, 6)
+-		solid[#solid + 1] = b
+-		return b
+-	end
+-
+-	local toggle = btn({Name = "Toggle", Size = UDim2.new(0, 96, 0, 28), Position = UDim2.new(0, 12, 0, 8), Text = "Align", Visible = CFG.alignButton ~= false, BackgroundColor3 = COL.bg, BackgroundTransparency = 0.1}, gui)
+-	mk("UIStroke", {Color = COL.line, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, toggle)
+-
+-	local W, HEAD, BODY_H = 280, 36, 468
+-	local main = mk("Frame", {Name = "Panel", Size = UDim2.new(0, W, 0, HEAD + BODY_H), Position = UDim2.new(0, 12, 0, 8), BackgroundColor3 = COL.bg, BackgroundTransparency = 0.04, BorderSizePixel = 0, Visible = false, Active = true, ClipsDescendants = true}, gui)
+-	round(main, 10)
+-	mk("UIStroke", {Color = COL.line, Thickness = 1}, main)
+-	local uiScale = mk("UIScale", {Scale = 1}, main)
+-
+-	local header = mk("Frame", {Size = UDim2.new(1, 0, 0, HEAD), BackgroundTransparency = 1, Active = true}, main)
+-	mk("TextLabel", {Size = UDim2.new(1, -164, 1, 0), Position = UDim2.new(0, 12, 0, 0), BackgroundTransparency = 1, Font = BOLD, TextSize = 14, TextColor3 = COL.text, TextXAlignment = Enum.TextXAlignment.Left, Text = "Sniper Align"}, header)
+-	local stopBtn = btn({Size = UDim2.new(0, 42, 0, 26), Position = UDim2.new(1, -150, 0, 5), Text = "Stop", TextSize = 12, TextColor3 = COL.bad}, header)
+-	local fadeBtn = btn({Size = UDim2.new(0, 42, 0, 26), Position = UDim2.new(1, -104, 0, 5), Text = "Fade", TextSize = 12}, header)
+-	local miniBtn = btn({Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -58, 0, 5), Text = "_", TextSize = 14, Font = BOLD}, header)
+-	local hideBtn = btn({Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -30, 0, 5), Text = "x", TextSize = 14, Font = BOLD}, header)
+-
+-	local body = mk("ScrollingFrame", {
+-		Size = UDim2.new(1, 0, 1, -HEAD), Position = UDim2.new(0, 0, 0, HEAD), BackgroundTransparency = 1, BorderSizePixel = 0,
+-		ScrollBarThickness = 4, ScrollBarImageColor3 = COL.line, ScrollingDirection = Enum.ScrollingDirection.Y,
+-		CanvasSize = UDim2.new(0, 0, 0, BODY_H), Active = true,
+-	}, main)
+-
+-	local tabs = {}
++	local genv = (typeof(getgenv) == "function" and getgenv()) or _G
++	local AL = {version = 1, title = "The Sniper", tabs = TAB, file = FILE, dirty = false, open = false, key = CFG.alignKeyText or string.upper(CFG.alignKey or "j")}
+ 	local cur = 1
+-	for s = 1, #TAB do
+-		tabs[s] = btn({Size = UDim2.new(0, 80, 0, 30), Position = UDim2.new(0, 12 + (s - 1) * 88, 0, 4), Text = TAB[s], TextSize = 13}, body)
+-	end
+-	local found = mk("TextLabel", {Size = UDim2.new(1, -24, 0, 16), Position = UDim2.new(0, 12, 0, 40), BackgroundTransparency = 1, Font = REG, TextSize = 11, TextColor3 = COL.muted, TextXAlignment = Enum.TextXAlignment.Left, TextScaled = true, Text = ""}, body)
+-	mk("UITextSizeConstraint", {MaxTextSize = 11}, found)
+-
+-	local LABEL = {"Move X", "Move Y", "Move Z", "Turn X", "Turn Y", "Turn Z"}
+-	local boxes = {}
+-	local MOVE_STEPS = {0.01, 0.05, 0.1, 0.25, 0.5, 1}
+-	local TURN_STEPS = {1, 5, 15, 45, 90}
+-	local mi, ti = 2, 2
+-	local dirty = false
+-	local saveBtn
+-	local function fmt(n, isRot)
+-		if isRot then
+-			local s = string.format("%.1f", n)
+-			if s == "-0.0" then
+-				s = "0.0"
+-			end
+-			return s
+-		end
+-		local s = string.format("%.3f", n)
+-		s = s:gsub("0+$", "")
+-		s = s:gsub("%.$", "")
+-		if s == "-0" then
+-			s = "0"
+-		end
+-		return s
+-	end
+-	local function refreshBoxes()
+-		for k = 1, 6 do
+-			boxes[k].Text = fmt(VAL[cur][k], k > 3)
+-		end
+-		for s = 1, #TAB do
+-			tabs[s].BackgroundColor3 = s == cur and COL.accent or COL.panel
+-			tabs[s].TextColor3 = s == cur and COL.bg or COL.text
+-		end
+-	end
+-	local statusLbl
+-	local statusToken = 0
+-	local function status(text, col, long)
+-		statusToken += 1
+-		local my = statusToken
+-		statusLbl.Text = text
+-		statusLbl.TextColor3 = col or COL.muted
+-		task.delay(long and 8 or 3, function()
+-			if statusToken == my and statusLbl.Parent then
+-				statusLbl.Text = HINT
+-				statusLbl.TextColor3 = COL.muted
+-			end
+-		end)
+-	end
+-	local function setDirty(d)
+-		dirty = d
+-		saveBtn.Text = d and "Save *" or "Save"
+-		saveBtn.BackgroundColor3 = d and COL.good or COL.panel
+-		saveBtn.TextColor3 = d and COL.bg or COL.text
+-		toggle.Text = d and "Align *" or "Align"
+-	end
+-
+-	local undo = {}
+-	local undoBtn
+-	local function pushUndo()
+-		undo[#undo + 1] = {cur, table.clone(VAL[cur])}
+-		if #undo > 40 then
+-			table.remove(undo, 1)
+-		end
+-		undoBtn.Text = "Undo (" .. #undo .. ")"
+-	end
+-	local function change(k, delta, absolute)
+-		local v = VAL[cur]
+-		local n = absolute or (v[k] + delta)
++	local watchers = {}
++	local function fire(what)
++		for _, f in ipairs(table.clone(watchers)) do
++			pcall(f, what)
++		end
++	end
++	local function hub()
++		local h = genv.AtsukoHub
++		return type(h) == "table" and h or nil
++	end
++	function AL.alive()
++		return C.alive
++	end
++	function AL.focus(s)
++		if VAL[s] then
++			cur = s
++		end
++	end
++	function AL.get(s)
++		return VAL[s] and table.clone(VAL[s]) or nil
++	end
++	function AL.set(s, k, n)
++		local v = VAL[s]
++		n = tonumber(n)
++		if not v or not n or n ~= n or math.abs(n) >= 1e5 then
++			return nil
++		end
+ 		if k > 3 then
+ 			n = ((n + 180) % 360) - 180
+ 			n = math.floor(n * 10 + 0.5) / 10
+@@ -3421,316 +3322,119 @@
+ 			n = math.floor(n * 1000 + 0.5) / 1000
+ 		end
+ 		v[k] = n
+-		rebuild(cur)
+-		boxes[k].Text = fmt(n, k > 3)
+-		setDirty(true)
+-	end
+-
+-	local holdToken = 0
+-	local press = nil
+-	local function bindHold(b, fn)
+-		b.InputBegan:Connect(function(io)
+-			local t = io.UserInputType
+-			if t ~= MB1 and t ~= TOUCH then
+-				return
+-			end
+-			holdToken += 1
+-			local my = holdToken
+-			local touch = t == TOUCH
+-			local start = io.Position
+-			local p = {fn = fn, touch = touch, fired = false}
+-			function p.moved()
+-				return touch and (io.Position - start).Magnitude > 12
+-			end
+-			press = p
+-			if not touch then
+-				pushUndo()
+-				p.fired = true
+-				fn()
+-			end
+-			task.delay(0.4, function()
+-				if holdToken ~= my or p.moved() then
+-					return
+-				end
+-				if not p.fired then
+-					pushUndo()
+-					p.fired = true
+-				end
+-				while holdToken == my and C.alive and not p.moved() do
+-					fn()
+-					task.wait(0.05)
+-				end
+-			end)
+-		end)
+-	end
+-	C.connect(UIS.InputEnded, function(io)
+-		if io.UserInputType == MB1 or io.UserInputType == TOUCH then
+-			local p = press
+-			press = nil
+-			holdToken += 1
+-			if p and p.touch and not p.fired and not p.moved() then
+-				pushUndo()
+-				p.fn()
+-			end
+-		end
+-	end)
+-
+-	for k = 1, 6 do
+-		local y = 60 + (k - 1) * 38
+-		mk("TextLabel", {Size = UDim2.new(0, 60, 0, 32), Position = UDim2.new(0, 12, 0, y), BackgroundTransparency = 1, Font = MED, TextSize = 12, TextColor3 = k > 3 and COL.warn or COL.accent, TextXAlignment = Enum.TextXAlignment.Left, Text = LABEL[k]}, body)
+-		local minus = btn({Size = UDim2.new(0, 40, 0, 32), Position = UDim2.new(0, 74, 0, y), Text = "-", Font = BOLD, TextSize = 18}, body)
+-		local box = mk("TextBox", {
+-			Size = UDim2.new(0, 104, 0, 32), Position = UDim2.new(0, 118, 0, y), BackgroundColor3 = COL.panel, BorderSizePixel = 0,
+-			Font = MED, TextSize = 14, TextColor3 = COL.text, Text = "0", ClearTextOnFocus = false, PlaceholderText = "0",
+-		}, body)
+-		round(box, 6)
+-		solid[#solid + 1] = box
+-		local plus = btn({Size = UDim2.new(0, 42, 0, 32), Position = UDim2.new(0, 226, 0, y), Text = "+", Font = BOLD, TextSize = 18}, body)
+-		boxes[k] = box
+-		bindHold(minus, function()
+-			change(k, -(k > 3 and TURN_STEPS[ti] or MOVE_STEPS[mi]))
+-		end)
+-		bindHold(plus, function()
+-			change(k, k > 3 and TURN_STEPS[ti] or MOVE_STEPS[mi])
+-		end)
+-		box.FocusLost:Connect(function()
+-			local n = tonumber((box.Text:gsub("[^%d%.%-]", "")))
+-			if n and n == n and math.abs(n) < 1e5 then
+-				if n ~= VAL[cur][k] then
+-					pushUndo()
+-					change(k, 0, n)
+-				else
+-					box.Text = fmt(n, k > 3)
+-				end
+-			else
+-				box.Text = fmt(VAL[cur][k], k > 3)
+-			end
+-		end)
+-	end
+-
+-	local moveStep = btn({Size = UDim2.new(0, 124, 0, 30), Position = UDim2.new(0, 12, 0, 290), TextSize = 12}, body)
+-	local turnStep = btn({Size = UDim2.new(0, 124, 0, 30), Position = UDim2.new(0, 144, 0, 290), TextSize = 12}, body)
+-	local function stepText()
+-		moveStep.Text = "Move step: " .. fmt(MOVE_STEPS[mi])
+-		turnStep.Text = "Turn step: " .. TURN_STEPS[ti]
+-	end
+-	stepText()
+-	moveStep.MouseButton1Click:Connect(function()
+-		mi = mi % #MOVE_STEPS + 1
+-		stepText()
+-	end)
+-	turnStep.MouseButton1Click:Connect(function()
+-		ti = ti % #TURN_STEPS + 1
+-		stepText()
+-	end)
+-
+-	saveBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 12, 0, 328), Text = "Save", Font = BOLD}, body)
+-	undoBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 100, 0, 328), Text = "Undo"}, body)
+-	local resetBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 188, 0, 328), Text = "Reset"}, body)
+-	local loadBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 12, 0, 366), Text = "Reload"}, body)
+-	local copyBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 100, 0, 366), Text = "Copy"}, body)
+-	local flipBtn = btn({Size = UDim2.new(0, 80, 0, 32), Position = UDim2.new(0, 188, 0, 366), Text = "Flip"}, body)
+-	local rollBtn = btn({Size = UDim2.new(0, 256, 0, 32), Position = UDim2.new(0, 12, 0, 404), Text = "Roll (upside down? tap this)"}, body)
+-
+-	function C.refreshAlignOpts() end
+-
+-	statusLbl = mk("TextLabel", {Size = UDim2.new(1, -24, 0, 18), Position = UDim2.new(0, 12, 0, 444), BackgroundTransparency = 1, Font = REG, TextSize = 11, TextColor3 = COL.muted, TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Text = HINT}, body)
+-
+-	saveBtn.MouseButton1Click:Connect(function()
++		rebuild(s)
++		AL.dirty = true
++		AL.later()
++		return n
++	end
++	function AL.put(s, vals)
++		if not VAL[s] or type(vals) ~= "table" then
++			return
++		end
++		for k = 1, 6 do
++			VAL[s][k] = tonumber(vals[k]) or 0
++		end
++		rebuild(s)
++		AL.dirty = true
++		AL.later()
++	end
++	function AL.reset(s)
++		AL.put(s, DEFAULT[s])
++	end
++	function AL.save()
++		AL.tok = (AL.tok or 0) + 1
+ 		local ok, e = saveAlign()
+ 		if ok then
+-			setDirty(false)
+-			status("Saved to " .. FILE, COL.good)
++			AL.dirty = false
++		end
++		return ok, e
++	end
++	function AL.later()
++		AL.tok = (AL.tok or 0) + 1
++		local my = AL.tok
++		task.delay(1.5, function()
++			if my == AL.tok and AL.dirty and C.alive and AL.save() then
++				fire("saved")
++			end
++		end)
++	end
++	function AL.load()
++		local ok, e = loadAlign()
++		if ok then
++			AL.dirty = false
++		end
++		fire("load")
++		return ok, e
++	end
++	function AL.watch(f)
++		watchers[#watchers + 1] = f
++		return function()
++			local i = table.find(watchers, f)
++			if i then
++				table.remove(watchers, i)
++			end
++		end
++	end
++	function AL.found()
++		return C.foundText and C.foundText() or ""
++	end
++	function AL.hat(s)
++		if C.alignHat then
++			return C.alignHat(s)
++		end
++		return nil
++	end
++	AL.optList = {{"roll", "Roll (upside down? tap this)", "button"}}
++	AL.optsSaved = false
++	function AL.opts()
++		return {}
++	end
++	function AL.setOpt(name, on)
++		local v = VAL[cur]
++		if name == "roll" and v then
++			AL.set(cur, 4, v[4] + 180)
++		end
++	end
++	function C.toggleAlign()
++		local h = hub()
++		if h and type(h.Align) == "function" then
++			pcall(h.Align)
+ 		else
+-			status("Not saved: " .. tostring(e), COL.bad)
++			C.notify(AL.title, "Open Atsuko Hub to line things up, the alignment lives there now", 5)
++		end
++	end
++	function C.alignOpen()
++		return AL.open
++	end
++	genv.AtsukoAlign = AL
++	do
++		local h = hub()
++		if h and type(h.AlignReady) == "function" then
++			pcall(h.AlignReady)
++		end
++	end
++
++	local marker = C.newPart({Name = "MuzzleMarker", Shape = Enum.PartType.Ball, Size = V3(0.4, 0.4, 0.4), Color = C3(1, 0.25, 0.3), Transparency = 1})
++	C.onStop(function()
++		if AL.dirty then
++			pcall(saveAlign)
++			AL.dirty = false
++		end
++		AL.open = false
++		if genv.AtsukoAlign == AL then
++			genv.AtsukoAlign = nil
++		end
++		fire("stop")
++		local h = hub()
++		if h and type(h.AlignReady) == "function" then
++			pcall(h.AlignReady)
+ 		end
+ 	end)
+-	undoBtn.MouseButton1Click:Connect(function()
+-		local u = table.remove(undo)
+-		undoBtn.Text = #undo > 0 and ("Undo (" .. #undo .. ")") or "Undo"
+-		if not u then
+-			status("nothing to undo", COL.warn)
+-			return
+-		end
+-		VAL[u[1]] = u[2]
+-		rebuild(u[1])
+-		cur = u[1]
+-		refreshBoxes()
+-		setDirty(true)
+-		status("undid a change on " .. TAB[u[1]], COL.accent)
+-	end)
+-	resetBtn.MouseButton1Click:Connect(function()
+-		pushUndo()
+-		VAL[cur] = table.clone(DEFAULT[cur])
+-		rebuild(cur)
+-		refreshBoxes()
+-		setDirty(true)
+-		status(TAB[cur] .. " reset (Undo brings it back)", COL.warn)
+-	end)
+-	loadBtn.MouseButton1Click:Connect(function()
+-		pushUndo()
+-		local ok, e = loadAlign()
+-		refreshBoxes()
+-		if ok then
+-			setDirty(false)
+-			status("Loaded your saved alignment", COL.good)
+-		else
+-			status(tostring(e), COL.warn)
+-		end
+-	end)
+-	copyBtn.MouseButton1Click:Connect(function()
+-		local v = VAL[cur]
+-		local txt = string.format("%s: move %s, %s, %s / turn %s, %s, %s", TAB[cur], fmt(v[1]), fmt(v[2]), fmt(v[3]), fmt(v[4], true), fmt(v[5], true), fmt(v[6], true))
+-		local cb = setclipboard or toclipboard
+-		if type(cb) == "function" and pcall(cb, txt) then
+-			status("copied: " .. txt, COL.good, true)
+-		else
+-			status(txt, COL.text, true)
+-		end
+-	end)
+-	flipBtn.MouseButton1Click:Connect(function()
+-		pushUndo()
+-		change(5, 180)
+-		status(TAB[cur] .. " flipped (Turn Y + 180)", COL.accent)
+-	end)
+-	rollBtn.MouseButton1Click:Connect(function()
+-		pushUndo()
+-		change(4, 180)
+-		status(TAB[cur] .. " rolled over (Turn X + 180)", COL.accent)
+-	end)
+-	for s = 1, #TAB do
+-		tabs[s].MouseButton1Click:Connect(function()
+-			cur = s
+-			refreshBoxes()
+-		end)
+-	end
+-
+-	local collapsed, faded = false, false
+-	local function area()
+-		local a = gui.AbsoluteSize
+-		if not a or a.X < 50 or a.Y < 50 then
+-			local cam = workspace.CurrentCamera
+-			a = cam and cam.ViewportSize or Vector2.new(800, 600)
+-		end
+-		return a
+-	end
+-	local function clampPos()
+-		local a = area()
+-		local sc = uiScale.Scale
+-		local w, h = W * sc, main.Size.Y.Offset * sc
+-		local p = main.Position
+-		local x = math.clamp(p.X.Offset, 4, math.max(4, a.X - w - 4))
+-		local y = math.clamp(p.Y.Offset, 4, math.max(4, a.Y - h - 4))
+-		main.Position = UDim2.new(0, x, 0, y)
+-	end
+-	local function fit()
+-		local a = area()
+-		local sc = math.clamp(math.min(1, (a.X - 16) / W, (a.Y - 16) / 220), 0.5, 1)
+-		uiScale.Scale = sc
+-		local h = HEAD
+-		if not collapsed then
+-			h = math.max(HEAD + 80, math.min(HEAD + BODY_H, math.floor((a.Y - 16) / sc)))
+-		end
+-		main.Size = UDim2.new(0, W, 0, h)
+-		body.Visible = not collapsed
+-		clampPos()
+-	end
+-	local function paintFade()
+-		main.BackgroundTransparency = faded and 0.7 or 0.04
+-		for _, b in ipairs(solid) do
+-			if b.Parent and b ~= toggle then
+-				b.BackgroundTransparency = faded and 0.55 or 0
+-			end
+-		end
+-		fadeBtn.Text = faded and "Solid" or "Fade"
+-	end
+-	fadeBtn.MouseButton1Click:Connect(function()
+-		faded = not faded
+-		paintFade()
+-	end)
+-	miniBtn.MouseButton1Click:Connect(function()
+-		collapsed = not collapsed
+-		miniBtn.Text = collapsed and "+" or "_"
+-		fit()
+-	end)
+-
+-	local function setOpen(v)
+-		main.Visible = v
+-		if v then
+-			refreshBoxes()
+-			fit()
+-		end
+-	end
+-	function C.toggleAlign()
+-		setOpen(not main.Visible)
+-	end
+-	function C.alignOpen()
+-		return main.Visible
+-	end
+-	toggle.MouseButton1Click:Connect(C.toggleAlign)
+-	hideBtn.MouseButton1Click:Connect(function()
+-		setOpen(false)
+-	end)
+-	stopBtn.MouseButton1Click:Connect(function()
+-		if C.screenOn and C.screenOn() then
+-			status("-screen is on, type -screen stop first", COL.warn)
+-			return
+-		end
+-		if dirty then
+-			saveAlign()
+-		end
+-		if C.requestStop then
+-			task.spawn(C.requestStop)
+-		else
+-			C.stop()
+-		end
+-	end)
+-
+-	local dragging, dragStart, startPos
+-	header.InputBegan:Connect(function(io)
+-		if io.UserInputType == MB1 or io.UserInputType == TOUCH then
+-			dragging = true
+-			dragStart = io.Position
+-			startPos = main.Position
+-		end
+-	end)
+-	C.connect(UIS.InputChanged, function(io)
+-		if dragging and (io.UserInputType == Enum.UserInputType.MouseMovement or io.UserInputType == TOUCH) then
+-			local d = io.Position - dragStart
+-			main.Position = UDim2.new(0, startPos.X.Offset + d.X, 0, startPos.Y.Offset + d.Y)
+-			clampPos()
+-		end
+-	end)
+-	C.connect(UIS.InputEnded, function(io)
+-		if io.UserInputType == MB1 or io.UserInputType == TOUCH then
+-			dragging = false
+-		end
+-	end)
+-
+-	refreshBoxes()
+-	setDirty(false)
+-	gui.Parent = C.guiParent()
+-	fit()
+-	C.connect(gui:GetPropertyChangedSignal("AbsoluteSize"), fit)
+-	if workspace.CurrentCamera then
+-		C.connect(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), fit)
+-	end
+-
+-	local marker = C.newPart({Name = "MuzzleMarker", Shape = Enum.PartType.Ball, Size = V3(0.4, 0.4, 0.4), Color = C3(1, 0.25, 0.3), Transparency = 1})
+-	local lastFound = ""
+-	C.onStop(function()
+-		gui:Destroy()
+-	end)
+ 
+ 	function C.alignFrame()
+-		if main.Visible then
++		if AL.open then
+ 			marker.Transparency = 0.15
+ 			marker.CFrame = C.muzzleCF()
+-			local f = C.foundText and C.foundText() or ""
+-			if f ~= lastFound then
+-				lastFound = f
+-				found.Text = f
+-			end
+ 		elseif marker.Transparency < 1 then
+ 			marker.Transparency = 1
+ 		end
+@@ -3752,7 +3456,6 @@
+ 	BulletRange = 256, -- how far the golden bullet flies before it comes back (The Hotline's)
+ 	Range = 1500, -- how far a shot can hit
+ 	Ammo = 10,
+-	TouchButtons = "auto", -- skill buttons on screen: "auto" = phones only, true = always, false = never
+ 	AlignKey = "p", -- align panel: Gun moves the gun in your hands, Muzzle where it shoots from, Scope where your eye lines up when you scope
+ }
+ 
+@@ -3762,7 +3465,7 @@
+ 
+ local StarterGui = game:GetService("StarterGui")
+ local function note(text, dur)
+-	pcall(StarterGui.SetCore, StarterGui, "SendNotification", {Title = "The Sniper", Text = text, Duration = dur or 5})
++	hubNotify("The Sniper", text, "info", dur)
+ end
+ local VERSION = 3
+ local old = _G.TheSniperCommands
+@@ -3851,6 +3554,30 @@
+ 		end)
+ 		return ok and type(n) == "string" and n or ""
+ 	end
++	local function hubJob(slot, e)
++		local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
++		if type(A) ~= "table" or type(A.match) ~= "function" or type(e) ~= "table" then
++			return nil
++		end
++		local ok, row = pcall(A.match, "The Sniper", slot, {mesh = idOf(rawget(e, "m")), tex = idOf(rawget(e, "t")), name = accName(e)})
++		return ok and type(row) == "table" and row.src == "user" and row or nil
++	end
++	local function hubHold(e)
++		local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
++		if type(A) ~= "table" or type(A.hold) ~= "function" or type(e) ~= "table" then
++			return nil
++		end
++		local ok, h = pcall(A.hold, {mesh = rawget(e, "m"), tex = rawget(e, "t")})
++		return ok and type(h) == "table" and h or nil
++	end
++	local function hubJoin(e)
++		local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
++		if type(A) ~= "table" or type(A.join) ~= "function" or type(e) ~= "table" then
++			return nil
++		end
++		local ok, undo = pcall(A.join, fd, e)
++		return ok and type(undo) == "function" and undo or nil
++	end
+ 	for i, gid in ipairs(SNIPER.Guns) do
+ 		local info = {}
+ 		INFO[i] = info
+@@ -3892,9 +3619,12 @@
+ 		end)
+ 	end
+ 	local function isRock(e)
+-		return idOf(rawget(e, "m")) == SNIPER.Bullet
++		return idOf(rawget(e, "m")) == SNIPER.Bullet or hubJob("bullet", e) ~= nil
+ 	end
+ 	local function gunRank(e)
++		if hubJob("gun", e) then
++			return 1
++		end
+ 		local m, t = idOf(rawget(e, "m")), idOf(rawget(e, "t"))
+ 		local n = squash(accName(e))
+ 		for i, gid in ipairs(SNIPER.Guns) do
+@@ -3981,8 +3711,19 @@
+ 		GUN.L, GUN.H = L, H
+ 		GUN.center = R:VectorToWorldSpace(-grip)
+ 		GUN.held = held
++		local known = hubHold(e)
++		if known then
++			local T2 = CFrame.fromMatrix(Vector3.zero, BARREL, TOP, BARREL:Cross(TOP))
++			GUN.base = T2 * known.fit
++			GUN.center = GUN.base.Position
++			GUN.held = true
++		end
+ 	end
+ 	local function findGun()
++		if GUN.unjoin then
++			GUN.unjoin()
++			GUN.unjoin = nil
++		end
+ 		GUN.e, GUN.j, GUN.home = nil, nil, nil
+ 		local best, bestRank = nil, math.huge
+ 		for e in pairs(fd.cframes) do
+@@ -3998,6 +3739,7 @@
+ 			GUN.e, GUN.j = best, j
+ 			GUN.home = {j.Part1, j.C0, j.C1}
+ 			fitGun(best, GUN.home)
++			GUN.unjoin = hubJoin(best)
+ 		end
+ 	end
+ 	local pose = {gun = CF(0.8, 0, -1) * ANG(0, math.pi / 2, 0), eye = VT(0, 1.6, -0.6), scope = VT(0.4, 1.4, -1)}
+@@ -4021,6 +3763,10 @@
+ 		local j, home = GUN.j, GUN.home
+ 		if j and home then
+ 			j.Part1, j.C0, j.C1 = home[1], home[2], home[3]
++		end
++		if GUN.unjoin then
++			GUN.unjoin()
++			GUN.unjoin = nil
+ 		end
+ 	end)
+ 	local TURN = ANG(0, math.pi / 2, 0)
+@@ -4151,6 +3897,22 @@
+ 		end
+ 	end)
+ 
++	C.alignHat = function(s)
++		local e = GUN.e
++		if type(e) ~= "table" then
++			return nil
++		end
++		local m, t = rawget(e, "m"), rawget(e, "t")
++		local id = (type(m) == "string" and string.match(m, "(%d+)%D*$")) or (type(t) == "string" and string.match(t, "(%d+)%D*$")) or nil
++		if not id then
++			return nil
++		end
++		local name = nil
++		pcall(function()
++			name = rawget(e, "p").Parent.Name
++		end)
++		return id, id, type(name) == "string" and name or nil
++	end
+ 	C.foundText = function()
+ 		local g
+ 		if GUN.e then
+@@ -4663,104 +4425,7 @@
+ 		Fire()
+ 	end
+ 
+-	local PAD = {{"fire", "LMB", "Fire"}, {"f", "F", "Aim"}, {"z", "Z", "Scope"}, {"c", "C", "Crouch"}, {"r", "R", "Reload"}}
+-	local padGui = Instance.new("ScreenGui")
+-	padGui.Name = "SniperButtons"
+-	padGui.ResetOnSpawn = false
+-	padGui.DisplayOrder = 55
+-	padGui.Parent = C.guiParent()
+-	local pad = Instance.new("Frame")
+-	pad.Name = "KeyButtons"
+-	pad.BackgroundTransparency = 1
+-	pad.Size = UDim2.fromOffset(1, 1)
+-	pad.Visible = false
+-	pad.Parent = padGui
+-	local padBtn = {}
+-	local function label(def, small)
+-		return '<font size="17">' .. def[2] .. '</font>\n<font size="10">' .. small .. "</font>"
+-	end
+-	for n, def in ipairs(PAD) do
+-		local col, row = (n - 1) % 4, math.floor((n - 1) / 4)
+-		local b = Instance.new("TextButton")
+-		b.Name = def[2]
+-		b.Size = UDim2.fromOffset(54, 54)
+-		b.Position = UDim2.fromOffset(-62 * (col + 1), -62 * row)
+-		b.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+-		b.BackgroundTransparency = 0.3
+-		b.AutoButtonColor = true
+-		b.BorderSizePixel = 0
+-		b.RichText = true
+-		b.TextColor3 = n == 1 and Color3.fromRGB(255, 190, 215) or C3(1, 1, 1)
+-		b.Font = Enum.Font.GothamBold
+-		b.TextSize = 12
+-		b.TextWrapped = true
+-		b.Text = label(def, def[3])
+-		local corner = Instance.new("UICorner")
+-		corner.CornerRadius = UDim.new(1, 0)
+-		corner.Parent = b
+-		local stroke = Instance.new("UIStroke")
+-		stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+-		stroke.Thickness = 1.5
+-		stroke.Color = n == 1 and Color3.fromRGB(255, 150, 190) or Color3.fromRGB(200, 200, 210)
+-		stroke.Transparency = 0.2
+-		stroke.Parent = b
+-		b.MouseButton1Down:Connect(function()
+-			task.spawn(C.keyDown, def[1])
+-		end)
+-		b.Parent = pad
+-		padBtn[def[1]] = {b, def}
+-	end
+-	local cross = Instance.new("TextLabel")
+-	cross.Name = "Crosshair"
+-	cross.AnchorPoint = Vector2.new(0.5, 0.5)
+-	cross.Position = UDim2.fromScale(0.5, 0.5)
+-	cross.Size = UDim2.fromOffset(24, 24)
+-	cross.BackgroundTransparency = 1
+-	cross.Text = "+"
+-	cross.TextSize = 24
+-	cross.Font = Enum.Font.GothamBold
+-	cross.TextColor3 = Color3.fromRGB(255, 170, 205)
+-	cross.TextStrokeTransparency = 0.3
+-	cross.Visible = false
+-	cross.Parent = padGui
+-	C.onStop(function()
+-		pcall(function()
+-			padGui:Destroy()
+-		end)
+-	end)
+-	local shown = {}
+-	local function setText(key, small)
+-		local p = padBtn[key]
+-		if p and shown[key] ~= small then
+-			shown[key] = small
+-			p[1].Text = label(p[2], small)
+-		end
+-	end
+-	local function updatePad()
+-		local tb = SNIPER.TouchButtons
+-		local show = tb == true or (tb == "auto" and UIS.TouchEnabled)
+-		pad.Visible = show
+-		cross.Visible = show and onPhone and Aiming
+-		if not show then
+-			return
+-		end
+-		setText("f", Aiming and "Aim: on" or "Aim")
+-		setText("z", Zoomed and "Scope: on" or "Scope")
+-		setText("c", Crouching and "Crouch: on" or "Crouch")
+-		setText("r", OPT.unli and "Reload: unli" or ("Reload " .. Ammo .. "/" .. SNIPER.Ammo))
+-		local pg = lp:FindFirstChildOfClass("PlayerGui")
+-		local tg = pg and pg:FindFirstChild("TouchGui")
+-		local tf = tg and tg:FindFirstChild("TouchControlFrame")
+-		local jb = tf and tf:FindFirstChild("JumpButton")
+-		if jb and tg.Enabled then
+-			local p = jb.AbsolutePosition - padGui.AbsolutePosition
+-			pad.Position = UDim2.fromOffset(p.X, p.Y)
+-		else
+-			pad.Position = UDim2.new(1, -90, 1, -150)
+-		end
+-	end
+ 	C.tick = function()
+-		updatePad()
+ 		lastRigCF = C.rootCF()
+ 	end
+ 

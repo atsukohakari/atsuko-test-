@@ -1,0 +1,436 @@
+--- a/FDless.txt
++++ b/Reanimation/Hat/FDless.lua
+@@ -1,7 +1,6 @@
+ --!optimize 2
+ --no need to load the whole thing cuz u can use the last one
+ if _G.GenesisFDless then 
+-	game:FindFirstChildOfClass("StarterGui"):SetCore("SendNotification",{Title="FDLESS",Text="Using FDless loaded by previously executed scripts to prevent reanimate conflicts. Rejoin to update reanimate settings.",Duration=10})
+ 	return _G.GenesisFDless 
+ end
+ 
+@@ -357,8 +356,16 @@
+ local respawntp=(type(respawntp)=="number" and respawntp) or 3
+ local disguiscripts=disguiscripts~=false
+ local breakjointsmethod=(type(breakjointsmethod)=="number" and breakjointsmethod) or 1
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
+ if (breakjointsmethod==4) and not replicatesignal then
+-	SetCore(sg,"SendNotification",{Title="FDLESS SERVERBREAKJOINTS",Text="Your executor does not support ReplicateSignal! Please see #supported-clients channel."})
++	hubNotify("FDless", "This executor has no replicatesignal, break joints method 4 is off", "warn", 6)
+ 	breakjointsmethod=1
+ end
+ local simrad=simrad~=false
+@@ -414,6 +421,7 @@
+ 	]]
+ 
+ 	local novoid=true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
++	local antivoid=true
+ 	local speedlimit=3000 --makes your parts move slower if the magnitude of their velocity is higher than this
+ 	local retVelTime=0.51 --time that claimed parts have velocity to reclaim in case u lose them
+ 	local walkSpeed=16 --your walkspeed (can be changed at runtime)
+@@ -500,6 +508,20 @@
+ 	local Yvel=0
+ 	local pos=cfGet(cfr,"Position")
+ 	cfr=cfl(pos,pos+cfGet(cfr,"LookVector")*v3_101)
++	local rigAt=nil
++	pcall(function()
++		local g=(typeof(getgenv)=="function" and getgenv()) or _G
++		rigAt=g.AtsukoRigAt
++		if type(rigAt)~="table" then
++			rigAt={}
++			g.AtsukoRigAt=rigAt
++		end
++	end)
++	if rigAt and typeof(rigAt.cf)=="CFrame" and ((type(rigAt.t)=="number" and osclock()-rigAt.t<2) or (type(rigAt.keep)=="number" and osclock()-rigAt.keep<20)) then
++		pos=cfGet(rigAt.cf,"Position")
++		cfr=cfl(pos,pos+cfGet(rigAt.cf,"LookVector")*v3_101)
++		rigAt.keep=nil
++	end
+ 	local primarypart=nil
+ 	local shiftlock=false
+ 	local firstperson=false
+@@ -509,6 +531,7 @@
+ 	local camrot=cfl(v3_0,camcfLV)
+ 	local camrotX,camrotY=cfGet(camrot,"ToEulerAnglesYXZ")(camrot)
+ 	local camcfRV=cfGet(camrot,"RightVector")
++	local camOverride=nil
+ 	local cammag=-vmagnitude((cfGet(camcf,"Position")-(pos+v3_0150)))
+ 
+ 	local R6parts={ 
+@@ -691,8 +714,69 @@
+ 		raycastparams.FilterDescendantsInstances=rayfilter
+ 	end
+ 	local rootparts={}
++	local rigOf={}
++	local hubWeapon=function(m,t,n)
++		local ok,w=pcall(function()
++			local A=((typeof(getgenv)=="function" and getgenv()) or _G).AtsukoAlignment
++			return type(A)=="table" and type(A.weapon)=="function" and A.weapon({mesh=m,tex=t,acc=n,name=n})
++		end)
++		return ok and w==true
++	end
++	local accNameOf=function(x)
++		local ok,n=pcall(function()
++			return insGet(insGet(x.p,"Parent"),"Name")
++		end)
++		return ok and n or ""
++	end
++	pcall(function()
++		local hub=((typeof(getgenv)=="function" and getgenv()) or _G).AtsukoAligns
++		local has=function(x)
++			return type(x)=="string" and x~=""
++		end
++		local key=function(x)
++			return x.PartName.."|"..(x.meshid or "").."|"..(x.textureid or "").."|"..(x.AccessoryName or "")
++		end
++		local covered={}
++		local front={}
++		if type(hub)=="table" then
++			for n=1,#hub do
++				local h=hub[n]
++				if type(h)=="table" and type(h.PartName)=="string" and (has(h.meshid) or has(h.textureid) or has(h.AccessoryName)) then
++					covered[key(h)]=true
++					for _=1,(type(h.count)=="number" and clamp(h.count,1,8)) or 1 do
++						tinsert(front,{PartName=h.PartName,meshid=h.meshid,textureid=h.textureid,AccessoryName=h.AccessoryName,C0=h.C0,hub=true})
++					end
++				end
++			end
++		end
++		local mine=((typeof(getgenv)=="function" and getgenv()) or _G).AtsukoScriptAligns
++		if type(mine)=="table" then
++			for n=1,#mine do
++				local h=mine[n]
++				if type(h)=="table" and type(h.PartName)=="string" and (has(h.meshid) or has(h.textureid) or has(h.AccessoryName)) and not covered[key(h)] then
++					covered[key(h)]=true
++					tinsert(front,{PartName=h.PartName,meshid=h.meshid,textureid=h.textureid,AccessoryName=h.AccessoryName,C0=h.C0,hub=true})
++				end
++			end
++		end
++		local rest={}
++		for n=1,#aligns do
++			local a=aligns[n]
++			if not a.hub then
++				a.off=covered[key(a)]
++				tinsert(rest,a)
++			end
++		end
++		tclear(aligns)
++		for n=1,#front do
++			tinsert(aligns,front[n])
++		end
++		for n=1,#rest do
++			tinsert(aligns,rest[n])
++		end
++	end)
+ 	for i,v in next,aligns do
+-		v.p=getPart(v.PartName)
++		v.p=(not v.off) and getPart(v.PartName) or nil
+ 		if not v.meshid then
+ 			v.meshid=""
+ 		end 
+@@ -778,8 +862,9 @@
+ 						end
+ 					end
+ 					local n=insGet(insGet(p,"Parent"),"Name")
++					local wpn=hubWeapon(meshid,textureid,n)
+ 					for i,l in next,aligns do
+-						if l.p and sfind(meshid,l.meshid) and sfind(textureid,l.textureid) and ((not l.AccessoryName) or (l.AccessoryName==n)) then
++						if (not wpn) and l.p and sfind(meshid,l.meshid) and sfind(textureid,l.textureid) and ((not l.AccessoryName) or (l.AccessoryName==n)) then
+ 							local t={Name=insGet(p,"Name"),l=insGet(p,"Position"),m=meshid,t=textureid,p=p}
+ 							makePartCons(p,t)
+ 							if placeholders then
+@@ -787,7 +872,9 @@
+ 								t.b=false
+ 							end
+ 							cframes[t]=insGet(p,"CFrame")
+-							tinsert(joints,{Part0=t,Part1=l.p,C0=l.C0 or cf_0,C1=cf_0})
++							local jt={Part0=t,Part1=l.p,C0=l.C0 or cf_0,C1=cf_0}
++							tinsert(joints,jt)
++							rigOf[t]={l=l,lp=l.p,j=jt,att={v1[1],insGet(v,"CFrame"),v1[2]}}
+ 							l.p=nil
+ 							return
+ 						end
+@@ -1220,6 +1307,40 @@
+ 		end
+ 	end
+ 
++	local forced=nil
++	local releaseMode=function()
++		local left=forced
++		if not left then
++			return
++		end
++		forced=nil
++		local modet=modes[mode]
++		lerpsIdle=modet.idle or defaultmode.idle or emptyfunction
++		lerpsWalk=modet.walk or defaultmode.walk or emptyfunction
++		lerpsJump=modet.jump or defaultmode.jump or emptyfunction
++		lerpsFall=modet.fall or defaultmode.fall or emptyfunction
++		if left.modeLeft then
++			left.modeLeft()
++		end
++	end
++	local forceMode=function(m)
++		if type(m)~="table" then
++			return
++		end
++		releaseMode()
++		forced=m
++		lerpsIdle=(type(m.idle)=="function" and m.idle) or emptyfunction
++		lerpsWalk=(type(m.walk)=="function" and m.walk) or emptyfunction
++		lerpsJump=(type(m.jump)=="function" and m.jump) or emptyfunction
++		lerpsFall=(type(m.fall)=="function" and m.fall) or emptyfunction
++		if m.modeEntered then
++			m.modeEntered()
++		end
++	end
++	local isForced=function()
++		return forced~=nil
++	end
++
+ 	local keyW=KeyCode.W
+ 	local Wpressed=IsKeyDown(uis,keyW)
+ 	local keyA=KeyCode.A
+@@ -1264,7 +1385,7 @@
+ 			shiftlock=allowshiftlock and not shiftlock
+ 			--elseif invisiblekeybind and a==keyI then
+ 			--invisible=not invisible
+-		elseif modes[a] then
++		elseif modes[a] and not forced then
+ 			local modeLeft=modes[mode].modeLeft
+ 			if modeLeft then
+ 				modeLeft()
+@@ -1320,12 +1441,16 @@
+ 
+ 	local thumbstickTouchStart=v3_0
+ 	local cameraZoomInputMagnitude=0
+-
+-	tinsert(cons,Connect(insGet(uis,"TouchStarted"),function(inputObject)
++	local inputBlocker=nil
++
++	tinsert(cons,Connect(insGet(uis,"TouchStarted"),function(inputObject,gp)
+ 		if insGet(gs,"MenuIsOpen") or GetFocusedTextBox(uis) then
+ 			return
+ 		end
+ 
++		if inputBlocker and inputBlocker(inputObject) then
++			return
++		end
+ 		local touchPos=insGet(inputObject,"Position")
+ 		local touchX=v3Get(touchPos,"X")
+ 		local touchY=v3Get(touchPos,"Y")
+@@ -1337,6 +1462,8 @@
+ 		elseif (not jumpInputObject) and touchY>jumpStartY and touchX>jumpStartX and touchX<jumpEndX and touchY<jumpEndY then
+ 			jumpInputObject=inputObject
+ 			jumpingInput=true
++		elseif gp then
++			return
+ 		elseif not cameraRotateInputObject then
+ 			cameraRotateInputObject=inputObject
+ 		else
+@@ -1429,7 +1556,7 @@
+ 
+ 	local mouseCameraMove=false
+ 	tinsert(cons,Connect(insGet(uis,"InputChanged"),function(a,b)
+-		if b then return end
++		if b or (inputBlocker and inputBlocker(a)) then return end
+ 		local inputType=insGet(a,"UserInputType")
+ 		if mouseCameraMove and (inputType==enumMM) and cameraMoveable then
+ 			local rotation=GetMouseDelta(uis)
+@@ -1544,6 +1671,10 @@
+ 	local onground=nil
+ 	local mainFunction=function()
+ 		sine=osclock()
++		if rigAt then
++			rigAt.cf=cfr
++			rigAt.t=sine
++		end
+ 		local delta=sine-lastsine
+ 		deltaTime=min(delta*10,1)
+ 		lastsine=sine
+@@ -1596,8 +1727,11 @@
+ 					pos=pos+v3_010*(raycastresult+hhOff-v3Get(pos,"Y"))
+ 				end
+ 			end
++		elseif antivoid then
++			Yvel=0
++			onground=false
+ 		else
+-			Yvel=0
++			Yvel=Yvel-gravity*delta
+ 			onground=false
+ 		end
+ 
+@@ -1861,6 +1995,13 @@
+ 			end
+ 		end
+ 
++		if camOverride then
++			local ok,ncf=pcall(camOverride,camcf)
++			if ok and typeof(ncf)=="CFrame" then
++				camcf=ncf
++				insSet(cam,"CFrame",camcf)
++			end
++		end
+ 		refreshjointsI(rootpart)
+ 		tclear(refreshedjoints)
+ 
+@@ -2092,10 +2233,105 @@
+ 	local YvelSign=function()
+ 		return Yvel>0
+ 	end
++	local setShiftlock=function(b)
++		shiftlock=allowshiftlock and (b==true)
++	end
++	local getShiftlock=function()
++		return shiftlock
++	end
++
++	local limbSet={}
++	for _,name in next,{"Head","Torso","Left Arm","Right Arm","Left Leg","Right Leg"} do
++		local lp0=getPart(name)
++		if lp0 then
++			limbSet[lp0]=true
++		end
++	end
++	local rigHat=function(x)
++		local r=rigOf[x]
++		return r and r.l.PartName or nil
++	end
++	local rigged=function(hat,x)
++		if x~=nil then
++			return rigOf[x]~=nil
++		end
++		if type(hat)~="table" then
++			return false
++		end
++		local m,t=tostring(hat.mesh or ""),tostring(hat.tex or "")
++		if m=="" and t=="" then
++			return false
++		end
++		local rig,free=false,false
++		for e1,_ in next,cframes do
++			if e1.m and e1.p and (m=="" or sfind(e1.m,m,1,true)) and (t=="" or sfind(e1.t or "",t,1,true)) then
++				if rigOf[e1] then
++					rig=true
++				else
++					free=true
++				end
++			end
++		end
++		return rig and not free
++	end
++	local freeWeapons=function()
++		local moved=0
++		for t0,r in next,rigOf do
++			if hubWeapon(t0.m,t0.t,accNameOf(t0)) then
++				local j=r.j
++				if j.Part1==r.lp then
++					j.Part1,j.C0,j.C1=r.att[1],r.att[2],r.att[3]
++				end
++				rigOf[t0]=nil
++				moved=moved+1
++				local l=r.l
++				local filled=false
++				for x,_ in next,cframes do
++					if (not filled) and x~=t0 and (not rigOf[x]) and x.m and x.p and sfind(x.m,l.meshid) and sfind(x.t or "",l.textureid) then
++						local xn=accNameOf(x)
++						if ((not l.AccessoryName) or (l.AccessoryName==xn)) and not hubWeapon(x.m,x.t,xn) then
++							for _,xj in next,joints do
++								if xj.Part0==x and limbSet[xj.Part1] then
++									rigOf[x]={l=l,lp=r.lp,j=xj,att={xj.Part1,xj.C0,xj.C1}}
++									xj.Part1,xj.C0,xj.C1=r.lp,l.C0 or cf_0,cf_0
++									filled=true
++									break
++								end
++							end
++						end
++					end
++				end
++				if not filled then
++					l.p=r.lp
++				end
++			end
++		end
++		return moved
++	end
++	local rigView=function()
++		local out={}
++		for e1,cf1 in next,cframes do
++			if type(e1)=="table" and e1.m and typeof(cf1)=="CFrame" then
++				local h=e1.p or e1.v
++				if h then
++					tinsert(out,{k=e1,cf=cf1,h=h})
++				end
++			end
++		end
++		return out
++	end
++	pcall(function()
++		local g=(typeof(getgenv)=="function" and getgenv()) or _G
++		g.AtsukoRigHats=rigged
++		g.AtsukoFreeWeapons=freeWeapons
++		g.AtsukoRigView=rigView
++	end)
+ 
+ 	return {
+ 		cframes=cframes,
+ 		joints=joints,
++		rigHat=rigHat,
++		freeWeapons=freeWeapons,
+ 		fling=fling,
+ 		predictionfling=fling,
+ 		refreshjoints=refreshjoints,
+@@ -2104,6 +2340,9 @@
+ 		velchgbycfrvec=velchgbycfrvec,
+ 		velYchg=velYchg,
+ 		addmode=addmode,
++		forceMode=forceMode,
++		releaseMode=releaseMode,
++		isForced=isForced,
+ 		getPart=getPart,
+ 		getPartFromMesh=getPartFromMesh,
+ 		getAccWeldFromMesh=getAccWeldFromMesh,
+@@ -2119,6 +2358,11 @@
+ 		getCamCF=getCamCF,
+ 		isFirstPerson=isFirstPerson,
+ 		setHipHeight=setHipHeight,
++		setShiftlock=setShiftlock,
++		getShiftlock=getShiftlock,
++		setInputBlocker=function(f)
++			inputBlocker=f
++		end,
+ 		characters=characters,
+ 		refreshrayfilter=function()
+ 			for i,v in next,characters do
+@@ -2131,7 +2375,23 @@
+ 		setCameraMoveable=setCameraMoveable,
+ 		isOnGround=isOnGround,
+ 		isWalking=isWalking,
+-		YvelSign=YvelSign
++		YvelSign=YvelSign,
++		setAntivoid=function(b)
++			antivoid=b~=false
++		end,
++		getAntivoid=function()
++			return antivoid
++		end,
++		setCamZoom=function(m)
++			cammag=math.min(m,0)
++			firstperson=cammag>=0
++		end,
++		getCamZoom=function()
++			return cammag
++		end,
++		setCamOverride=function(f)
++			camOverride=f
++		end
+ 	}
+ end
+ 

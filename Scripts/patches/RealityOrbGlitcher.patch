@@ -1,0 +1,707 @@
+--- a/RealityOrbGlitcherConvert.lua
++++ b/RealityOrbGlitcher.lua
+@@ -36,7 +36,686 @@
+ https://www.roblox.com/catalog/16297156693/Transparent-Inverted-Black-Torso
+ ]]
+ 
+-local reanimation = loadstring(game:HttpGet("https://gist.githubusercontent.com/pepfre12/a6804484c857aaa92a673d0db68d4ec8/raw/6efa0f57bfd6ab503d99ee8cc26e30c804446009/oblopa"))()
++local reanimation = (function()
++	local genv = (typeof(getgenv) == "function" and getgenv()) or _G
++	local Players = game:GetService("Players")
++	local RunService = game:GetService("RunService")
++	local lp = Players.LocalPlayer
++	local IDENT = CFrame.identity
++	local M = {}
++	local SIZES = {
++		HumanoidRootPart = Vector3.new(2, 2, 1),
++		Torso = Vector3.new(2, 2, 1),
++		Head = Vector3.new(2, 1, 1),
++		["Right Arm"] = Vector3.new(1, 2, 1),
++		["Left Arm"] = Vector3.new(1, 2, 1),
++		["Right Leg"] = Vector3.new(1, 2, 1),
++		["Left Leg"] = Vector3.new(1, 2, 1),
++	}
++	local JOINTS = {
++		{ "RootJoint", "HumanoidRootPart", "Torso", "HumanoidRootPart", CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, 0), CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, 0) },
++		{ "Neck", "Torso", "Head", "Torso", CFrame.new(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, 0), CFrame.new(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, 0) },
++		{ "Right Shoulder", "Torso", "Right Arm", "Torso", CFrame.new(1, 0.5, 0, 0, 0, 1, 0, 1, 0, -1, 0, 0), CFrame.new(-0.5, 0.5, 0, 0, 0, 1, 0, 1, 0, -1, 0, 0) },
++		{ "Left Shoulder", "Torso", "Left Arm", "Torso", CFrame.new(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0), CFrame.new(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0) },
++		{ "Right Hip", "Torso", "Right Leg", "Torso", CFrame.new(1, -1, 0, 0, 0, 1, 0, 1, 0, -1, 0, 0), CFrame.new(0.5, 1, 0, 0, 0, 1, 0, 1, 0, -1, 0, 0) },
++		{ "Left Hip", "Torso", "Left Leg", "Torso", CFrame.new(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0), CFrame.new(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0) },
++	}
++
++	local function say(text, kind)
++		local f = genv.AtsukoNotify
++		if type(f) == "function" then
++			pcall(f, "Reality Orb Glitcher", text, kind or "info", 5)
++		else
++			warn("[Reality Orb Glitcher] " .. tostring(text))
++		end
++	end
++
++	local function valid(x)
++		return type(x) == "table" and type(x.reanimate) == "function" and type(x.stopreanimate) == "function"
++	end
++
++	local function hubFD(aligns)
++		local FDL = rawget(_G, "GenesisFDless")
++		if not valid(FDL) then
++			FDL = genv.GenesisFDless
++		end
++		if valid(FDL) then
++			return FDL
++		end
++		local R = genv.LumenReanim
++		if type(R) == "table" and type(R.rig) == "function" then
++			local list = table.clone(aligns)
++			for _, a in ipairs(type(R.presets) == "table" and R.presets or {}) do
++				list[#list + 1] = a
++			end
++			local ok, rig = pcall(R.rig, { aligns = list })
++			if ok and valid(rig) then
++				return rig
++			end
++		end
++		return nil
++	end
++
++	local function vpart(fd, name)
++		for p in pairs(fd.cframes) do
++			if type(p) == "table" and rawget(p, "Name") == name and rawget(p, "m") == nil then
++				return p
++			end
++		end
++		return fd.getPart and fd.getPart(name) or nil
++	end
++
++	local function matchAlign(list, mesh, tex)
++		for _, a in ipairs(type(list) == "table" and list or {}) do
++			if type(a) == "table" then
++				local m, t = a.meshid, a.textureid
++				local has = (type(m) == "string" and m ~= "") or (type(t) == "string" and t ~= "")
++				if has then
++					local okM = type(m) ~= "string" or m == "" or (type(mesh) == "string" and string.find(mesh, m, 1, true) ~= nil)
++					local okT = type(t) ~= "string" or t == "" or (type(tex) == "string" and string.find(tex, t, 1, true) ~= nil)
++					if okM and okT then
++						return true
++					end
++				end
++			end
++		end
++		return false
++	end
++
++	function M.assets(id)
++		local ok, list = pcall(function()
++			return game:GetObjects("rbxassetid://" .. tostring(id))
++		end)
++		local found = ok and type(list) == "table" and list[1] and list[1]:FindFirstChild("FakeMouseMainConversion")
++		if found then
++			return found
++		end
++		say("The orb's effects didn't load, so it uses plain ones", "warn")
++		local root = Instance.new("Folder")
++		root.Name = "FakeMouseMainConversion"
++		local orb = Instance.new("Part")
++		orb.Name = "Orb"
++		orb.Size = Vector3.new(1, 1, 1)
++		orb.Transparency = 1
++		orb.CanCollide = false
++		orb.Massless = true
++		orb.Parent = root
++		local center = Instance.new("Attachment")
++		center.Name = "Center"
++		center.Parent = orb
++		for _, n in ipairs({ "SPARKLE", "SPARKLE_2", "HEX", "ORB", "ORB_2" }) do
++			local e = Instance.new("ParticleEmitter")
++			e.Name = n
++			e.Rate = n == "ORB" and 20 or 6
++			e.Lifetime = NumberRange.new(0.4, 0.8)
++			e.Speed = NumberRange.new(0, 1)
++			e.LightEmission = 1
++			e.Size = NumberSequence.new(n == "ORB" and 1.6 or 0.4, 0)
++			e.Parent = center
++		end
++		local a0 = Instance.new("Attachment")
++		a0.Position = Vector3.new(0, 0.5, 0)
++		a0.Parent = orb
++		local a1 = Instance.new("Attachment")
++		a1.Position = Vector3.new(0, -0.5, 0)
++		a1.Parent = orb
++		local trail = Instance.new("Trail")
++		trail.Name = "Trail"
++		trail.Attachment0 = a0
++		trail.Attachment1 = a1
++		trail.Lifetime = 0.3
++		trail.LightEmission = 1
++		trail.Parent = orb
++		for _, n in ipairs({ "Ring", "pt" }) do
++			local p = Instance.new("Part")
++			p.Name = n
++			p.Size = Vector3.new(0.2, 0.2, 0.2)
++			p.Transparency = 1
++			p.Anchored = true
++			p.CanCollide = false
++			p.CanQuery = false
++			p.CanTouch = false
++			p.Parent = root
++			local b0 = Instance.new("Attachment")
++			b0.Name = "a1"
++			b0.Parent = p
++			local b1 = Instance.new("Attachment")
++			b1.Name = "a2"
++			b1.Parent = p
++			local fx = Instance.new(n == "Ring" and "Beam" or "Trail")
++			fx.Name = n == "Ring" and "Beam" or "Trail"
++			fx.Attachment0 = b0
++			fx.Attachment1 = b1
++			fx.LightEmission = 1
++			if n == "Ring" then
++				fx.FaceCamera = true
++			else
++				fx.Lifetime = 0.4
++			end
++			fx.Parent = p
++		end
++		local color = Instance.new("Color3Value")
++		color.Name = "Color"
++		color.Parent = root
++		local song = Instance.new("StringValue")
++		song.Name = "Song"
++		song.Parent = root
++		for _, n in ipairs({ "Shaker", "Extrability" }) do
++			local s = Instance.new("LocalScript")
++			s.Name = n
++			s.Disabled = true
++			s.Parent = root
++			if n == "Shaker" then
++				for _, v in ipairs({ "Shakeval", "MultLength" }) do
++					local nv = Instance.new("NumberValue")
++					nv.Name = v
++					nv.Parent = s
++				end
++			end
++		end
++		return root
++	end
++
++	function M.start(opts)
++		opts = type(opts) == "table" and opts or {}
++		local aligns = {}
++		for _, v in ipairs(type(opts.accessorylimbs) == "table" and opts.accessorylimbs or {}) do
++			if type(v) == "table" and type(v.Name) == "string" then
++				aligns[#aligns + 1] = { PartName = v.Name, meshid = v.meshid, textureid = v.textureid, C0 = typeof(v.C0) == "CFrame" and v.C0 or IDENT }
++			end
++		end
++		local FD = hubFD(aligns)
++		if not FD then
++			say("Pick Script Reanimate or FDless on the Hat tab first", "error")
++			error("no reanimation to run on", 0)
++		end
++		local prior = genv.AtsukoScriptAligns
++		genv.AtsukoScriptAligns = aligns
++		local okRe, fd = pcall(FD.reanimate)
++		genv.AtsukoScriptAligns = prior
++		if not okRe or type(fd) ~= "table" or type(fd.cframes) ~= "table" then
++			say("The reanimation didn't start", "error")
++			error(okRe and "the reanimation didn't start" or fd, 0)
++		end
++		local function still()
++			local ok, on = pcall(FD.isReanimated)
++			return ok and on and true or false
++		end
++		local live = nil
++		pcall(function()
++			local L = genv.LumenReanim
++			local l = type(L) == "table" and type(L.current) == "function" and L.current()
++			if type(l) == "table" and l.fd == fd then
++				live = l
++			end
++		end)
++		local deadline = os.clock() + 8
++		while still() and live and type(live.isReady) == "function" and not live.isReady() and os.clock() < deadline do
++			task.wait()
++		end
++
++		local V = {}
++		for name in pairs(SIZES) do
++			V[name] = vpart(fd, name)
++		end
++		local rootCF = fd.cframes[V.HumanoidRootPart] or IDENT
++
++		local rig = Instance.new("Model")
++		rig.Name = lp.Name
++		local parts = {}
++		for name, size in pairs(SIZES) do
++			local p = Instance.new("Part")
++			p.Name = name
++			p.Size = size
++			p.Transparency = 1
++			p.CanCollide = false
++			p.CanQuery = false
++			p.CanTouch = false
++			p.CastShadow = false
++			p.Massless = true
++			p.Anchored = name == "HumanoidRootPart"
++			p.CFrame = rootCF
++			p.Parent = rig
++			parts[name] = p
++		end
++		local face = Instance.new("Decal")
++		face.Name = "face"
++		face.Transparency = 1
++		face.Parent = parts.Head
++		local hum = Instance.new("Humanoid")
++		hum.Name = "Humanoid"
++		pcall(function()
++			hum.RigType = Enum.HumanoidRigType.R6
++			hum.RequiresNeck = false
++			hum.BreakJointsOnDeath = false
++			hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
++			hum.HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOff
++			hum.EvaluateStateMachine = false
++		end)
++		hum.Parent = rig
++		local animator = Instance.new("Animator")
++		animator.Parent = hum
++		local animate = Instance.new("Folder")
++		animate.Name = "Animate"
++		animate.Parent = rig
++		for _, j in ipairs(JOINTS) do
++			local m = Instance.new("Motor6D")
++			m.Name = j[1]
++			m.Part0 = parts[j[2]]
++			m.Part1 = parts[j[3]]
++			m.C0 = j[5]
++			m.C1 = j[6]
++			m.Parent = parts[j[4]]
++		end
++		rig.PrimaryPart = parts.HumanoidRootPart
++		rig.Parent = workspace
++		local root = parts.HumanoidRootPart
++
++		local api = { character = rig }
++		local alive = true
++		local conns = {}
++		local lastCF, lastVel = rootCF, Vector3.zero
++		local clock = os.clock()
++
++		local function realJoints()
++			local list = {}
++			for _, d in ipairs(rig:GetDescendants()) do
++				if d:IsA("JointInstance") and d.Parent and d.Part0 and d.Part1 and d.Part0:IsDescendantOf(rig) and d.Part1:IsDescendantOf(rig) then
++					local on = true
++					pcall(function()
++						on = d.Enabled
++					end)
++					if on then
++						list[#list + 1] = d
++					end
++				end
++			end
++			return list
++		end
++
++		local function solve(base)
++			local world = { [root] = base }
++			local joints = realJoints()
++			local more, rounds = true, 0
++			while more and rounds < 8 do
++				more = false
++				rounds += 1
++				for _, j in ipairs(joints) do
++					local a, b = j.Part0, j.Part1
++					if world[a] and not world[b] then
++						world[b] = world[a] * j.C0 * j.C1:Inverse()
++						more = true
++					elseif world[b] and not world[a] then
++						world[a] = world[b] * j.C1 * j.C0:Inverse()
++						more = true
++					end
++				end
++			end
++			return world
++		end
++
++		local function push(world)
++			for _, j in ipairs(JOINTS) do
++				local vj = fd.getJoint(j[1])
++				local w0, w1 = world[parts[j[2]]], world[parts[j[3]]]
++				if vj and w0 and w1 then
++					local c1 = typeof(vj.C1) == "CFrame" and vj.C1 or IDENT
++					vj.C0 = w0:Inverse() * w1 * c1
++				end
++			end
++		end
++
++		local orb = { list = {}, at = 0, center = nil }
++		local LIMB = {}
++		for _, name in ipairs({ "Torso", "Head", "Right Arm", "Left Arm", "Right Leg", "Left Leg" }) do
++			if V[name] then
++				LIMB[V[name]] = true
++			end
++		end
++
++		local function spareHats()
++			local used = {}
++			for _, h in ipairs(orb.list) do
++				used[h.e] = true
++			end
++			local fresh = {}
++			for e in pairs(fd.cframes) do
++				if type(e) == "table" and rawget(e, "m") ~= nil and rawget(e, "p") ~= nil and not used[e] then
++					local m, t = rawget(e, "m"), rawget(e, "t")
++					local j = fd.getPartJoint and fd.getPartJoint(e)
++					if j and rawget(j, "Part0") == e and not matchAlign(genv.AtsukoAligns, m, t) and not matchAlign(aligns, m, t) then
++						local p1, c1 = rawget(j, "Part1"), rawget(j, "C1")
++						local limb = LIMB[p1] and (typeof(c1) ~= "CFrame" or c1 == IDENT)
++						if not limb then
++							fresh[#fresh + 1] = { e = e, j = j, home = { p1, rawget(j, "C0"), c1 } }
++						end
++					end
++				end
++			end
++			return fresh
++		end
++
++		local function restoreHats()
++			for _, h in ipairs(orb.list) do
++				pcall(function()
++					h.j.Part1, h.j.C0, h.j.C1 = h.home[1], h.home[2], h.home[3]
++				end)
++			end
++			orb.list = {}
++		end
++
++		local HS = game:GetService("HttpService")
++		local FILE = "RealityOrbAlign.json"
++		local VAL = { 0, 0, 0, 0, 0, 0 }
++		local OFF = IDENT
++		local function rebuild()
++			OFF = CFrame.new(VAL[1], VAL[2], VAL[3]) * CFrame.Angles(math.rad(VAL[4]), math.rad(VAL[5]), math.rad(VAL[6]))
++		end
++		local function loadAlign()
++			if not (isfile and readfile) then
++				return false, "your executor can't read files"
++			end
++			local ok, has = pcall(isfile, FILE)
++			if not ok or not has then
++				return false, "no saved alignment yet"
++			end
++			local ok2, data = pcall(function()
++				return HS:JSONDecode(readfile(FILE))
++			end)
++			if not ok2 or type(data) ~= "table" or type(data.orb) ~= "table" then
++				return false, FILE .. " is damaged"
++			end
++			for n = 1, 6 do
++				local x = tonumber(data.orb[n])
++				if x and x == x and math.abs(x) < 1e5 then
++					VAL[n] = x
++				end
++			end
++			rebuild()
++			return true
++		end
++		local function saveAlign()
++			if not writefile then
++				return false, "your executor can't save files"
++			end
++			local ok, e = pcall(writefile, FILE, HS:JSONEncode({ orb = VAL }))
++			if not ok then
++				return false, tostring(e)
++			end
++			return true
++		end
++		loadAlign()
++
++		local function placeHats(dt, base, world)
++			local part = orb.center
++			local center = part and part.Parent and (world[part] or part.CFrame) or nil
++			if center then
++				center = center * OFF
++			end
++			if not center then
++				return
++			end
++			orb.at += dt
++			local n = #orb.list
++			if n == 0 then
++				return
++			end
++			local radius = 1.1 + 0.35 * math.sqrt(n)
++			local spin = CFrame.Angles(0.35 * math.sin(orb.at * 0.6), orb.at * 1.4, 0.25 * math.cos(orb.at * 0.5))
++			local golden = math.pi * (3 - math.sqrt(5))
++			local inv = base:Inverse()
++			for i, h in ipairs(orb.list) do
++				local y = n == 1 and 0 or (1 - (i - 1) / (n - 1) * 2)
++				local r = math.sqrt(math.max(0, 1 - y * y))
++				local a = golden * (i - 1)
++				local dir = Vector3.new(math.cos(a) * r, y, math.sin(a) * r)
++				local pulse = 1 + 0.08 * math.sin(orb.at * 3 + i)
++				local spot = center * spin * CFrame.new(dir * radius * pulse)
++				local look = CFrame.lookAt(spot.Position, center.Position) * CFrame.Angles(0, 0, orb.at * 2 + i)
++				h.j.Part1 = V.HumanoidRootPart
++				h.j.C0 = IDENT
++				h.j.C1 = inv * look
++			end
++		end
++
++		local scan = 0
++		local function sync()
++			if not alive then
++				return
++			end
++			local now = os.clock()
++			local dt = math.clamp(now - clock, 0, 0.1)
++			clock = now
++			local base = fd.cframes[V.HumanoidRootPart] or lastCF
++			local moved = root.CFrame
++			if (moved.Position - lastCF.Position).Magnitude > 0.01 or moved.LookVector:Dot(lastCF.LookVector) < 0.9999 then
++				pcall(fd.setCfr, moved)
++				base = moved
++			end
++			local vel = root.AssemblyLinearVelocity
++			pcall(function()
++				vel = root.Velocity
++			end)
++			if (vel - lastVel).Magnitude > 0.01 and vel.Magnitude > 0.01 then
++				base = base + vel * dt
++				pcall(fd.setCfr, base)
++			end
++			root.CFrame = base
++			lastCF = base
++			local real = Vector3.zero
++			if type(fd.getVel) == "function" then
++				local ok, v = pcall(fd.getVel)
++				if ok and typeof(v) == "Vector3" then
++					real = v
++				end
++			end
++			pcall(function()
++				root.Velocity = real
++			end)
++			lastVel = real
++			local world = solve(base)
++			push(world)
++			scan -= dt
++			if scan <= 0 then
++				scan = 1
++				for _, h in ipairs(spareHats()) do
++					orb.list[#orb.list + 1] = h
++				end
++			end
++			placeHats(dt, base, world)
++		end
++
++		local function frame()
++			local ok, err = pcall(sync)
++			if not ok then
++				warn("[Reality Orb Glitcher] " .. tostring(err))
++			end
++		end
++
++		if type(fd.addmode) == "function" then
++			fd.addmode("default", { idle = frame, walk = frame, jump = frame, fall = frame })
++		else
++			conns[#conns + 1] = RunService.Heartbeat:Connect(frame)
++		end
++
++		hum:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
++			if alive and type(fd.setWalkSpeed) == "function" then
++				pcall(fd.setWalkSpeed, hum.WalkSpeed)
++			end
++		end)
++		hum:GetPropertyChangedSignal("JumpPower"):Connect(function()
++			if alive and type(fd.setJumpPower) == "function" then
++				pcall(fd.setJumpPower, hum.JumpPower)
++			end
++		end)
++
++		local watchers = {}
++		local function fire(what)
++			for _, f in ipairs(table.clone(watchers)) do
++				pcall(f, what)
++			end
++		end
++		local AL = { version = 1, title = "Reality Orb Glitcher", tabs = { "Orb" }, file = FILE, dirty = false, open = false, marker = false, hint = "Orb moves and turns the ball of hats that flies around the orb." }
++		M.AL = AL
++		function AL.alive()
++			return alive
++		end
++		function AL.get(i)
++			return i == 1 and table.clone(VAL) or nil
++		end
++		function AL.later()
++			AL.tok = (AL.tok or 0) + 1
++			local my = AL.tok
++			task.delay(1.5, function()
++				if my == AL.tok and AL.dirty and alive and AL.save() then
++					fire("saved")
++				end
++			end)
++		end
++		function AL.set(i, k, n)
++			n = tonumber(n)
++			if i ~= 1 or not n or n ~= n or math.abs(n) >= 1e5 or not VAL[k] then
++				return nil
++			end
++			if k > 3 then
++				n = ((n + 180) % 360) - 180
++				n = math.floor(n * 10 + 0.5) / 10
++			else
++				n = math.floor(n * 1000 + 0.5) / 1000
++			end
++			VAL[k] = n
++			rebuild()
++			AL.dirty = true
++			AL.later()
++			return n
++		end
++		function AL.put(i, vals)
++			if i ~= 1 or type(vals) ~= "table" then
++				return
++			end
++			for k = 1, 6 do
++				VAL[k] = tonumber(vals[k]) or 0
++			end
++			rebuild()
++			AL.dirty = true
++			AL.later()
++		end
++		function AL.reset(i)
++			AL.put(i, { 0, 0, 0, 0, 0, 0 })
++		end
++		function AL.save()
++			AL.tok = (AL.tok or 0) + 1
++			local ok, e = saveAlign()
++			if ok then
++				AL.dirty = false
++			end
++			return ok, e
++		end
++		function AL.load()
++			local ok, e = loadAlign()
++			if ok then
++				AL.dirty = false
++			end
++			fire("load")
++			return ok, e
++		end
++		function AL.watch(f)
++			watchers[#watchers + 1] = f
++			return function()
++				local i = table.find(watchers, f)
++				if i then
++					table.remove(watchers, i)
++				end
++			end
++		end
++		function AL.found()
++			return "Orb: " .. #orb.list .. (#orb.list == 1 and " hat" or " hats")
++		end
++		function AL.hat()
++			return nil
++		end
++		function M.toggleAlign()
++			local h = genv.AtsukoHub
++			if type(h) == "table" and type(h.Align) == "function" then
++				pcall(h.Align)
++			else
++				say("Open Atsuko Hub to move the orb, the alignment lives there", "info")
++			end
++		end
++		local function alignStop()
++			if AL.dirty then
++				pcall(saveAlign)
++				AL.dirty = false
++			end
++			AL.open = false
++			if genv.AtsukoAlign == AL then
++				genv.AtsukoAlign = nil
++			end
++			fire("stop")
++			local h = genv.AtsukoHub
++			if type(h) == "table" and type(h.AlignReady) == "function" then
++				pcall(h.AlignReady)
++			end
++		end
++
++		function api.orbAt(part)
++			orb.center = part
++		end
++		function api.keepGui(gui)
++			pcall(function()
++				gui.ResetOnSpawn = false
++			end)
++		end
++		function api.fling(target)
++			if type(fd.fling) == "function" then
++				pcall(fd.fling, target)
++			end
++		end
++		function api.stop()
++			if not alive then
++				return
++			end
++			alive = false
++			alignStop()
++			for _, c in ipairs(conns) do
++				pcall(function()
++					c:Disconnect()
++				end)
++			end
++			restoreHats()
++			pcall(function()
++				hum.Health = 0
++			end)
++			task.delay(0.5, function()
++				pcall(function()
++					rig:Destroy()
++				end)
++			end)
++		end
++
++		conns[#conns + 1] = RunService.Heartbeat:Connect(function()
++			if alive and (not still() or not rig.Parent) then
++				api.stop()
++			end
++		end)
++		local hub = AtsukoHub
++		if type(hub) == "table" and type(hub.OnStop) == "function" then
++			pcall(hub.OnStop, api.stop)
++		end
++		genv.AtsukoAlign = AL
++		do
++			local h = genv.AtsukoHub
++			if type(h) == "table" and type(h.AlignReady) == "function" then
++				pcall(h.AlignReady)
++			end
++		end
++		M.live = api
++		say("Q E R T Y switch modes, Z N M attack, L mutes, B turns damage off", "ok")
++		return api
++	end
++
++	return M
++end)()
+ local FDless = reanimation.start({
+ revokeownerships=true,
+ simulationradius={
+@@ -102,7 +781,7 @@
+ addaccessories={}
+ }
+ })
+-script=game:GetObjects("rbxassetid://106767142974276")[1].FakeMouseMainConversion
++script=reanimation.assets(106767142974276)
+ 
+ local Player = game.Players.LocalPlayer
+ 
+@@ -782,6 +1461,7 @@
+ local sorb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.random())
+ CreateWelde(ModClone,sorb,ModClone,0,0,0,math.rad(0),math.rad(0),math.rad(0),0,0,0,math.rad(0),math.rad(0),math.rad(0))
+ local sordweld = CreateWelde(sorb,root,sorb,0,1,0,math.rad(0),math.rad(0),math.rad(0),0,0,0,math.rad(0),math.rad(0),math.rad(0))
++FDless.orbAt(sorb)
+ ------
+ 
+ 

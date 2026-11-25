@@ -1,0 +1,7 @@
+{
+  "converter": {
+    "name": "images.weserv.nl",
+    "url": "https://images.weserv.nl/?url={url}&output=png",
+    "note": "Sends the picture link to images.weserv.nl, a free service that turns it into a PNG. It keeps logs for about a week and may keep the picture for up to a month. Only used when Roblox can't show the picture itself."
+  }
+}

@@ -1,0 +1,1165 @@
+{
+ "FDless": [
+  [
+   4,
+   4,
+   "7.11 B: guard notice call removed, the return stays"
+  ],
+  [
+   360,
+   361,
+   "7.11 B: hubNotify helper and the SERVERBREAKJOINTS notice"
+  ],
+  [
+   417,
+   417,
+   "1.5.0: antivoid flag from the newer FDless inside the Main Scripts"
+  ],
+  [
+   503,
+   503,
+   "1.6.1: a switched script starts where the fake body was, not at the real body"
+  ],
+  [
+   512,
+   512,
+   "1.5.0: camera override holder from the newer FDless"
+  ],
+  [
+   693,
+   695,
+   "alignment: the hub alignment list, then the running script's own list, go in front of the table and entries they cover are switched off"
+  ],
+  [
+   781,
+   781,
+   "1.6.1: rig hats are known, a hat you added as a weapon never becomes a body part and is let go if it was one"
+  ],
+  [
+   782,
+   782,
+   "1.6.1: rig hats are known, a hat you added as a weapon never becomes a body part and is let go if it was one"
+  ],
+  [
+   790,
+   790,
+   "1.6.1: rig hats are known, a hat you added as a weapon never becomes a body part and is let go if it was one"
+  ],
+  [
+   1221,
+   1223,
+   "1.6.1: rig hats are known, a hat you added as a weapon never becomes a body part and is let go if it was one"
+  ],
+  [
+   1223,
+   1223,
+   "7.9: releaseMode, forceMode and isForced inserted after addmode"
+  ],
+  [
+   1267,
+   1267,
+   "7.9: key switch ignored while a mode is forced"
+  ],
+  [
+   1323,
+   1324,
+   "1.5.0: input blocker and the gameProcessed flag on TouchStarted, from the newer FDless"
+  ],
+  [
+   1329,
+   1329,
+   "1.5.0: a blocked touch is ignored, from the newer FDless"
+  ],
+  [
+   1340,
+   1340,
+   "1.5.0: a touch on a game button does not turn the camera, from the newer FDless"
+  ],
+  [
+   1432,
+   1432,
+   "1.5.0: a blocked input does not move the camera, from the newer FDless"
+  ],
+  [
+   1547,
+   1547,
+   "1.6.1: a switched script starts where the fake body was, not at the real body"
+  ],
+  [
+   1599,
+   1602,
+   "1.5.0: with antivoid off the body falls, from the newer FDless"
+  ],
+  [
+   1864,
+   1864,
+   "1.5.0: the camera override runs after the camera moves, from the newer FDless"
+  ],
+  [
+   2094,
+   2095,
+   "1.5.0: setShiftlock and getShiftlock, from the newer FDless"
+  ],
+  [
+   2099,
+   2099,
+   "1.6.1: rig hats are known, a hat you added as a weapon never becomes a body part and is let go if it was one"
+  ],
+  [
+   2107,
+   2107,
+   "7.9: forceMode, releaseMode and isForced added to the returned table"
+  ],
+  [
+   2122,
+   2122,
+   "1.5.0: setShiftlock, getShiftlock and setInputBlocker added to the returned table"
+  ],
+  [
+   2134,
+   2134,
+   "1.5.0: setAntivoid, getAntivoid, setCamZoom, getCamZoom and setCamOverride added to the returned table"
+  ]
+ ],
+ "Gelatek": [
+  [
+   28,
+   35,
+   "7.11 B and 7.5: hub notice for the guard, cleanup registry, Conn and Track helpers"
+  ],
+  [
+   40,
+   41,
+   "7.5: the align objects are registered for stop"
+  ],
+  [
+   85,
+   86,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   92,
+   93,
+   "7.5: the R6 clone is registered"
+  ],
+  [
+   104,
+   105,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   125,
+   126,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   148,
+   149,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   155,
+   156,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   185,
+   186,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   192,
+   193,
+   "7.5: the R6 clone is registered"
+  ],
+  [
+   203,
+   204,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   224,
+   225,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   248,
+   249,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   257,
+   258,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   275,
+   279,
+   "7.11 B: the Pal Hair notice goes through the hub"
+  ],
+  [
+   293,
+   294,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   301,
+   302,
+   "7.5: the R6 clone is registered"
+  ],
+  [
+   312,
+   313,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   332,
+   333,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   359,
+   360,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   368,
+   369,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   378,
+   379,
+   "7.5: the bullet movers are registered"
+  ],
+  [
+   379,
+   380,
+   "7.5: the bullet movers are registered"
+  ],
+  [
+   387,
+   388,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   391,
+   392,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   396,
+   397,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   405,
+   406,
+   "7.5: the bullet outline is registered"
+  ],
+  [
+   433,
+   434,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   439,
+   440,
+   "7.5: the R15 rig is registered"
+  ],
+  [
+   451,
+   452,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   470,
+   471,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   508,
+   509,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   515,
+   516,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   536,
+   537,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   542,
+   543,
+   "7.5: the R15 rig is registered"
+  ],
+  [
+   554,
+   555,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   573,
+   574,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   611,
+   612,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   621,
+   622,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   643,
+   644,
+   "7.5: the animator stand-in is registered"
+  ],
+  [
+   650,
+   651,
+   "7.5: the R15 rig is registered"
+  ],
+  [
+   660,
+   661,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   680,
+   681,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   727,
+   728,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   735,
+   736,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   752,
+   753,
+   "7.5: the bullet movers are registered"
+  ],
+  [
+   753,
+   754,
+   "7.5: the bullet movers are registered"
+  ],
+  [
+   763,
+   764,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   767,
+   768,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   772,
+   773,
+   "7.5: connections are registered for stop"
+  ],
+  [
+   781,
+   782,
+   "7.5: the bullet outline is registered"
+  ],
+  [
+   791,
+   795,
+   "7.11 B: the advert notice is removed"
+  ]
+ ],
+ "Uhhhhhh": [
+  [
+   63,
+   70,
+   "7.11 B: Util.Notify goes through the hub"
+  ],
+  [
+   342,
+   344,
+   "7.5: headless mode hides the fork's window"
+  ],
+  [
+   706,
+   708,
+   "7.5: headless mode plays no music"
+  ],
+  [
+   750,
+   753,
+   "7.5: headless mode skips the intro"
+  ],
+  [
+   7258,
+   7261,
+   "7.5: headless API next to the Reanimate button handler"
+  ],
+  [
+   7769,
+   7770,
+   "9.2: dance launcher functions for the Emotes page"
+  ],
+  [
+   9932,
+   9933,
+   "security: the remote code channel through pusher is disabled"
+  ]
+ ],
+ "NeptunianV": [
+  [
+   9,
+   9,
+   "7.11 A and C: the header sentence about the Align button and the skill buttons"
+  ],
+  [
+   51,
+   51,
+   "7.11 A: the TouchButtons option"
+  ],
+  [
+   55,
+   55,
+   "7.11 B: the hubNotify helper"
+  ],
+  [
+   61,
+   61,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   418,
+   418,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2225,
+   2227,
+   "7.11 B: notify goes through the hub, name and signature kept"
+  ],
+  [
+   2302,
+   2303,
+   "1.5.0: hubSword, a sword picked for Neptunian V in the hub's Hats & alignment uses the first sword's alignment"
+  ],
+  [
+   2318,
+   2318,
+   "1.5.0: a picked sword counts as a sword"
+  ],
+  [
+   4910,
+   4910,
+   "owner request: Tory's on-screen label restored"
+  ],
+  [
+   5604,
+   5614,
+   "7.11 C: the panel header and its gui parent helper"
+  ],
+  [
+   5617,
+   5631,
+   "7.11 C: the panel look (colours, fonts, builders)"
+  ],
+  [
+   5680,
+   6101,
+   "7.11 C: the Align panel is replaced by the hub adapter"
+  ],
+  [
+   6108,
+   6179,
+   "7.11 A: the on-screen skill buttons"
+  ],
+  [
+   6190,
+   6191,
+   "7.11 A and C: cleanup no longer destroys the two script-drawn GUIs"
+  ]
+ ],
+ "DubstepGun": [
+  [
+   10,
+   10,
+   "7.11 B: the hubNotify helper"
+  ],
+  [
+   14,
+   14,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   371,
+   371,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2309,
+   2309,
+   "7.11 B: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3280,
+   3741,
+   "7.11 C: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3749,
+   3749,
+   "7.11 A: the TouchButtons option"
+  ],
+  [
+   3761,
+   3769,
+   "7.11 B: the credit banner is deleted"
+  ],
+  [
+   3974,
+   3975,
+   "1.5.0: hubJob, the gun hats picked for Dubstep Gun in the hub's Hats & alignment"
+  ],
+  [
+   4012,
+   4012,
+   "1.5.0: one more extra gun: any hat picked in the hub"
+  ],
+  [
+   4013,
+   4013,
+   "1.5.0: a picked hat counts as an extra gun"
+  ],
+  [
+   4056,
+   4056,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4069,
+   4069,
+   "1.5.0: a picked hat with an alignment sits where the alignment says"
+  ],
+  [
+   4081,
+   4082,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4138,
+   4139,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4459,
+   4569,
+   "7.11 A: touch pad, crosshair, updatePad and its C.tick call"
+  ]
+ ],
+ "TheHotline": [
+  [
+   10,
+   10,
+   "7.11 B: the hubNotify helper"
+  ],
+  [
+   14,
+   14,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   371,
+   371,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2291,
+   2291,
+   "7.11 B: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3262,
+   3713,
+   "7.11 C: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3735,
+   3735,
+   "7.11 A: the TouchButtons option"
+  ],
+  [
+   3818,
+   3819,
+   "1.5.0: hubJob, the hats picked for The Hotline in the hub's Hats & alignment"
+  ],
+  [
+   3860,
+   3860,
+   "1.5.0: a gun hat picked in the hub is a gun"
+  ],
+  [
+   3882,
+   3882,
+   "1.5.0: a bullet hat picked in the hub is the bullet"
+  ],
+  [
+   3932,
+   3932,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3934,
+   3934,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3942,
+   3942,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3964,
+   3965,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3971,
+   3971,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4106,
+   4106,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4488,
+   4570,
+   "7.11 A: touch pad, updatePad and its C.tick call"
+  ]
+ ],
+ "NeptunianVGun": [
+  [
+   11,
+   11,
+   "7.11 B: the hubNotify helper"
+  ],
+  [
+   15,
+   15,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   372,
+   372,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2310,
+   2310,
+   "7.11 B: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3281,
+   3760,
+   "7.11 C: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3785,
+   3785,
+   "7.11 A: the TouchButtons option"
+  ],
+  [
+   3792,
+   3801,
+   "7.11 B: the credit banner is deleted"
+  ],
+  [
+   3927,
+   3927,
+   "1.5.0: hubJob and the job of every hat, for the hats picked for Neptunian V Gun in the hub's Hats & alignment"
+  ],
+  [
+   3973,
+   3973,
+   "1.5.0: a hat picked in the hub for a job ranks first"
+  ],
+  [
+   4011,
+   4011,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4082,
+   4082,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4156,
+   4156,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4160,
+   4161,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4927,
+   4995,
+   "7.11 A: touch pad, crosshair, updatePad and its call from C.tick"
+  ]
+ ],
+ "TheSniper": [
+  [
+   10,
+   10,
+   "7.11 B: the hubNotify helper"
+  ],
+  [
+   14,
+   14,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   371,
+   371,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2309,
+   2309,
+   "7.11 B: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3280,
+   3737,
+   "7.11 C: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3755,
+   3755,
+   "7.11 A: the TouchButtons option"
+  ],
+  [
+   3765,
+   3765,
+   "7.11 B: note goes through the hub, name and signature kept"
+  ],
+  [
+   3853,
+   3854,
+   "1.5.0: hubJob, the hats picked for The Sniper in the hub's Hats & alignment"
+  ],
+  [
+   3895,
+   3895,
+   "1.5.0: a bullet hat picked in the hub is the bullet"
+  ],
+  [
+   3898,
+   3898,
+   "1.5.0: a gun hat picked in the hub ranks first"
+  ],
+  [
+   3984,
+   3984,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3986,
+   3986,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4001,
+   4001,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4024,
+   4025,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4154,
+   4154,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4666,
+   4765,
+   "7.11 A: touch pad, crosshair, updatePad and its call from C.tick"
+  ]
+ ],
+ "LastStar": [
+  [
+   176,
+   176,
+   "7.11 B: FDless guard notice call removed, the return stays"
+  ],
+  [
+   532,
+   532,
+   "7.11 B: the hubNotify helper, inside the FDless block so the main chunk gets no new local"
+  ],
+  [
+   533,
+   533,
+   "7.11 B: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2442,
+   2442,
+   "add command: an empty sword wing also takes a hat you added as a sword or as any weapon"
+  ],
+  [
+   3181,
+   3181,
+   "7.11 A2: the leaked-by chat line"
+  ]
+ ],
+ "Addict": [
+  [
+   14,
+   14,
+   "1.5.0: the hubNotify helper"
+  ],
+  [
+   18,
+   18,
+   "1.5.0: FDless guard notice call removed, the return stays"
+  ],
+  [
+   375,
+   375,
+   "1.5.0: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2313,
+   2313,
+   "1.5.0: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3284,
+   3759,
+   "1.5.0: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3783,
+   3783,
+   "1.5.0: the TouchButtons option"
+  ],
+  [
+   3938,
+   3939,
+   "1.5.0: hubJob, the hats picked for Addict in the hub's Hats & alignment"
+  ],
+  [
+   3945,
+   3945,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4006,
+   4006,
+   "1.5.0: a gun hat picked in the hub ranks first"
+  ],
+  [
+   4063,
+   4063,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4088,
+   4088,
+   "1.5.0: a bullet hat picked in the hub works as the golem rock"
+  ],
+  [
+   4138,
+   4138,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4142,
+   4143,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4722,
+   4775,
+   "1.5.0: touch pad, crosshair and updatePad"
+  ],
+  [
+   4798,
+   4800,
+   "1.5.0: the updatePad call from C.tick"
+  ]
+ ],
+ "CommanderV2": [
+  [
+   11,
+   11,
+   "1.5.0: the hubNotify helper"
+  ],
+  [
+   15,
+   15,
+   "1.5.0: FDless guard notice call removed, the return stays"
+  ],
+  [
+   372,
+   372,
+   "1.5.0: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2310,
+   2310,
+   "1.5.0: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   3281,
+   3756,
+   "1.5.0: the LCGunAlign panel is replaced by the hub adapter"
+  ],
+  [
+   3780,
+   3780,
+   "1.5.0: the TouchButtons option"
+  ],
+  [
+   3787,
+   3795,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   3788,
+   3796,
+   "1.5.0: the credit banner at the start is deleted"
+  ],
+  [
+   3914,
+   3915,
+   "1.5.0: hubJob, the hats picked for Commander V2 in the hub's Hats & alignment"
+  ],
+  [
+   3972,
+   3972,
+   "1.5.0: a gun or bullet hat picked in the hub ranks first"
+  ],
+  [
+   4010,
+   4010,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4071,
+   4071,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4136,
+   4136,
+   "1.5.0: an LC Gun half is held the way Uhhhhhh holds it and the other half is joined to it"
+  ],
+  [
+   4140,
+   4141,
+   "1.5.0: C.alignHat tells the hub which hat is on each alignment tab, so each hat keeps its own spot"
+  ],
+  [
+   4549,
+   4603,
+   "1.5.0: touch pad, crosshair and updatePad"
+  ],
+  [
+   4605,
+   4608,
+   "1.5.0: the updatePad call from C.tick"
+  ],
+  [
+   5661,
+   5668,
+   "1.5.0: the loaded banner goes through the hub"
+  ]
+ ],
+ "InternalWar": [
+  [
+   57,
+   57,
+   "1.5.0: the hubNotify helper"
+  ],
+  [
+   58,
+   60,
+   "1.5.0: the Loading pop-up goes through the hub"
+  ],
+  [
+   65,
+   65,
+   "1.5.0: FDless guard notice call removed, the return stays"
+  ],
+  [
+   445,
+   445,
+   "1.5.0: FDLESS SERVERBREAKJOINTS notice goes through the hub"
+  ],
+  [
+   2326,
+   2326,
+   "1.5.0: the FDless did not start pop-up goes through the hub"
+  ],
+  [
+   2414,
+   2414,
+   "1.5.0: C.notify goes through the hub, name and signature kept"
+  ],
+  [
+   2985,
+   2986,
+   "1.5.0: the TouchButtons and SkillLabels options"
+  ],
+  [
+   3501,
+   3502,
+   "1.5.0: hubJob, the hats picked for InternalWar in the hub's Hats & alignment"
+  ],
+  [
+   3609,
+   3623,
+   "1.5.0: scanHats looks at the hats picked in the hub first"
+  ],
+  [
+   4825,
+   4893,
+   "1.5.0: the skill buttons, touch pad, crosshair and updatePad"
+  ],
+  [
+   4983,
+   5078,
+   "1.5.0: the Titan hat align panel is replaced by the hub adapter"
+  ],
+  [
+   5336,
+   5336,
+   "1.5.0: the padTick counter"
+  ],
+  [
+   5371,
+   5374,
+   "1.5.0: the updatePad call"
+  ],
+  [
+   5498,
+   5499,
+   "1.5.0: the first updatePad call and the start note"
+  ],
+  [
+   5524,
+   5526,
+   "1.5.0: the failed to load pop-up goes through the hub"
+  ]
+ ],
+ "MasterChief": [
+  [
+   49,
+   774,
+   "1.5.0: the two pop-ups become one hub toast (hubNotify), and the Emper reanimate (Reanimate and its call) is replaced by MC, the hub adapter that runs Master Chief on the reanimation you picked with a doll in place of workspace.non"
+  ],
+  [
+   784,
+   793,
+   "1.5.0: the 30 fps heartbeat is kept by MC so it stops with the script"
+  ],
+  [
+   808,
+   809,
+   "1.5.0: the mouse and the character come from MC (the doll)"
+  ],
+  [
+   849,
+   850,
+   "1.5.0: effects stay physical (MC.free) so the grenade still flies"
+  ],
+  [
+   862,
+   880,
+   "1.5.0: the ArtificialHB heartbeat is kept by MC so it stops with the script"
+  ],
+  [
+   1192,
+   1192,
+   "1.5.0: MOUSE comes from MC"
+  ],
+  [
+   1199,
+   1204,
+   "1.5.0: the Bullet part goes in the doll, and MC.arm puts the rifle, shotgun and bullet hats on"
+  ],
+  [
+   1220,
+   1229,
+   "1.5.0: the shot loops use the doll and end when the script stops"
+  ],
+  [
+   1313,
+   1313,
+   "1.5.0: rootpart.Anchored becomes MC.hold, so you stand still while shooting"
+  ],
+  [
+   1350,
+   1350,
+   "1.5.0: rootpart.Anchored becomes MC.hold"
+  ],
+  [
+   1365,
+   1365,
+   "1.5.0: rootpart.Anchored becomes MC.hold"
+  ],
+  [
+   1423,
+   1423,
+   "1.5.0: rootpart.Anchored becomes MC.hold"
+  ],
+  [
+   1494,
+   1494,
+   "1.5.0: the X dash moves the reanimation (MC.push) instead of setting the root's Velocity"
+  ],
+  [
+   1548,
+   1557,
+   "1.5.0: the main loop stops with the script and reads the speed, the ground and the move direction from MC"
+  ]
+ ],
+ "RealityOrbGlitcher": [
+  [
+   39,
+   39,
+   "the hub's reanimation instead of the FDless download: a body the script animates, kept in step with Script Reanimate or FDless, and the orb made of the hats you wear"
+  ],
+  [
+   105,
+   105,
+   "the effects model loads through the bridge, with plain effects when Roblox doesn't send it"
+  ],
+  [
+   785,
+   785,
+   "tells the bridge which part is the orb, so your hats gather around it"
+  ]
+ ]
+}

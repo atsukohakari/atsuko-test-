@@ -1,0 +1,451 @@
+--- a/InternalWar.lua
++++ b/InternalWar.lua
+@@ -54,15 +54,20 @@
+    - -stop (or /e -stop) stops everything, the Stop button in the size panel does too
+ ]]
+ 
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
+ local IW_OK, IW_ERR = pcall(function()
+-pcall(function()
+-	game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Internal War", Text = "Loading...", Duration = 3})
+-end)
++hubNotify("Internal War", "Loading...", "info", 3)
+ local FD = (function()
+ --!optimize 2
+ --no need to load the whole thing cuz u can use the last one
+ if _G.GenesisFDless then 
+-	game:FindFirstChildOfClass("StarterGui"):SetCore("SendNotification",{Title="FDLESS",Text="Using FDless loaded by previously executed scripts to prevent reanimate conflicts. Rejoin to update reanimate settings.",Duration=10})
+ 	return _G.GenesisFDless 
+ end
+ 
+@@ -442,7 +447,7 @@
+ local disguiscripts=disguiscripts~=false
+ local breakjointsmethod=(type(breakjointsmethod)=="number" and breakjointsmethod) or 1
+ if (breakjointsmethod==4) and not replicatesignal then
+-	SetCore(sg,"SendNotification",{Title="FDLESS SERVERBREAKJOINTS",Text="Your executor does not support ReplicateSignal! Please see #supported-clients channel."})
++	hubNotify("FDless", "This executor has no replicatesignal, break joints method 4 is off", "warn", 6)
+ 	breakjointsmethod=1
+ end
+ local simrad=simrad~=false
+@@ -2323,7 +2328,7 @@
+ 	if not fd then
+ 		local why = fdErr or "it returned nothing. Rejoin and run it again, another FDless script can be in the way"
+ 		warn("[Internal War] FDless did not start: " .. why)
+-		pcall(StarterGui.SetCore, StarterGui, "SendNotification", {Title = "Internal War: FDless did not start", Text = string.sub(why, 1, 200), Duration = 25})
++		hubNotify("Internal War: FDless did not start", string.sub(why, 1, 200), "error", 25)
+ 		pcall(function()
+ 			if setclipboard then
+ 				setclipboard("Internal War: FDless did not start: " .. why)
+@@ -2411,7 +2416,7 @@
+ 	end
+ 
+ 	function C.notify(title, text, dur)
+-		pcall(StarterGui.SetCore, StarterGui, "SendNotification", {Title = title, Text = text, Duration = dur or 5})
++		hubNotify(title, text, "info", dur)
+ 	end
+ 
+ 	local waiters = {}
+@@ -2982,8 +2987,6 @@
+ 	Music = true, -- the Internal War song
+ 	MusicVolume = 1.5,
+ 	WalkSpeed = 16,
+-	TouchButtons = "auto", -- skill buttons on screen: "auto" = phones only, true = always, false = never
+-	SkillLabels = true, -- the Z E R T Y list on the left side (PC)
+ }
+ 
+ if not game:IsLoaded() then
+@@ -3499,6 +3502,14 @@
+ 	end
+ 	return nil
+ end
++local function hubJob(slot, e)
++	local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
++	if type(A) ~= "table" or type(A.match) ~= "function" or type(e) ~= "table" then
++		return nil
++	end
++	local ok, row = pcall(A.match, "InternalWar", slot, {mesh = idOf(rawget(e, "m")), tex = idOf(rawget(e, "t")), name = accName(e)})
++	return ok and type(row) == "table" and row.src == "user" and row or nil
++end
+ -- what the catalog assets turned out to be (filled in by the loader below)
+ local UGCMETA = {}
+ local UGCIDS = {torso = "118799338103138", rarm = "132416515427938", larm = "101379144205559", rleg = "80628080423002", lleg = "121360936156823"}
+@@ -3606,21 +3617,23 @@
+ 		return
+ 	end
+ 	-- pass 1: UGC limb piece by its mesh (loaded from the catalog id, or the one it had last time), pass 2: by its accessory name, pass 3: the Void hats by mesh id
+-	for pass = 1, 3 do
++	for pass = 0, 3 do
+ 		for _, h in ipairs(need) do
+-			if not h.e and (pass == 3 or h.alt) then
++			if not h.e and (pass == 0 or pass == 3 or h.alt) then
+ 				for e in pairs(fd.cframes) do
+ 					if type(e) == "table" and rawget(e, "m") ~= nil and rawget(e, "p") and not claimed[e] then
+ 						local rawm = rawget(e, "m")
+ 						local hit
+-						if pass == 1 then
++						if pass == 0 then
++							hit = hubJob(h.key, e) ~= nil
++						elseif pass == 1 then
+ 							hit = LEARN[h.key] ~= nil and hasId(rawm, LEARN[h.key])
+ 						elseif pass == 2 then
+ 							hit = nameMatch(h, e)
+ 						else
+ 							hit = hasId(rawm, h.mesh)
+ 						end
+-						if hit and claim(h, e, pass == 3 and 1 or 2) then
++						if hit and claim(h, e, (pass == 3 or (pass == 0 and not h.tab2)) and 1 or 2) then
+ 							claimed[e] = true
+ 							break
+ 						end
+@@ -4822,75 +4835,6 @@
+ 	return b
+ end
+ 
+--- skill list on the left (PC) like the og
+-local skillLabels = {}
+-for i, s in ipairs(SKILLS) do
+-	local b = inst("TextButton", gui, {
+-		Name = "Skill" .. s[1], Position = UDim2.new(0.05, 0, 0.9 - 0.045 * i, 0), Size = UDim2.new(0.26, 0, 0.04, 0), BackgroundTransparency = 1, Text = "[" .. s[2] .. "]",
+-		TextColor3 = WHITE, Font = Enum.Font.Fantasy, TextSize = 22, TextXAlignment = Enum.TextXAlignment.Left, TextStrokeTransparency = 0.45, AutoButtonColor = false, Visible = false,
+-	})
+-	b.MouseButton1Click:Connect(function()
+-		task.spawn(C.keyDown, s[1])
+-	end)
+-	skillLabels[#skillLabels + 1] = b
+-end
+-
+--- buttons for phones
+-local PAD = {{"z", "Z", "Punch"}, {"e", "E", "Throw"}, {"r", "R", "Uppercut"}, {"t", "T", "Roar"}, {"y", "Y", "Take On"}, {"size", "S", "Size"}}
+-local padHeld = {}
+-local pad = inst("Frame", gui, {Name = "KeyButtons", BackgroundTransparency = 1, Size = UDim2.fromOffset(1, 1), Visible = false})
+-for n, def in ipairs(PAD) do
+-	local col, row = (n - 1) % 4, math.floor((n - 1) / 4)
+-	local b = inst("TextButton", pad, {
+-		Name = def[2], Size = UDim2.fromOffset(54, 54), Position = UDim2.fromOffset(-62 * (col + 1), -62 * row),
+-		BackgroundColor3 = Color3.fromRGB(10, 10, 14), BackgroundTransparency = 0.25, AutoButtonColor = true, BorderSizePixel = 0,
+-		RichText = true, TextColor3 = WHITE, Font = Enum.Font.GothamBold,
+-		TextSize = 12, TextWrapped = true, Text = '<font size="16">' .. def[2] .. '</font>\n<font size="10">' .. def[3] .. "</font>",
+-	})
+-	inst("UICorner", b, {CornerRadius = UDim.new(1, 0)})
+-	inst("UIStroke", b, {ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Thickness = 1.5, Color = C3(0.9, 0.9, 0.95), Transparency = 0.3})
+-	b.MouseButton1Down:Connect(function()
+-		padHeld[def[1]] = true
+-		if def[1] == "size" then
+-			C.toggleSize()
+-		else
+-			task.spawn(C.keyDown, def[1])
+-		end
+-	end)
+-	b.MouseButton1Up:Connect(function()
+-		padHeld[def[1]] = nil
+-	end)
+-	b.MouseLeave:Connect(function()
+-		padHeld[def[1]] = nil
+-	end)
+-end
+-local cross = inst("TextLabel", gui, {
+-	Name = "Crosshair", AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(24, 24),
+-	BackgroundTransparency = 1, Text = "+", TextSize = 24, Font = Enum.Font.GothamBold, TextColor3 = WHITE, TextStrokeTransparency = 0.3, Visible = false,
+-})
+-local function updatePad()
+-	local tb = IW.TouchButtons
+-	local show = tb == true or (tb == "auto" and UIS.TouchEnabled)
+-	pad.Visible = show
+-	cross.Visible = show and onPhone
+-	for _, l in ipairs(skillLabels) do
+-		l.Visible = IW.SkillLabels ~= false and not show
+-	end
+-	if not show then
+-		return
+-	end
+-	local pg = lp:FindFirstChildOfClass("PlayerGui")
+-	local tg = pg and pg:FindFirstChild("TouchGui")
+-	local tf = tg and tg:FindFirstChild("TouchControlFrame")
+-	local jb = tf and tf:FindFirstChild("JumpButton")
+-	if jb and tg.Enabled then
+-		local p = jb.AbsolutePosition - gui.AbsolutePosition
+-		pad.Position = UDim2.fromOffset(p.X, p.Y)
+-	else
+-		pad.Position = UDim2.new(1, -90, 1, -150)
+-	end
+-end
+-
+ -- Titan scale panel (the Uhhhhhh "Character Scale" slider: 0.5 to 5 in steps of 0.5, you can type 0.001 to 20)
+ local sizePanel = inst("Frame", gui, {
+ 	Name = "TitanScale", Size = UDim2.fromOffset(280, 138), Position = UDim2.new(0.5, -140, 0.2, 0), BackgroundColor3 = COL.bg, BackgroundTransparency = 0.05,
+@@ -4980,101 +4924,148 @@
+ 	end
+ end
+ 
+--- Titan hat align panel
+-local alignPanel = inst("Frame", gui, {
+-	Name = "TitanAlign", Size = UDim2.fromOffset(290, 346), Position = UDim2.new(0, 14, 0.5, -173), BackgroundColor3 = COL.bg, BackgroundTransparency = 0.05,
+-	BorderSizePixel = 0, Visible = false, Active = true,
+-})
+-round(alignPanel, 8)
+-inst("UIStroke", alignPanel, {Color = COL.line, Thickness = 1})
+-label(alignPanel, {Position = UDim2.fromOffset(12, 8), Size = UDim2.new(1, -60, 0, 24), Text = "Titan hats", TextSize = 18, Font = Enum.Font.GothamBold})
+-local alignClose = button(alignPanel, {Position = UDim2.new(1, -36, 0, 8), Size = UDim2.fromOffset(26, 24), Text = "x"})
+-local alignTab, alignSet = 1, 1
+-local tabButtons, alignBoxes = {{}, {}}, {}
+-for i = 1, 4 do
+-	tabButtons[1][i] = button(alignPanel, {Position = UDim2.fromOffset(12 + (i - 1) * 68, 38), Size = UDim2.fromOffset(64, 28), Text = TABNAME[i]})
+-end
+-for i = 1, 5 do
+-	tabButtons[2][i] = button(alignPanel, {Position = UDim2.fromOffset(12 + (i - 1) * 55, 38), Size = UDim2.fromOffset(52, 28), Text = TABNAME2[i], Visible = false})
+-end
+-local AXES = {"X", "Y", "Z", "RX", "RY", "RZ"}
+-for k = 1, 6 do
+-	label(alignPanel, {Position = UDim2.fromOffset(16, 76 + (k - 1) * 32), Size = UDim2.fromOffset(40, 28), Text = AXES[k], TextSize = 14, TextColor3 = COL.muted})
+-	local tb = inst("TextBox", alignPanel, {
+-		Position = UDim2.fromOffset(60, 76 + (k - 1) * 32), Size = UDim2.fromOffset(110, 28), BackgroundColor3 = Color3.fromRGB(32, 32, 40), TextColor3 = COL.text, Font = Enum.Font.Code,
+-		TextSize = 15, ClearTextOnFocus = false, Text = "0", BorderSizePixel = 0,
+-	})
+-	round(tb, 6)
+-	alignBoxes[k] = tb
++local ALTAB = {"Head", "Torso", "Arms", "Legs", "UGC Torso", "UGC R Arm", "UGC L Arm", "UGC R Leg", "UGC L Leg"}
++local AL = {version = 1, title = "InternalWar", tabs = ALTAB, file = ALIGNFILE, dirty = false, open = false, key = string.upper(IW.AlignKey or "p"), hint = "Head to Legs line up the Void hats, the UGC tabs the UGC limb set. Tap Alignment on the Main Scripts bar to open it again."}
++local alState = {cur = 1, watchers = {}, genv = (typeof(getgenv) == "function" and getgenv()) or _G}
++local function alFire(what)
++	for _, f in ipairs(table.clone(alState.watchers)) do
++		pcall(f, what)
++	end
+ end
+-local alignInfo = label(alignPanel, {Position = UDim2.fromOffset(12, 270), Size = UDim2.new(1, -24, 0, 70), Text = "", TextSize = 11, TextColor3 = COL.muted, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+-local alignReset = button(alignPanel, {Position = UDim2.fromOffset(182, 76), Size = UDim2.fromOffset(92, 28), Text = "Reset tab"})
+-local alignSetBtn = button(alignPanel, {Position = UDim2.fromOffset(182, 108), Size = UDim2.fromOffset(92, 28), Text = "Set: Void"})
+-local function curAlign()
+-	return alignSet == 1 and ALIGN[alignTab] or ALIGN2[alignTab]
+-end
+-local function refreshAlign()
+-	for s = 1, 2 do
+-		for i, b in ipairs(tabButtons[s]) do
+-			local on = s == alignSet and i == alignTab
+-			b.Visible = s == alignSet
+-			b.BackgroundColor3 = on and Color3.fromRGB(235, 235, 245) or Color3.fromRGB(32, 32, 40)
+-			b.TextColor3 = on and Color3.fromRGB(12, 12, 15) or COL.text
+-		end
++local function alHub()
++	local h = alState.genv.AtsukoHub
++	return type(h) == "table" and h or nil
++end
++local function alSlot(s)
++	if type(s) ~= "number" then
++		return nil
+ 	end
+-	alignSetBtn.Text = alignSet == 1 and "Set: Void" or "Set: UGC"
+-	local A = curAlign()
+-	for k = 1, 6 do
+-		alignBoxes[k].Text = string.format("%g", A[k])
++	if s >= 1 and s <= 4 then
++		return ALIGN[s]
+ 	end
+-	local n, u = hatCount()
+-	if alignSet == 1 then
+-		alignInfo.Text = "Void hats found: " .. (n - u) .. " of 6. X Y Z move the hat on the Titan part (studs, mirrored on the left), RX RY RZ turn it (degrees). Saved to " .. ALIGNFILE
++	return ALIGN2[s - 4]
++end
++function AL.alive()
++	return C.alive
++end
++function AL.focus(s)
++	if alSlot(s) then
++		alState.cur = s
++	end
++end
++function AL.get(s)
++	local v = alSlot(s)
++	return v and table.clone(v) or nil
++end
++function AL.set(s, k, n)
++	local v = alSlot(s)
++	n = tonumber(n)
++	if not v or not n or n ~= n or math.abs(n) >= 1e4 then
++		return nil
++	end
++	if k > 3 then
++		n = ((n + 180) % 360) - 180
++		n = math.floor(n * 10 + 0.5) / 10
+ 	else
+-		alignInfo.Text = "UGC limb hats (LLeg, RArm, RLeg, LArm, Torso) found: " .. u .. " of 5. Every piece has its own tab. X Y Z move it on its Titan part (studs), RX RY RZ turn it (degrees). Saved to " .. ALIGNFILE
++		n = math.floor(n * 1000 + 0.5) / 1000
++	end
++	v[k] = n
++	AL.dirty = true
++	AL.later()
++	return n
++end
++function AL.put(s, vals)
++	local v = alSlot(s)
++	if not v or type(vals) ~= "table" then
++		return
++	end
++	for k = 1, 6 do
++		v[k] = tonumber(vals[k]) or 0
+ 	end
++	AL.dirty = true
++	AL.later()
+ end
+-for s = 1, 2 do
+-	for i = 1, #tabButtons[s] do
+-		tabButtons[s][i].MouseButton1Click:Connect(function()
+-			alignSet, alignTab = s, i
+-			refreshAlign()
+-		end)
++function AL.reset(s)
++	AL.put(s, {0, 0, 0, 0, 0, 0})
++end
++function AL.save()
++	AL.tok = (AL.tok or 0) + 1
++	local ok = saveAlign()
++	if ok then
++		AL.dirty = false
++		return true
+ 	end
++	return false, "couldn't write " .. ALIGNFILE
+ end
+-alignSetBtn.MouseButton1Click:Connect(function()
+-	alignSet = alignSet == 1 and 2 or 1
+-	alignTab = 1
+-	refreshAlign()
+-end)
+-for k = 1, 6 do
+-	alignBoxes[k].FocusLost:Connect(function()
+-		local n = tonumber(alignBoxes[k].Text)
+-		if n and n == n and math.abs(n) < 1e4 then
+-			curAlign()[k] = n
+-			saveAlign()
++function AL.later()
++	AL.tok = (AL.tok or 0) + 1
++	local my = AL.tok
++	task.delay(1.5, function()
++		if my == AL.tok and AL.dirty and C.alive and AL.save() then
++			alFire("saved")
+ 		end
+-		alignBoxes[k].Text = string.format("%g", curAlign()[k])
+ 	end)
+ end
+-alignReset.MouseButton1Click:Connect(function()
+-	if alignSet == 1 then
+-		ALIGN[alignTab] = {0, 0, 0, 0, 0, 0}
+-	else
+-		ALIGN2[alignTab] = {0, 0, 0, 0, 0, 0}
++function AL.load()
++	loadAlign()
++	AL.dirty = false
++	alFire("load")
++	return true
++end
++function AL.watch(f)
++	local list = alState.watchers
++	list[#list + 1] = f
++	return function()
++		local i = table.find(list, f)
++		if i then
++			table.remove(list, i)
++		end
+ 	end
+-	saveAlign()
+-	refreshAlign()
+-end)
+-alignClose.MouseButton1Click:Connect(function()
+-	alignPanel.Visible = false
+-end)
++end
++function AL.found()
++	local n, u = hatCount()
++	return "Void hats: " .. (n - u) .. " of 6  ·  UGC limbs: " .. u .. " of 5"
++end
++AL.optList = {{"size", "Titan size", "button"}}
++AL.optsSaved = false
++function AL.opts()
++	return {}
++end
++function AL.setOpt(name)
++	if name == "size" and C.toggleSize then
++		C.toggleSize()
++	end
++end
+ function C.toggleAlign()
+-	alignPanel.Visible = not alignPanel.Visible
+-	if alignPanel.Visible then
+-		refreshAlign()
++	local h = alHub()
++	if h and type(h.Align) == "function" then
++		pcall(h.Align)
++	else
++		note("Open Atsuko Hub to line the Titan hats up, the alignment lives there now")
+ 	end
+ end
++alState.genv.AtsukoAlign = AL
++do
++	local h = alHub()
++	if h and type(h.AlignReady) == "function" then
++		pcall(h.AlignReady)
++	end
++end
++C.onStop(function()
++	if AL.dirty then
++		pcall(saveAlign)
++		AL.dirty = false
++	end
++	AL.open = false
++	if alState.genv.AtsukoAlign == AL then
++		alState.genv.AtsukoAlign = nil
++	end
++	alFire("stop")
++	local h = alHub()
++	if h and type(h.AlignReady) == "function" then
++		pcall(h.AlignReady)
++	end
++end)
+ C.connect(UIS.InputBegan, function(io, gp)
+ 	if io.UserInputType == Enum.UserInputType.Keyboard and not gp and not UIS:GetFocusedTextBox() then
+ 		if string.lower(io.KeyCode.Name) == string.lower(IW.AlignKey or "p") and not (UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.RightShift)) then
+@@ -5333,7 +5324,6 @@
+ 	YAW.last = root.Rotation
+ end
+ local last = {}
+-local padTick = 0
+ C.tick = function()
+ 	SINE += CHANGE
+ 	local want = wantedSet()
+@@ -5368,10 +5358,6 @@
+ 		last.g = g
+ 		pcall(fd.setGravity, g)
+ 	end
+-	padTick += 1
+-	if padTick % 6 == 0 then
+-		updatePad()
+-	end
+ end
+ 
+ C.keyDown = function(k)
+@@ -5495,8 +5481,7 @@
+ 	C.music.Volume = IW.MusicVolume or 1.5
+ 	C.music:Play()
+ end
+-updatePad()
+-note(onPhone and "Internal War: Z Punch, E Throw, R Uppercut, T Roar, Y Take On. S = Titan size" or "Internal War: Z Punch, E Throw, R Uppercut, T Roar, Y Take On. -size = Titan scale, P = hat align, -stop = stop")
++note("Internal War: Z Punch, E Throw, R Uppercut, T Roar, Y Take On. -size = Titan scale, -stop = stop. The Titan hats line up in the hub's Alignment window")
+ task.delay(4, function()
+ 	if C.alive then
+ 		local n, u = hatCount()
+@@ -5521,9 +5506,7 @@
+ 			_G.IWFD_Stop(true)
+ 		end
+ 	end)
+-	pcall(function()
+-		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Internal War failed to load", Text = string.sub(msg, 1, 220), Duration = 40})
+-	end)
++	hubNotify("Internal War failed to load", string.sub(msg, 1, 220), "error", 40)
+ 	pcall(function()
+ 		if setclipboard then
+ 			setclipboard("Internal War load error: " .. msg)

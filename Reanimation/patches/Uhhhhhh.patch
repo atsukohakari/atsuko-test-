@@ -1,0 +1,201 @@
+--- a/betabetafork.txt
++++ b/Reanimation/Limb/Uhhhhhh.lua
+@@ -60,12 +60,16 @@
+ 	end
+ 	return c
+ end
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
+ Util.Notify = function(text)
+-	StarterGui:SetCore("SendNotification", {
+-		Title = "Uhhhhhh",
+-		Text = text,
+-		Duration = 5
+-	})
++	hubNotify("Uhhhhhh", text, "info", 5)
+ end
+ 
+ cloneref = cloneref or function(o) return o end
+@@ -340,6 +344,10 @@
+ 	SCREENGUI.Parent = gethiddengui()
+ else
+ 	SCREENGUI.Parent = CoreGui
++end
++local UhhhhhhHeadless = getgenv().UhhhhhhHeadless == true
++if UhhhhhhHeadless then
++	SCREENGUI.Enabled = false
+ end
+ 
+ local UIMainFrame = Util.Instance("Frame", SCREENGUI)
+@@ -704,6 +712,7 @@
+ MusicPlayer.Switching = false
+ MusicPlayer.Last = 1
+ MusicPlayer.PlayMusic = function(i)
++	if UhhhhhhHeadless then return end
+ 	if MusicPlayer.Switching then return end
+ 	MusicPlayer.Switching = true
+ 	local last = MusicPlayer.LastMusic
+@@ -747,7 +756,7 @@
+ end)
+ 
+ SaveData.SkipIntro = not not SaveData.SkipIntro
+-if SaveData.SkipIntro then
++if SaveData.SkipIntro or UhhhhhhHeadless then
+ 	MusicPlayer.PlayMusic()
+ else
+ 	UISound.Music.Volume = 0
+@@ -7257,6 +7266,98 @@
+ 		end
+ 		ReanimateStartButton.Interactable = true
+ 	end)
++	_G.UhhhhhhAPI = {
++		Version = 1,
++		Limb = LimbReanimator,
++		IsLoaded = function()
++			return IsUhhhhhhFullyLoaded
++		end,
++		SetMethod = function()
++			SelectedReanimator = LimbReanimator
++			ReanimatorConfigTitle.Text = "-=+ Limb Reanimator Config +=-"
++			Util.ClearAllChildrenGui(ReanimatorConfigCanvas)
++			LimbReanimator.Config(ReanimatorConfigCanvas)
++			return true
++		end,
++		State = function()
++			if Reanimate.Stopping then
++				return "stopping"
++			end
++			if Reanimate.Starting then
++				return "starting"
++			end
++			if Reanimate.Current and Reanimate.Current.Running == true then
++				return "running"
++			end
++			return "idle"
++		end,
++		IsRunning = function()
++			return Reanimate.Current ~= nil and Reanimate.Current.Running == true
++		end,
++		SetUIVisible = function(visible)
++			UhhhhhhHeadless = visible ~= true
++			SCREENGUI.Enabled = visible == true
++		end,
++		Start = function(limit)
++			if Reanimate.Current or Reanimate.Starting or Reanimate.Stopping then
++				return false, "busy"
++			end
++			limit = tonumber(limit) or 30
++			ReanimateStartButton.Interactable = false
++			SelectedReanimator = LimbReanimator
++			ReanimateStartButtonText.Text = "Starting..."
++			Reanimate.Starting = true
++			Reanimate.Current = LimbReanimator
++			HumanoidLASetHookState(Reanimate.UseLoadAnimationHook)
++			ReanimateText.Text = "Running: " .. LimbReanimator.Name
++			task.spawn(LimbReanimator.Start)
++			local began = os.clock()
++			repeat task.wait() until not Reanimate.Starting or os.clock() - began > limit
++			if Reanimate.Starting then
++				Reanimate.Stopping = true
++				local gave = os.clock()
++				repeat task.wait() until not Reanimate.Stopping or os.clock() - gave > 10
++				Reanimate.Starting = false
++				Reanimate.Stopping = false
++				Reanimate.Current = nil
++				HumanoidLASetHookState(false)
++				ReanimateText.Text = "Running: NONE"
++				ReanimateStartButtonText.Text = "* Reanimate *"
++				ReanimateStartButton.Interactable = true
++				return false, "start timed out"
++			end
++			LimbReanimator.Running = true
++			ReanimateStartButtonText.Text = "* Deanimate *"
++			ReanimateStartButton.Interactable = true
++			return true
++		end,
++		Stop = function(limit)
++			if not Reanimate.Current then
++				return true
++			end
++			if Reanimate.Starting then
++				return false, "still starting"
++			end
++			limit = tonumber(limit) or 10
++			ReanimateStartButton.Interactable = false
++			ReanimateStartButtonText.Text = "Stopping..."
++			Reanimate.Stopping = true
++			local began = os.clock()
++			repeat task.wait() until not Reanimate.Stopping or os.clock() - began > limit
++			if Reanimate.Stopping then
++				ReanimateStartButtonText.Text = "* Deanimate *"
++				ReanimateStartButton.Interactable = true
++				return false, "stop timed out"
++			end
++			Reanimate.Current.Running = nil
++			Reanimate.Current = nil
++			HumanoidLASetHookState(false)
++			ReanimateText.Text = "Running: NONE"
++			ReanimateStartButtonText.Text = "* Reanimate *"
++			ReanimateStartButton.Interactable = true
++			return true
++		end,
++	}
+ 	UI.CreateButton(MainPage, "Show Reanimate Hitboxes", 15).Activated:Connect(function()
+ 		if not Reanimate.Character then return end
+ 		ReanimateShowHitboxes()
+@@ -7767,6 +7868,40 @@
+ local CurrentDance = nil
+ local _CurrentDance = nil
+ local OldReanimCharacter = nil
++do
++	local api = _G.UhhhhhhAPI
++	local function findDance(name)
++		local wanted = string.lower(tostring(name))
++		for _, m in ipairs(DanceableDances) do
++			if string.lower(m.Name) == wanted or (m.InternalName and string.lower(m.InternalName) == wanted) then
++				return m
++			end
++		end
++		return nil
++	end
++	api.ListDances = function()
++		local out = {}
++		for _, m in ipairs(DanceableDances) do
++			table.insert(out, { Name = m.Name, InternalName = m.InternalName, Description = m.Description })
++		end
++		return out
++	end
++	api.PlayDance = function(name)
++		local m = findDance(name)
++		if not m or not api.IsRunning() then
++			return false
++		end
++		CurrentDance = m
++		return true
++	end
++	api.StopDance = function()
++		CurrentDance = nil
++		return true
++	end
++	api.CurrentDance = function()
++		return _CurrentDance and _CurrentDance.Name or nil
++	end
++end
+ 
+ if type(SaveData.MovesetIndex) == "number" then
+ 	MovementStyleIndex = SaveData.MovesetIndex
+@@ -9929,7 +10064,7 @@
+ 			end
+ 		end
+ 	end
+-	if WebSocket and WebSocket.connect then while task.wait(1) do
++	if false and WebSocket and WebSocket.connect then while task.wait(1) do
+ 		local look = WebSocket.connect("wss://ws-us2.pusher.com:443/app/00da9a105aadacead35f?client=lua&protocol=5&version=1.0.0")
+ 		if look then
+ 			local isok = true

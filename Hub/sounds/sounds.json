@@ -1,0 +1,18 @@
+{
+	"login": [
+		{ "file": "login/atsuko.mp3", "name": "Atsuko", "seconds": 1.9 },
+		{ "file": "login/atsuko_swimsuit.mp3", "name": "Atsuko (Swimsuit)", "seconds": 3.6 },
+		{ "file": "login/chihiro.mp3", "name": "Chihiro", "seconds": 4.3 },
+		{ "file": "login/fuyu.mp3", "name": "Fuyu", "seconds": 2.6 },
+		{ "file": "login/hare_camping.mp3", "name": "Hare (Camping)", "seconds": 9.1 },
+		{ "file": "login/haruka_dress.mp3", "name": "Haruka (Dress)", "seconds": 3.4 },
+		{ "file": "login/haruka_dress_2.mp3", "name": "Haruka (Dress) 2", "seconds": 3.4 },
+		{ "file": "login/hiyori.mp3", "name": "Hiyori", "seconds": 7.8 },
+		{ "file": "login/hoshino_swimsuit.mp3", "name": "Hoshino (Swimsuit)", "seconds": 7.1 },
+		{ "file": "login/kokoro.mp3", "name": "Kokoro", "seconds": 6.4 },
+		{ "file": "login/mika_swimsuit.mp3", "name": "Mika (Swimsuit)", "seconds": 8.5 },
+		{ "file": "login/yuuka_pajama.mp3", "name": "Yuuka (Pajama)", "seconds": 1.6 }
+	],
+	"click": "click.mp3",
+	"notify": "notify.mp3"
+}

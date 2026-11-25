@@ -1,0 +1,50 @@
+--- a/Last Star.lua
++++ b/LastStar.lua
+@@ -173,7 +173,6 @@
+ --!optimize 2
+ --no need to load the whole thing cuz u can use the last one
+ if _G.GenesisFDless then 
+-	game:FindFirstChildOfClass("StarterGui"):SetCore("SendNotification",{Title="FDLESS",Text="Using FDless loaded by previously executed scripts to prevent reanimate conflicts. Rejoin to update reanimate settings.",Duration=10})
+ 	return _G.GenesisFDless 
+ end
+ 
+@@ -529,8 +528,16 @@
+ local respawntp=(type(respawntp)=="number" and respawntp) or 3
+ local disguiscripts=disguiscripts~=false
+ local breakjointsmethod=(type(breakjointsmethod)=="number" and breakjointsmethod) or 1
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
+ if (breakjointsmethod==4) and not replicatesignal then
+-	SetCore(sg,"SendNotification",{Title="FDLESS SERVERBREAKJOINTS",Text="Your executor does not support ReplicateSignal! Please see #supported-clients channel."})
++	hubNotify("FDless", "This executor has no replicatesignal, break joints method 4 is off", "warn", 6)
+ 	breakjointsmethod=1
+ end
+ local simrad=simrad~=false
+@@ -2439,6 +2446,13 @@
+ 								for _, id in ipairs(CFG.SWORD_MESHES) do
+ 									if string.find(v.m, id, 1, true) then ok = true break end
+ 								end
++								if not ok then
++									local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
++									if type(A) == "table" and type(A.match) == "function" then
++										local okM, row = pcall(A.match, "Last Star", "sword", {mesh = string.match(tostring(v.m), "(%d+)%s*$"), tex = string.match(tostring(v.t or ""), "(%d+)%s*$")})
++										ok = okM and type(row) == "table" and row.src == "user"
++									end
++								end
+ 								if ok then
+ 									used[#used + 1] = v
+ 									SW[i] = {p = v, j = api.getPartJoint(v)}
+@@ -3178,7 +3192,6 @@
+ 	voice:Play()
+ 	game:GetService("Debris"):AddItem(voice,5)
+ end
+-chatmsg("Last Star convert/LEAKED BY M0NK")
+ 
+ local RPA,RPS,NO = ray(Root.Position,V3(0,-1000,0))
+ if RPA then

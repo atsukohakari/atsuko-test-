@@ -1,0 +1,367 @@
+v1.6.1
+- no more beta, this is v1.6.1
+- atsuko reanimate is called script reanimate now, and the reanimate cards on the hat tab don't have descriptions anymore
+- the limb tab on main scripts is off for now while new ways to do it are tried. tapping it tells you so
+- the verified badge shows above heads too: if someone running the hub has theirs on, you see it after their name over their head, and they see yours. the hub hides roblox's own name for that player on your screen only and draws it again with the badge, the health bar stays. if the game has its own name tag, the badge goes after the name on it
+- the verified badge switch in settings has no description anymore
+- add <id> puts the hat on the hat script you're running, and only that one, so start the script first. it picks the job the script has (its gun, its sword, its book), and the script restarts so it holds the hat. add rightarm <id> and the other body parts still go on the rig
+- the page name is back in the top left corner like the old ui, and you can still drag it to move the ui and double tap it to put it back
+- home has its old look back: welcome back up top, your executor, the time and customize at the top right, your profile with the version, now playing, quick switches, colored quick actions (stop all, respawn, cmd bar, scripts), recent scripts, the game with its picture, this server and friends online
+- the commands page was redesigned: a command line with your prefix in front and a run key that lights up when you typed a command, chips for all, on and every kind of command (movement, world, camera, players, tools and more) with their counts, a colored stripe for each kind, usage in a code font and a glow on what's on
+- new main script: reality orb glitcher, on the hat tab. it runs on script reanimate or fdless like the others, and its orb is made of the hats you wear: every hat that isn't a body part floats around the orb and spins. you can move the orb in the alignment window. q e r t y: modes, z: flower, n and m: fly, l: mute
+- while you dance, a gun you wear goes on your right wrist and a sword on your back, like uhhhhhh. it works on script reanimate and fdless, and they go back when the dance ends
+- switching hat scripts doesn't deanimate you anymore: pick another script while one runs and the reanimate button says switch. the old script stops, the new one takes over the same reanimation and you don't respawn. the script you're on says active in the list. limb scripts and scripts that only run on the other reanimation still need a deanimate first
+- new hat scripts from uhhhhhh by STEVETHEREALONE: ak-47, banisher, linked sword and r6 (uhhhhhh's 2015 roblox). they run uhhhhhh's own code, so the animations, the lines they say, the sounds, the effects, the settings and banisher's theme are the real ones. r6 plays the real 2015 roblox animations
+- they run on script reanimate or fdless, take their gun, sword and bullet from the hats you wear like uhhhhhh does (add gun <id>, add sword <id> or add bullet <id> works while they run) and have their own alignment tabs
+- their settings (sounds, no cooldown, camera fly, gun = sword and the rest) and their keys are hub commands with uhhhhhh's own names. a tap on a phone is M1, there is still no button pad
+- the verified badge is roblox's own verified character now (utf8.char(0xE000)), in blue, instead of a picture. it's written right after the name, so it sits as close and as big as the name itself: in roblox chat, the menu's people list and a player's profile, the leaderboard, a game's own leaderboard and name lists, the name above your head and the hub. settings > about > copy diagnostics shows the last name it was added to
+- add joins two parts of one gun or sword now, not just the lc gun: add <id> <id> with two parts of the same item (part 1 and part 2, top and bottom, 1/2 and 2/2) saves them as one weapon, and the second part rides on the first where it sits when you wear them, in every script that holds that weapon. two different weapons still stay two hats
+- ak-47 has an aiming tab in the alignment window that moves the rifle while you shoot, and linked sword's launcher tab is called bazooka
+- ak-47, banisher and linked sword use the golden bullet hat and the other bullet hats from uhhhhhh's hat list: it flies with the shots and rockets and hides under you in between, like in uhhhhhh
+- every hat from uhhhhhh's hat map is in the hat list now: its body part hats fdless didn't know go on the rig (a new arm or leg hat can be any arm or leg, like in uhhhhhh), its guns and swords work in every script with a gun or a sword, ported ones too, and its bullets in every script that shoots
+- while ak-47, banisher, linked sword or r6 runs, the hats uhhhhhh knows sit where uhhhhhh puts them, like the wings on your back
+- the works with list on a script's info is gone
+- serverinfo is reworked: it used to show how long you had been in the server and call it the server's age. now it shows the real age when the game keeps one, otherwise at least how old the server is (and longer if you were in it before), how long you've been here and who joined last. home's uptime does the same, with a + when it's at least
+- the verified badge goes after every nickname the hub can find: game leaderboards and menus, name tags anywhere in the world, signs, buttons and text with the name in it. never after a username or an @username
+
+Beta v1.5.0
+- the big update, a lot changed (1.4.0 was skipped)
+- the dynamic bar opens smoothly now: it grows out of the pill, then the art, title, artist, progress and lyrics come in one after another, and lyric lines slide as they change
+- tapping the dynamic bar works with any music (spotify, youtube, a link, a file or the video player). with nothing playing it opens home like before
+- the dynamic island is called the dynamic bar now, and it shows up fully: it no longer uses canvas groups (phones often drew them blank or half drawn), it sits above the top bar from the start, and notifications move under it while it's open instead of covering it
+- the touch arrow stays on phones even when a keyboard is connected or a script fakes one. it sits on the edge next to your dock or bar, slides away while the hub is open and comes back when you close it. new setting: settings > general > touch arrow
+- the page name in the top left corner is gone. a slim handle on top of the panel moves the whole ui now, double tap it to reset
+- home was rebuilt: one column on small screens, two on big ones, no more shrinking to fit. cards fade in once, collapse when you tap their title, and card density (comfortable or compact) replaces the fit switch
+- if a card on home breaks it says so and the rest of home keeps working
+- the miyu model and its settings were removed
+- you can run the whole hub from a folder in your executor's workspace without github, the readme shows how
+- neptunian v is on the main scripts page, on the hat tab. the original is by NoobyGames12 and the remake it is built on is by Tory, both are credited in settings > about > credits
+- new: main scripts > setup > hats & alignment. add any hat to the reanimations yourself, no update needed: put it on, tap it in the list (or type its hat id or mesh id), pick what it is for and add it. rig: it goes on a body part on every reanimation, the next time you reanimate. gun: every script that has a gun uses it. sword: every script that has a sword uses it. one script: you pick what the hat does there (its bullet, aura or a part of internalwar's titan) and only that script uses it, the next time it starts
+- Alignment/alignment.lua lists the hat ids, mesh ids and alignment of every hat the scripts use. add a line to it on github or in your test folder and the hub picks it up
+- new: pick which reanimate runs your scripts at the top of the hat and limb tabs of main scripts (atsuko or fdless for hats, gelatek or uhhhhhh for limbs) and change their options right there. fdless has all of its options there: fling, click to fling, fling direction and targeting, ctrl + click teleport, shift lock, hat placeholders, where your real body waits and more. the reanimate button also starts your pick on its own when no script is selected. nothing is picked for you on the hat side, see below
+- the uhhhhhh fork the hub is built on had a hidden channel that ran code sent from a server. it is switched off in the copy the hub ships, Reanimation/README.md explains it
+- the main scripts: addict, commander v2, internalwar, dubstep gun (original), last star, neptunian v, neptunian v gun and the hotline are on the hat tab of the main scripts page, and the sniper is in the folder but hidden. each one is the original file plus a recorded patch (Scripts/patches), and Scripts/README.md lists what changed
+- new main scripts: addict (Booga, MelonScripter, Auxnos, Emper), commander v2 (Commander CR by Shackluster, converted by Melon) and internalwar (BeezelduD, MelonScripter, Emper). like the others they have no on-screen buttons and no grey pop-ups, their alignment is in the hub's window (internalwar's titan hats too, with a titan size button), and everyone in their credits is in settings > about > credits
+- every hat script runs on atsuko reanimate or fdless now, whichever you pick at the top of the hat tab, and none of them uses a reanimate of its own: the hub hands each script your pick before it starts. nothing is picked for you, so the first hat script you start (or reanimate with no script) opens a small window with both cards and starts as soon as you tap one. your pick is saved, the old setting isn't read, so everyone picks once
+- the hub's own scripts (studio dummy, snake banisher, dubstep gun (hub)) run on fdless too, and the main scripts run on atsuko reanimate too. the shared fdless got the newer functions the main scripts call (camera override and zoom, input blocker, shift lock, antivoid) and so did atsuko reanimate's rig
+- the two dubstep guns are called dubstep gun (hub) and dubstep gun (original) now, since both run on both reanimations
+- the scripts page is called main scripts now and has four tabs: hat, limb, favorites and recent. hat and limb start with two cards to pick the reanimate (atsuko or fdless for hats, gelatek or uhhhhhh for limbs) and show its options. scripts sit in one list sorted by name with no groups, each row shows who made it and whether it is running, and no file endings show up anywhere. Scripts/_TEMPLATE_HAT.lua and Scripts/_TEMPLATE_LIMB.lua are small starter scripts, and a script can read AtsukoHub.Reanim to see what it runs on. Scripts/README.md explains the rest
+- scripts don't draw their own touch buttons, the + aim cross or grey roblox pop-ups anymore. what matters shows up as a hub toast. last star keeps its three phone controls. on a phone without a keyboard the key-only skills can't be used now, Scripts/README.md lists which ones
+- alignment lives only in the hub's alignment window: the panels inside dubstep gun (original), neptunian v gun, the hotline, the sniper, neptunian v, addict, commander v2 and internalwar are gone, and your saved alignment files load as before. the window got button rows (equip, find sword, switch sword, roll) and shows only the rows that matter for the tab you are on
+- studio dummy's row of six buttons is gone, and studio dummy, snake banisher and the dubstep gun write to the output instead of a roblox pop-up when the hub isn't open
+- fixed the crash on the main scripts: the hub looked for FDless in the wrong place, never found it and stopped the script after about 40 seconds. it looks in both places now and no longer stops a script just because it can't see FDless. the same wrong place made uhhhhhh time out after 90 seconds, fixed too
+- the hub is gentler when it starts: it doesn't touch roblox's engine at all while it loads anymore. hiding your commands from chat and catching other scripts' pop-ups both use a hook, so they start off now and have their own switches in settings > chat and keyboard > hooks. turn one on and it hooks once, a few seconds after the hub is up
+- safe mode: while the hub starts it keeps a small note in AtsukoHub/boot.json. if the game closes before the start finishes, the next start comes up in safe mode: no hooks, no auto-run, no reanimation, no chat and no update check, a toast says where it stopped, and the hook it was in the middle of is switched off. a start that finishes brings everything back. run getgenv().AtsukoSafeMode = true before the hub to ask for it yourself. reanimation has a Retry button for when you want it back in safe mode
+- a script that was starting when the game closed doesn't auto-run again, its auto-run is switched off and the hub says so
+- new: Hub/Probe.lua. when the game closes before you see anything, run it instead of the hub: it reads and compiles your files one by one, writes every step to AtsukoHub_probe.txt as it goes (the last line shows where the game stopped) and starts nothing. getgenv().AtsukoProbeRun = true makes it start the hub in safe mode afterwards
+- new: the editor window can be resized from all four sides and all four corners, on pc and on a phone. open the editor tab, tap pop out to move and resize, then hold any side or corner and drag. the side you aren't holding stays put, it can't go off the screen or below 300 x 240, a badge shows the size, and a second finger scrolling the code doesn't get in the way. double tap the title bar to make it as big as the screen allows and again to bring it back. size and place are remembered, settings > general > reset window sizes puts them back, and the editor tab remembers that you last used it popped out. narrow windows switch the toolbar to icons. other windows keep their corner button for now
+- hats that only have a catalog id are looked up a few seconds after the hub is up, one at a time, never during the start
+- every script has its own logo and banner now. the hub's logo is gone from a script's page: two empty spots (add banner, add logo) sit at the top, tap one to pick a picture. pick it by link (https, discord, imgur, github raw, an asset id or rbxassetid) or from your workspace folder: type a name like pics/me.png, or tap the folder button for a grid of thumbnails with a preview that shows the file name exactly as it is, so scrambled names are fine. the hub looks at what is inside the file, not at its ending, and keeps its own copy in AtsukoHub/cache/art so the picture still shows if you move or delete the original. each script keeps its own, tap a set picture to change or remove it
+- roblox only shows some picture types. if one can't be shown the hub says exactly why (for a file: convert it to png or jpg and pick it again). for links there is a switch, off by default, that converts the picture with images.weserv.nl. it sends the link to that service, which keeps its logs for about a week and may keep the picture for up to a month, so leave it off for private links
+- the credits were redesigned: settings > about has one credits button that opens its own window (a centred window on pc, a sheet you can swipe down on a phone). it has a spotlight for atsuko, claude and the tester, a search box, chips for every group and a card for everyone with a few words about them. tap a card for their page: a big picture, the name, one description, where it is used and their links, each with copy and open buttons. the list is Hub/credits.json, so it can be edited without touching the hub
+- testers get the Roblox avatar, nickname and @username (read from Roblox when it answers, a letter and the name Tester when it doesn't), the sentence Just a tester lol, he's a cool guy :3 and an Open Roblox profile button. atsuko, claude and the tester carry roblox's verified badge next to their name and username, atsuko's card has his own picture (Hub/credits/atsuko.png) and his roblox username (@AtsukoHakariBA), claude's entry is written formally (bug fixes, code and testing), and everyone has one proper description now. Tory, the people behind every script and the libraries are credited there too, and roblox isn't credited anymore
+- the script settings moved out of settings: main scripts has a new setup tab with run & stop (respawn when stopped, one script at a time, smart stop, script prints, looking for new scripts), right now (stop all, respawn, clear the recent list) and hats & alignment. settings has five tabs now: general, themes, ai, commands and about
+- the emotes tab only shows while a reanimation is running. when the reanimation stops the tab goes away, and if you were on it you land back on home with a toast that says why
+- settings > colors > my colors: pick the background, the cards, the text and the accent yourself, with the picker or by typing a hex like #101115. use auto lets the hub choose for you, fix text colour repairs text you can't read, and save as a new theme keeps your set. rainbow background is a slow color cycle behind the hub, one loop takes 30 to 120 seconds, and it stays off while smooth animations are off
+- the commands page was rebuilt: one list in alphabetical order, a search box that looks at the name, the short names and what a command does, a count at the top, an On tag on whatever is running and no icons. tap a command and its description slides out under its name with how to use it and the buttons to run it
+- 179 new commands in packs that load a couple of seconds after the hub starts: info and fun, the world and lighting, the camera, your character, tools, teleports and players, waypoints, and automation (alias, bind, combo, loop, runafter, onjoin, onleave, prefix, say, whisper, exceptions). every toggle puts things back the way they were when you turn it off. the other 107 of the 288 planned commands are not in yet. some are left out on purpose because they need hooks into roblox that can close your game
+- commands that take a player understand: a name or the start of one, me, all, others, random, nearest, farthest, friends, team:name, @userid and -name to leave someone out. players in your exceptions list are skipped by all and others
+- one prefix for everything: the symbol that starts a chat command is also the key that opens the command bar. change it in settings > chat and keyboard, or say prefix followed by a symbol
+- two commands can't share a name anymore. the hub keeps the first one and writes a warning to the console
+- a command pack that was loading when the game closed is switched off by itself on the next start, and a toast says which one. a hub update turns it back on, and safe mode leaves the packs out
+- settings > about > copy diagnostics copies a short report with the version, your executor, what is switched on, which command packs and modules loaded and the latest problems. no keys, passwords or chat are in it, so you can paste it when something breaks
+- hub chat: the bad word filter and its setting are gone, and so is the text about getting the Atsuko Hakari tag
+- atsuko reanimate doesn't flick your screen anymore. when roblox gave you a new body, the camera could jump to it before the hub knew it was yours, and roblox turned the camera to face that body under the map. now the camera is checked before and after roblox moves it every frame, so it stays on you and keeps pointing the same way through every respawn, and a game that turns the health bar back on can't flash the red hurt screen either
+- the credits window was fixed: square glows don't cover its round corners anymore (the top of the window, the spotlight cards, a person's page and its banner), role chips that don't fit are left out instead of cut in half, and on a short screen (a phone held sideways) the header is one slim line with the search box next to the chips, so the cards get most of the window
+- emotes work on fdless now: pick fdless at the top of the hat tab, reanimate, and the dances on the emotes page (and their keys) play on it, even while a script runs. a script with dances of its own, like studio dummy, keeps them
+- fixed the body going up and down while you dance, on atsuko reanimate and on fdless: the feet stay on the ground now, even when a script raised your hip height. emotes > setup > keep feet on the ground turns it off for flips and jumps
+- new main script: master chief (Helkern, converted by MelonScripter), on atsuko reanimate and fdless. click shoots, q swaps the rifle and the shotgun, z throws a grenade, x dashes forward and 2 runs. rifle: tactical cyberpunk railgun, kinetic staff, full stop rifle, black sci-fi blaster rifle or sakura futuristic sniper (back). shotgun: type-12 scattershot, 24k gold plunger, hoshino's eye of horus or rebecca carnage shotgun. a gun it doesn't know is fitted by its size, and its alignment window has a rifle tab and a shotgun tab. like the other main scripts it has no grey pop-ups and is the original file plus a recorded patch
+- hats & alignment: used for is rig, weapon or one script now. weapon has gun, sword, shotgun and rifle: a shotgun or rifle hat is used by every script with that weapon (master chief for now), the same way gun and sword already worked
+- master chief loads its gun models more reliably: it asks roblox up to three times and tries the other ways executors offer, it looks the catalog guns up one at a time and only when you don't already wear a gun it knows, and if roblox still sends nothing it uses its own stand-in guns and says why instead of stopping
+- emotes on fdless keep the running script going underneath the dance: in internalwar only your own rig dances and the titan keeps floating, and a script no longer stops after two seconds of dancing
+- atsuko reanimate uses roblox's own thumbstick and jump button on phones again, like uhhhhhh. its own fdless style touch stick and jump spot are gone
+- the script descriptions on the main scripts page are short and formal now
+- new main script: fakevr, full-body vr in the style of clovr by 0866 and abacaxl, on atsuko reanimate and fdless. your arms are rerilla style two-rig arms by default (the leg hats become upper arms and bend at the elbow), or switch the leg hats to legs whose feet stay planted and step when you turn or walk. the arms never play walking animations and never stretch away from your body: hold a mouse button and that arm points where you aim. on a phone, two circles in the middle of the screen move your arms (left circle, left arm): the top of a circle points the arm up, the middle ahead and the bottom down, the sides swing it left and right, and moving your arm never moves the camera. a lowered arm hangs straight down, the two-rig arms too. a finger keeps its arm until you lift it, touching outside the circles turns the camera like always, the joystick and jump button keep working, a quick tap on an accessory pulls it into that hand, and lifting your finger throws what you hold (a flick throws harder). grab any accessory except your hair (hats on your head can be turned on) or point at one further away to pull it in. first person, crouch (c or ctrl), sprint (shift), smooth flying (f), and a real vr headset and controllers move your head and hands. the body tab has up/down distance and sideways distance (how far the circles move the arm), arm reach (how far the two-rig arms stretch), circle size and a switch for the circles. built on fakevr by im_patrick and rerilla by saucekid
+- the hub keeps its original look: the designs, the design maker and the sidebar and window layouts were removed. themes still pick the colors
+- settings > general > verified badge gives you a verified badge, the same tilted blue one roblox uses. it sits right after your name in roblox chat, the roblox menu's people list, the leaderboard, the hub's chat, the players list and home. only the name gets it, never the @username. only people running the hub see it, and anyone running the hub can turn theirs on
+- new: a login voice. once the hub has finished loading and your game isn't lagging, a voice line from blue archive plays: atsuko, atsuko (swimsuit), chihiro, fuyu, hare (camping), haruka (dress), hiyori, hoshino (swimsuit), kokoro, mika (swimsuit) or yuuka (pajama). settings > general > sounds > login voice lists them by character: tap one to keep that voice, or random for a different one each time. it never plays over a voice that is still talking, works with -reload and stays out of safe mode. the click, notification and login sounds are always on now (the volume slider still works), they're the only sounds the hub plays, and they're credited in settings > about > credits
+- the add and check commands don't crash anymore. add <id> now adds your own hat to every reanimation script at once: on its own it is the gun in every gun script and the sword in every sword script (and master chief's rifle and shotgun, and last star's empty sword wings). as gun or as sword keeps it to one, as pair makes two ids snake banisher's gun 1 and gun 2, and as rightarm (or another body part) puts it on the rig. up to 8 hat ids, mesh ids or links at once, and hats & alignment has an any weapon choice for the same thing. check opens a window with the accessories someone wears and copy buttons for their ids
+- atsuko reanimate and fdless start again: both looked for a file next to a script object that executors don't have, so they failed before doing anything. fdless shows its 15 real options at the top of the hat tab again
+- home loads again: a few broken lines stopped the whole page from loading. it is the two column home described above
+- the unfinished unified reanimate and tab dragging were removed, they didn't work and broke the settings page
+- lc-gun hats count as snake banisher's gun 1 and gun 2 in hats & alignment
+- add <lc gun 1 id> <lc gun 2 id> works now and holds the lc gun the way uhhhhhh does: the two halves stay joined as one gun in the hotline, addict, commander v2, neptunian v gun, the sniper and both dubstep guns, and snake banisher puts each half in its own slot where they meet instead of on top of each other. before, both ids became a gun and a sword everywhere and snake banisher took lc gun 2 as its first gun too. running the same add again swaps those old rows out
+- add only works while you're reanimated now, and so does the add hat button in hats & alignment. it reads the hats on your reanimation, so a mesh id of a hat you wear is found right away
+- add sword <id> and add gun <id> pick the job (as sword and as gun still work). with no job, add works out whether the hat is a gun or a sword from the hat list and its name (sword, katana, blade, pistol, rifle, gun and more) and makes it that in every script that has one. if it can't tell, the hat is both until you say add gun or add sword, which swaps the guess out
+- a gun you add is master chief's rifle and shotgun too (an lc gun half stays out, master chief can't join it)
+- at x y z only moves the hat right before it now, not every id in the same add
+- alignment is saved per hat: the spot you give a hat in the alignment window belongs to that hat only, a new hat starts from the default spot instead of the last hat's, and going back to a hat brings its own spot back. the script's own gun keeps the spot you saved before
+- new hat script: book reader. the fe book reader from dark eccentric's script showcase episode 131 (youtube.com/@DarkEccentric), rebuilt from his video because the original file is lost. you hold a book open in front of your face like you're reading it and walk around with it, everything eased so it's smooth. it runs on atsuko reanimate or fdless. wear the how to read book, any hat with book in its name, or say add book <hat id>. dark eccentric is on the credits page with his channel and the video
+- add book <id> gives book reader its book, and add works it out by itself for a hat with book in its name
+- credits: blue archive has its own card with the verified badge, its picture and links to the game (website, steam, app store and google play), claude has a picture now, and everyone's description is shorter
+- fakevr has no screen of its own anymore: its menu is a hub window (the new menu button at the top of main scripts, t or vrhats) with throw and body tabs, and the hub draws its phone circles. the top right buttons, the help tab and the hint are gone, holding jump while flying goes up on a phone, and its commands show up in the hub now (they never registered before)
+- scripts can use the hub's ui through AtsukoHub.UI: a menu in a hub window, a layer under the hub and the hub's colors, all cleaned up when the script stops. Scripts/README.md explains it
+- book reader walks like the video now: the book arm goes up beside your head with the book resting on that hand, the other arm is held forward, and the book bobs with your steps. stopping brings it back down in front of your face
+- book reader has a jump: the leg in front lifts, the free arm swings out, falling reaches for the floor and landing dips and springs back, all of it eased
+- book reader: pick the book hand (right or left) in its alignment window, the tabs are book, book arm and other arm now, and the choice is saved
+- the alignment window can show a choice row for a script, book reader's book hand is the first
+- add works for every script again: neptunian v didn't send the hat's texture, so it never matched the sword you added and left it on your back. a hat is matched by its mesh when the texture is missing or a different color
+- when the script you're running uses the hat you add (neptunian v and a sword, the hotline and a gun), it restarts by itself so it holds the hat right away. adding a hat that's already there says already added instead of couldn't add
+- credits: blue archive and claude have new pictures
+
+Beta v1.3.0
+- Reanimate respawns the FDless way now: your character is never swapped for the reanimate, so roblox's controls, camera and jump button don't reset every time you respawn (that's what made it buggy on mobile)
+- mobile: the jump button shows and works while you're reanimated, and you keep walking right through a respawn. if roblox's touch controls vanish for a moment, an FDless style touch stick and jump spot take over
+- the camera stays on you when a new body spawns, it can't jump over to it anymore
+- a new body waits 0.3 seconds under the map like FDless (once your avatar loads), then gets knocked down and its hats come straight to you
+- new from FDless: ctrl + click teleports you on pc, and your simulation radius goes up when your executor allows it
+- hub commands work on the reanimate: speed, jump power, fly, smooth fly, infinite jump, freeze, freecam, click teleport, go to, spin and save / load spot. they stay on through respawns and move back to your own body when you deanimate
+- teleports from commands or other scripts stick now instead of snapping back
+- the alignment button moved to the top right corner of atsuko script with a new logo. it lights up when the running script has something to line up, tap it to open or close the window
+
+Beta v1.2.9
+- alignment is easy to find now: while a script you can line up is running, an Alignment strip sits right above the reanimate bar on atsuko script. tap it to open or close the window (it says what you can line up)
+- the dubstep gun has alignment too: Gun moves every gun hat together in your hand, Aura moves the aura hats. it saves by itself like the others
+- fixed hats that hang off a part the script moves by itself (like the dubstep gun's aura) not following it
+
+Beta v1.2.8
+- Reanimate moves your body the FDless way now: no physics on the body, it finds the ground with a raycast and stands 3 studs over it, and gravity, jumping and walking work like FDless
+- emotes don't make you walk by yourself or float around anymore (the body can't be pushed by its own poses now)
+- no more antivoid teleports: with no ground under you, you just hover like FDless
+- turning toward something (setCfr) doesn't stop you while you walk anymore, so studio dummy and the others can aim and move at the same time
+- -size lifts your body properly, and flying with zero gravity stays perfectly steady
+- moving works on mobile during the respawn moment too
+- FDless scripts: joints chain at any depth both ways, refreshjoints works, and a hat that isn't loaded yet gives a placeholder the hat snaps onto when it loads
+- like FDless, the body doesn't bump into walls
+- studio dummy's -antivoid off still lets you fall into the void, and nothing keeps walking or jumping by itself while you respawn
+
+Beta v1.2.7
+- the dubstep gun runs on the hub's Reanimate now instead of patchma, so the roblox change that broke patchma (ConnectDiedSignalBackend) doesn't matter anymore
+- emotes work with the dubstep gun, and the gun stays in your hand while you dance
+- it wears the same rig hats as studio dummy (plus the ones Reanimate already knows), the gun hats, aura and bullet hat line up like before
+- deanimate cleans the dubstep gun up fully now, no rejoin needed
+- if a dubstep gun song can't download, it plays without it instead of stopping with an error
+
+Beta v1.2.6
+- the dubstep gun runs again: roblox removed ConnectDiedSignalBackend, and the patchma v48 it loads still looked it up, so it errored right away. it now skips that one signal (roblox had already patched it to do nothing), the rest of patchma is untouched
+
+Beta v1.2.5
+- gun alignment saves by itself now: a second after you stop nudging, when you close the alignment window, and when the script stops. nothing gets lost on a stop or a rejoin anymore
+- switching guns saves the old gun's spot before loading the new one
+- emotes are honest with scripts that bring their own reanimate (like the Dubstep Gun): the hub says they can't dance instead of saying emotes work
+- dances never freeze on a song that won't play or gets stuck, they keep their own beat instead
+
+Beta v1.2.4
+- added the Dubstep Gun by Supr14 to Atsuko Script
+- it runs on its own FDless / Patchma reanimate, so it works but stands apart from Reanimate, alignment and emotes. deanimate cleans up what it can, a rejoin fully removes it
+- works with lists the dubstep gun's hats like the other scripts
+- credited FDless / Patchma (and Supr14) in settings > about
+
+Beta v1.2.3
+- youtube music works on way more executors now: it comes through a converter as an mp3 and plays through a Sound, instead of the webm that only some executors could play
+- the hub uses a free converter by default, so youtube music just works out of the box. turn it off in music > more to go back to the straight-from-youtube webm way
+- paste your own converter in music > more for the best speed (a cobalt server, new or old, or any link with {id} or {url}), or host your own
+- any converter the hub finds that's down just falls back to the next one, then to webm, so music keeps working
+
+Beta v1.2.2
+- the scripts don't carry credit text anymore, everyone is credited in settings > about
+- credits without a discord server just say what they made
+- the old reanimate is gone, the scripts and the hub only use Reanimate now
+
+Beta v1.2.1
+- renamed AtsukoReanimate.lua and AtsukoEmotes.lua to Reanimate.lua and Emotes.lua, the hub and the scripts use the new names
+- studio dummy and snake banisher download the new files by themselves
+
+Beta v1.2.0
+- the biggest update yet, almost everything got rebuilt
+- atsuko script: tap a script to pick it, then tap reanimate. deanimate stops it. the bar at the bottom shows what's running
+- only one script runs at a time now, deanimate the one that's on before you start another
+- the scripts use the new Reanimate, a smoother uhhhhhh style reanimate that lives in its own file (Hub/Reanimate.lua)
+- studio dummy v4 and snake banisher v3 run on Reanimate now
+- new emotes page right next to atsuko script, no studio dummy needed
+- emotes work while you're reanimated with any of the scripts, the page tells you when you need to reanimate first
+- all dances in one list with search, a favorites tab and a setup tab
+- star the dances you like, give any dance its own key, turn the keys on or off and set the volume
+- every dance has its own options under it, and stopping a dance fades you back smoothly
+- emotes live in their own file (Hub/Emotes.lua) and only download when you use them
+- removed the emote and alignment buttons from studio dummy's phone buttons, emotes have their own page now
+- ui designs: pick how the whole hub is laid out in settings > general > layout (or say design)
+- original: the dock at the bottom and the panel on the left, like before
+- sidebar: a big menu down the left with every page, the panel opens next to it
+- window: one window with the pages on the left, drag it anywhere by the top
+- move things around: everything can be moved now, the panel, the dock, the top bar, the side card, the command bar and the popups
+- tap move things around in settings (or say moveui), drag the handles, then done. reset puts it all back
+- the window design remembers its own spot
+- pc: the panel slides all the way out to the side now, no more invisible line cutting it off halfway
+- fixed the dynamic island staying up after you tap it
+- new music player look: a big card with the cover on a spinning disc, the song and the buttons right under it
+- new youtube check in music > more: it tests everything youtube songs need on your executor and tells you if they'll work there and why
+- the command bar got a new look: clean rounded corners (no more weird corner), your key on the side, sections and a smooth fade
+- rejoin and serverhop: you rejoin first, then the hub loads itself back in the new server by itself
+- the editor got redesigned: a new toolbar, undo and redo, find (ctrl + f), word wrap and line numbers that follow it
+- ask ai button in the editor: your code goes with your message
+- the run button in the editor turns into stop while your script runs
+- ai tools under the chat: fix errors, explain, make it better, add a menu and copy chat
+- fix errors sends your editor code and the last errors from the log so the ai knows what broke
+- stop button while the ai is answering
+- run button on the ai's code, tap it twice so nothing runs by accident
+- works with is accurate now: it reads the hats each script really uses, rig hats with which body part they go on, guns and the rest
+- it keeps checking even if you close the script, and opening it again shows it right away, no new scan
+- what it finds is saved for a week, and it tells you the hats a script picks by name too
+- the hub keeps the files it downloads (reanimate, emotes) so they load faster next time
+- the alignment lives in the hub now, the align panels inside studio dummy and snake banisher are gone
+- tap the round button on the atsuko script bar to line things up (or press the script's own key, or say align)
+- the alignment window: pick gun, screen or muzzle, nudge with - and + (hold to keep going), type exact numbers, undo, reset, flip, copy and save, and studio dummy's screen options are right there too
+- a red ball shows where the muzzle is while the alignment window is open, and it closes by itself when the script stops
+- studio dummy and snake banisher talk through the hub's own notifications now instead of their own popups
+- long notifications show an arrow, tap them to read the whole thing
+- scripts can use the hub's notifications too (the template shows how), and they fall back to roblox's when the hub isn't open
+- youtube videos play straight from youtube in the video player now, no converter: the picture and the sound get put together into one video
+- the video player shows how far the download is, and plays videos up to 20 minutes
+- youtube downloads try again by themselves when a piece fails
+- music > more lists the executors youtube should work on
+- credits in settings > about: everyone who made the hub and the atsuko scripts possible, with their discord servers (tap to copy), and a button to copy them all
+
+Beta v1.1.3
+- spotify works on free accounts now: paste a spotify playlist, album or song link in music > library > spotify and it plays right in the game, no premium
+- search any song there (or in music > add) and play it with one tap
+- free spotify through discord has a play here button, it plays the song you're on in the game from where you are
+- youtube songs don't need a converter or a key anymore, they play straight from youtube (a converter is still there if you want one)
+- tap the heart on a spotify or youtube song to keep it in your library
+- the next song in a spotify list gets ready while the one before it plays
+- the hub says beta now
+
+v1.1.2
+- themes: a new themes tab in settings with 9 themes: midnight, pure black, sakura, grape, ocean, forest, mocha, and two light ones, cloud and strawberry milk
+- a theme changes the whole hub: the background, the cards and buttons, the text and the accent
+- make your own themes in the theme maker: pick the background and everything else follows it, or set the cards, text and accent yourself
+- the hub changes as you pick colors in the theme maker, and closing it without saving puts everything back
+- light backgrounds get dark text by themselves, dark ones get light text
+- share themes: copy a theme's code and anyone can add it in settings > themes
+- new theme command: say theme and a name, or just theme for the next one
+- your themes come along in copy my settings, and resetting settings keeps them
+- the ai is talkative now: it chats with you about anything, not just scripts, and it's still great at scripting
+- new personality setting in ai settings > preferences: chatty, balanced or scripts only
+- new thinking setting: quick answers faster, deep thinks longer on hard scripts
+- fixed the ai saying to check your internet: it tries again by itself when a message gets dropped, answers faster, and tells you the real reason when something goes wrong
+- test the connection button in ai settings > ai key
+
+v1.1.1
+- new ai tab: ask for a script or how to fix one and it writes it for you, with copy and open in editor buttons on the code
+- the ai can read the script in your editor: tap the code button next to the box and it goes with your message
+- the ai is called Atsuko Hakari and has its own picture. its name is the big title on the ai tab, change the name and picture whenever you want
+- personal preferences: tell the ai about you and how you want your answers, in settings > ai or in the ai's own settings. it reads them before every answer
+- recent chats: your last 30 chats are saved, search them, open one to keep going or delete it (the clock button at the top of the ai tab)
+- ai settings with 4 tabs: profile, preferences, ai key and chats. answer length, creativity, reply language, chat memory, remember chats and a heads-up when an answer is ready
+- clean chat look: your messages on the right with your picture, answers with the ai's picture, copy and retry under each answer, and ideas to start with
+- the ai works with a free google gemini key, or any openai-style service (openrouter, groq and more). your keys stay on your device
+- the ai lives in its own file and only downloads when you open the tab, so the hub doesn't get bigger. an old copy of that file never opens on a newer hub, the tab tells you to update it
+- pick your own profile picture in settings > general (a roblox image id or a picture link), it shows on home and in the ai chat
+- search youtube for songs in music > add, then add them with one tap (needs a free youtube key, songs go through your converter)
+- the command bar opens as soon as you press ; (or your own key), and the key doesn't end up in the box
+- keys can be combos now: shift + ; makes : and the other shift symbols work too (! ? @ and more), plus ctrl + any key
+- hub keys work even when the game uses the same key, just not while you're typing or in the roblox menu
+- your converter and youtube keys are never in copy my settings
+- the owner's chat tag says Atsuko Hakari now
+- removed the colored fog and aurora sky commands
+
+v1.1.0
+- smoother everywhere: switching pages and tabs doesn't snap or jump anymore, things on the left slide in from the left and things on the right slide in from the right
+- home opens with the left cards coming in from the left and the right cards from the right
+- runs and opens straight on home, and when you close it and open it again you're back on the page you left
+- pc: alt (left or right) opens and closes it, change it in settings > general. the arrow on the side of the screen is only on phones now
+- spotify moved into the music player: one player for your songs and spotify, with a whole new look
+- lyrics show the line you're on big and the next line under it, plus a full lyrics tab
+- new mini player with a lyrics button
+- add songs from youtube and other links, they get saved in your music folder and the same song never gets added twice
+- music keeps going on phones: if the game or the phone cuts the song off it picks it back up, and spotify stays logged in on phones that can't save files
+- tap the dynamic island while a song is on to see it, with nothing playing it opens home
+- new editor tab: write scripts, run them, save them, and pop it out into its own window you can move around
+- atsuko's own scripts page is called atsuko script now. edit any of them and save your copy, it shows up in scripts > my scripts
+- hub size setting, starts at 75%
+- pick any color you want for the accent, and the background can take some of it too
+- customize home: show, hide and move the cards, and add your own pictures, notes and clocks
+- new command bar: suggestions as you type, arrow keys, tab to fill and your recent commands
+- new commands: antifling, antivoid, antisit, tpwalk, swim, freecam, hipheight, light, edgejump, fixcam and lay
+- running the hub again just tells you it's already running instead of making a second one, same for commands that are already on
+- no more double notifications
+- say -reload in chat to restart the hub, it tells you if anything broke
+- studio dummy: stop really stops it now, none of its commands work until you run it again
+- the dynamic island grows right out of the top bar when you tap it and shrinks back into it, same size and smooth
+- drag the title to move the hub anywhere, the reset button in the corner (or running it again) puts it back
+- home fits everything on the screen instead of scrolling (turn it off in customize home)
+- spotify works with free accounts too, through discord: the song, the time, lyrics and the visualizer
+- the visualizer bounces on spotify songs too
+- hub chat: a server chat with the hub users in your server and a global chat with everyone, in a window you can move and resize. tap someone's picture to block them, bad words get covered up
+- the hub's owner gets a purple-to-pink Atsuko tag in chat, and nobody else can fake it
+- commands from 07hub (with permission): smooth fly, fly speed, freeze, orbit, head sit, teleport to a spot, copy position, waypoints, emotes, fps and ping, fps cap, colored fog and aurora sky
+- video player for testing: youtube (through your converter), webm and mp4 links and roblox video ids, saved in your videos folder
+
+v1.0.8
+- opening a script doesn't lag anymore, works with checks a little at a time in the background and remembers what it found
+- works with shows 6 of each kind first, tap show all to see the rest
+- studio dummy doesn't freeze the game when it starts anymore
+
+v1.0.7
+- works with: open a script and the hub finds the guns, swords and hats it supports by itself, with the shop name and id, and shows which ones you're wearing or own
+- studio dummy: run and stop from the hub only, no more -run / -stop
+- studio dummy: works with the full stop rifle, and the align panel remembers each gun on its own (tap A on the touch buttons to open and close it)
+
+v1.0.6
+- tap a script, a player, a playlist or a scriptblox script again to close its info
+- scripts with their own run and stop (like studio dummy) show as stopped when they stop by themselves
+- no more -run talk in the hub, the run and stop buttons do it all
+
+v1.0.5
+- fixed the hub not starting on some executors, the script got too big for how they read it
+- the hub doesn't need owner.txt or any other extra file, just AtsukoHub.lua
+- on small phones the title and the top bar don't overlap anymore
+
+v1.0.4
+- new look: big title at the top, see-through cards on the left and right, and a dock at the bottom that shows the page you're on
+- new scripts tab: scripts from scriptblox with trending, this game, universal and saved, a search bar, a keyless filter and run with one tap
+- tap a script to see its views, likes, tags and what it does, then run it, copy it, grab the key link or save it
+- spotify got way bigger: your playlists, liked songs, recently played, search, the queue, a like button and picking which device plays
+- lyrics on the spotify tab that follow the song, tap a line to jump there
+- players tab: everyone, friends and nearby, with a big avatar card and go to, spectate, follow, mark, hide and copy
+- home is a dashboard now: your profile, friends online, the game you're in, this server, now playing, quick switches and quick actions
+- layout settings: put the top bar at the top, left, right or bottom, the dock at the bottom, left or right, and show or hide page names in the dock
+- phones in landscape get a smaller header so there's more room, phones held upright get one card at a time
+- your own scripts tab is called my scripts now
+- after updating, log in to spotify once more so the hub can see your library
+
+v1.0.3
+- music player tab: play roblox audio ids, direct mp3/ogg links or your own files from the AtsukoHub/music folder, only you can hear it
+- library with search and favorites, a queue (play next or add to queue), shuffle, repeat one or all, seeking and volume
+- sound presets (normal, nightcore, slowed, bass) plus speed, bass boost, reverb and echo
+- visualizer, sleep timer, pick up where you left off, quiet the game's own music, play/pause and next song keys
+- music player mini window and home card, and the song shows on the top bar
+- the old music tab is called spotify now
+- new commands: float, gravity, follow, save spot, load spot, esp, x-ray, instant prompts, play and skip
+- follow button in player windows
+- new settings: font, open the panel when the hub loads, open on home or last page, clock on the top bar, click and notification sounds, panic key, and pick your own quick switches on home
+- tapping the top bar while only the side bar is out opens the panel now instead of closing everything
+
+v1.0.2
+- music tab: connect your own spotify app and see what's playing, with play/pause, skip, seek, shuffle, repeat and volume
+- now playing card on home, a mini player you can pop out, and the song can show on the top bar
+- simpler: no more extra setup pages, the hub just loads your scripts
+- cleaner home: one row of stats, one row of buttons, server hop sits in the server card
+- fixed long descriptions getting cut off, the go button in player windows forgetting the name, notifications sliding in from the wrong side at the bottom, the top/bottom picker sitting crooked and switches snapping when rainbow is on
+- lighter: noclip doesn't rescan your character every frame, rainbow accent does less work and the scripts list only rebuilds when something changed
+
+v1.0.1
+- new look like ak admin: little windows you can drag, resize, minimize and close
+- fps and ping bar at the top, tap it to open or hide the hub
+- the logo on the bar is home now, and the bar squeezes itself on small screens
+- commands tab: fly, noclip, speed, jump power, infinite jump, click tp, spin, go to player, sit, refresh, reset
+- visual commands: fullbright, no fog, time of day, fov, max zoom out, see through walls, spectate, boost fps
+- utility commands: anti afk, allow shift lock, rejoin, server hop, copy join script
+- command bar (press ; on pc) and chat commands with your own prefix
+- players tab: go to, spectate, copy name and id
+- home got quick switches, more stats and a server card
+- more settings: rainbow accent, blur, animation speed, notification time and spot, lock panel, fps cap, copy and load your settings
+- checks for updates by itself and shows this window when something changed
+
+v1.0.0
+- first version: scripts from github, run and stop, running list, console and settings

@@ -1,0 +1,1745 @@
+{
+  "version": 1,
+  "sections": [
+    "The hub",
+    "Testers",
+    "Reanimation",
+    "Scripts",
+    "Commands",
+    "Music and services",
+    "Libraries and assets"
+  ],
+  "people": [
+    {
+      "id": "atsuko",
+      "section": "The hub",
+      "name": "Atsuko",
+      "handle": "AtsukoHakariBA",
+      "kind": "person",
+      "roles": [
+        "Hub author",
+        "Owner"
+      ],
+      "usedIn": [
+        "Everything"
+      ],
+      "links": {
+        "github": "https://github.com/atsukohakari/Atsuko",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "AtsukoHakariBA",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "he's a weird guy ngl, plus he's soooo lazy like very lazyy..... and he's a femboy so.. yeah :3",
+      "license": "",
+      "source": "HOME_REPO in AtsukoHub.lua, the README install line and the hub footer ('made by atsukohakari'); the description, the picture and the badge are the owner's own request; the Roblox username AtsukoHakariBA is the owner's own",
+      "verified": true,
+      "picture": "Hub/credits/atsuko.png"
+    },
+    {
+      "id": "claude",
+      "section": "The hub",
+      "name": "Claude",
+      "handle": "",
+      "kind": "assistant",
+      "roles": [
+        "Bug fixes",
+        "Code and testing"
+      ],
+      "usedIn": [
+        "Hub code",
+        "Reanimation",
+        "Tests"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://www.anthropic.com/claude",
+        "roblox": "",
+        "other": [
+          "https://claude.ai"
+        ]
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "AI by Anthropic. Helped write, fix and test the hub with Atsuko.",
+      "license": "",
+      "source": "the owner's request (credit, badge)",
+      "verified": true,
+      "picture": "Hub/credits/claude.png"
+    },
+    {
+      "id": "tester-11345577877",
+      "section": "Testers",
+      "name": "Tester",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Tester"
+      ],
+      "usedIn": [],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "https://www.roblox.com/users/11345577877/profile",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": 11345577877
+      },
+      "profileStyle": "roblox",
+      "description": "Just a tester lol, he's a cool guy :3",
+      "license": "",
+      "source": "the owner's message (profile https://www.roblox.com/users/11345577877/profile); badge on the owner's request",
+      "verified": true,
+      "picture": ""
+    },
+    {
+      "id": "myworld-rqz",
+      "section": "Reanimation",
+      "name": "MyWorld & rqz",
+      "handle": "",
+      "kind": "team",
+      "roles": [
+        "FDless reanimate",
+        "Patchma Hub"
+      ],
+      "usedIn": [
+        "Reanimation / FDless",
+        "Main Scripts"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.com/invite/QMy5f6DrbH",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "MyWorld made FDless and rqz kept it going. It's the hat reanimation the hub runs on.",
+      "license": "",
+      "source": "README credits table; the FDless header and the header of every Main Script ('FDless Reanimate by MyWorld continued by rqz', 'Patchma Hub Discord'); the Addict_1.lua header ('MyWorld (optimization on reanimate)') and the InternalWar_FDless.lua header ('MyWorld - Optimization on reanimate'); the MasterChief header ('MyWorld - Optimization')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "stevetherealone",
+      "section": "Reanimation",
+      "name": "STEVETHEREALONE",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Uhhhhhh author"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh",
+        "Emotes",
+        "Main Scripts / Addict",
+        "Main Scripts / Banisher, Linked Sword, R6, AK-47"
+      ],
+      "links": {
+        "github": "https://github.com/STEVE-916-create/Uhhhhhh/",
+        "discord": "https://discord.gg/NASNUKRBVM",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made Uhhhhhh, the code and the graphics. Our Uhhhhhh reanimation, the dances, and Banisher, Linked Sword, R6 and AK-47 come from it.",
+      "license": "MIT License, Copyright (c) 2025 STEVETHEREALONE. The file header also says: Thou shalth not steal. Point at this source if you used a snippet here.",
+      "source": "README credits table; betabetafork.txt header, and the repository and invite its credits page copies (lines 9015 and 9024); the Addict_1.lua header ('emotes: the Uhhhhhh ones by STEVETHEREALONE')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "boredgal",
+      "section": "Reanimation",
+      "name": "BoredGal",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Uhhhhhh patches"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Did most of the patches in Uhhhhhh.",
+      "license": "",
+      "source": "betabetafork.txt header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "awes955",
+      "section": "Reanimation",
+      "name": "Awes955",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Uhhhhhh mod"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the modded build of Uhhhhhh.",
+      "license": "",
+      "source": "betabetafork.txt header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "dubmood",
+      "section": "Reanimation",
+      "name": "Dubmood",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Music"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh",
+        "Emotes"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Music in Uhhhhhh, some of the dance songs too.",
+      "license": "",
+      "source": "README credits table; betabetafork.txt header (Music) and line 789",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "four-mat",
+      "section": "Reanimation",
+      "name": "4mat",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Music"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Some of the music in Uhhhhhh.",
+      "license": "",
+      "source": "betabetafork.txt header (Music) and line 789",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "master-boot-record",
+      "section": "Reanimation",
+      "name": "MASTER BOOT RECORD",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Music"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Some of the music in Uhhhhhh.",
+      "license": "",
+      "source": "betabetafork.txt header (Music)",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "aalib",
+      "section": "Reanimation",
+      "name": "AALib",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "Graphics"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "The ASCII art library behind Uhhhhhh's text art.",
+      "license": "",
+      "source": "betabetafork.txt header (GFX) and credits page",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "solary-3",
+      "section": "Reanimation",
+      "name": "Solary-3",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Dance songs and animations"
+      ],
+      "usedIn": [
+        "Reanimation / Uhhhhhh",
+        "Emotes"
+      ],
+      "links": {
+        "github": "https://github.com/Solary-3/Scripts",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Some of Uhhhhhh's dance songs and animations, so a few of the Emotes too.",
+      "license": "",
+      "source": "README credits table; betabetafork.txt line 9801 (Sphere.mp3 comes from the Solary-3/Scripts repository)",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "gelatek",
+      "section": "Reanimation",
+      "name": "Gelatek",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Limb reanimate author"
+      ],
+      "usedIn": [
+        "Reanimation / Gelatek"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the limb reanimate our Gelatek reanimation is built on.",
+      "license": "",
+      "source": "Reanimation.lua, its credits print and warn lines",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "poncho",
+      "section": "Reanimation",
+      "name": "poncho",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Helped with the limb reanimate"
+      ],
+      "usedIn": [
+        "Reanimation / Gelatek"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Helped Gelatek with a small part of the limb reanimate.",
+      "license": "",
+      "source": "Reanimation.lua, its credits print and warn lines",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "vulnerali-padero",
+      "section": "Scripts",
+      "name": "Vulnerali / padero",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Studio Dummy V4 author"
+      ],
+      "usedIn": [
+        "Scripts / Studio Dummy V4"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the original Studio Dummy V4.",
+      "license": "",
+      "source": "README credits table",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "andrfix",
+      "section": "Scripts",
+      "name": "andrfix",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Studio Dummy modes and fly"
+      ],
+      "usedIn": [
+        "Scripts / Studio Dummy V4"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the Studio Dummy version the modes and fly come from.",
+      "license": "",
+      "source": "README credits table",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "mlg-super-killer",
+      "section": "Scripts",
+      "name": "MLG Super Killer",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Snake Banisher author"
+      ],
+      "usedIn": [
+        "Scripts / Snake Banisher V3"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the original Snake Banisher.",
+      "license": "",
+      "source": "README credits table",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "epic",
+      "section": "Scripts",
+      "name": "Epic",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Snake Banisher V3 converter"
+      ],
+      "usedIn": [
+        "Scripts / Snake Banisher V3"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Turned Snake Banisher into the V3 we run.",
+      "license": "",
+      "source": "README credits table",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "supr14",
+      "section": "Scripts",
+      "name": "Supr14",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Dubstep Gun author"
+      ],
+      "usedIn": [
+        "Main Scripts / Dubstep Gun"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the Dubstep Gun.",
+      "license": "",
+      "source": "README credits table; the DubstepGun.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "bloxinstud10",
+      "section": "Scripts",
+      "name": "BloxinStud10",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Dubstep Gun songs"
+      ],
+      "usedIn": [
+        "Main Scripts / Dubstep Gun"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the ScriptAssets the Dubstep Gun plays its songs from.",
+      "license": "",
+      "source": "the DubstepGun.lua header ('songs: BloxinStud10's ScriptAssets')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "noobygames12",
+      "section": "Scripts",
+      "name": "NoobyGames12",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Neptunian V author"
+      ],
+      "usedIn": [
+        "Main Scripts / Neptunian V"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the original Neptunian V.",
+      "license": "",
+      "source": "README credits table; the Neptunian V Gun.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "gobl00x",
+      "section": "Scripts",
+      "name": "gObl00x (random_hacke6)",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Neptunian V Gun converter"
+      ],
+      "usedIn": [
+        "Main Scripts / Neptunian V Gun"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Converted Neptunian V into Neptunian V Gun for FDless.",
+      "license": "",
+      "source": "the Neptunian V Gun.lua header ('convert by gObl00x (random_hacke6)')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "tory",
+      "section": "Scripts",
+      "name": "Tory",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Neptunian V remake author"
+      ],
+      "usedIn": [
+        "Main Scripts / Neptunian V"
+      ],
+      "links": {
+        "github": "https://github.com/Jskfhggjxu/nep-remake-tory-assets",
+        "discord": "https://discord.gg/kMuXv6PuXp",
+        "youtube": "https://youtube.com/@jskfhggjxu",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "YeImTory",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the Neptunian V remake ours is built on, and hosts its music.",
+      "license": "",
+      "source": "the owner's message (discord and youtube); Neptunian_Tory_remake_5.lua (the YeImTory tag 'Neptunian remaker' and the repository its music files come from)",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "asarii-iv",
+      "section": "Scripts",
+      "name": "Asarii_IV",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Last Star author"
+      ],
+      "usedIn": [
+        "Main Scripts / Last Star"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Wrote Last Star from scratch.",
+      "license": "",
+      "source": "the Last Star.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "stratopsheric-aero",
+      "section": "Scripts",
+      "name": "StratopshericAero",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Last Star animation base"
+      ],
+      "usedIn": [
+        "Main Scripts / Last Star"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the animation base Last Star moves with.",
+      "license": "",
+      "source": "the Last Star.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "gunsforgunskidd",
+      "section": "Scripts",
+      "name": "GunsForGunsKidd",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Last Star animation rigs"
+      ],
+      "usedIn": [
+        "Main Scripts / Last Star"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the animation rigs Last Star uses.",
+      "license": "",
+      "source": "the Last Star.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "dangerredile",
+      "section": "Scripts",
+      "name": "DangerRedile",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Last Star modes"
+      ],
+      "usedIn": [
+        "Main Scripts / Last Star"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made Last Star's Convert & More modes.",
+      "license": "",
+      "source": "the Last Star.lua header",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "gelatek-hub",
+      "section": "Scripts",
+      "name": "Gelatek Hub",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "The Hotline and The Sniper"
+      ],
+      "usedIn": [
+        "Main Scripts / The Hotline",
+        "The Sniper (hidden)"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the original The Hotline and The Sniper.",
+      "license": "",
+      "source": "the TheHotline.lua and TheSniper.lua headers",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "booga",
+      "section": "Scripts",
+      "name": "Booga",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Addict original convert"
+      ],
+      "usedIn": [
+        "Main Scripts / Addict"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the first convert of Addict.",
+      "license": "",
+      "source": "the Addict_1.lua header ('og script: Booga (original convert)')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "melonscripter",
+      "section": "Scripts",
+      "name": "MelonScripter",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Addict, Internal War and Master Chief converter"
+      ],
+      "usedIn": [
+        "Main Scripts / Addict",
+        "Main Scripts / InternalWar",
+        "Main Scripts / Master Chief"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "https://www.youtube.com/@MelonScripter",
+        "website": "",
+        "roblox": "",
+        "other": [
+          "https://x.com/MelonScripter"
+        ]
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Fixed and reconverted Addict, and converted the hat Internal War and Master Chief.",
+      "license": "",
+      "source": "the Addict_1.lua header ('MelonScripter (fixed, reconverted, edited, aligned)'); the InternalWar_FDless.lua header ('MelonScripter - Converted and Aligned (the og hat version)' and its socials); the MasterChief header ('converted by melon', the quote signed MelonScripter and the MelonScripter socials)",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "melon",
+      "section": "Scripts",
+      "name": "Melon",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Commander V2 converter"
+      ],
+      "usedIn": [
+        "Main Scripts / Commander V2"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Converted Commander CR into Commander V2.",
+      "license": "",
+      "source": "the CommanderV2_2.lua header ('og script: Commander CR by Shackluster, converted by Melon')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "shackluster",
+      "section": "Scripts",
+      "name": "Shackluster",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Commander CR author"
+      ],
+      "usedIn": [
+        "Main Scripts / Commander V2"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made Commander CR, where Commander V2 comes from.",
+      "license": "",
+      "source": "the CommanderV2_2.lua header ('og script: Commander CR by Shackluster')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "helkern",
+      "section": "Scripts",
+      "name": "Helkern",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Master Chief creator"
+      ],
+      "usedIn": [
+        "Main Scripts / Master Chief"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the original Master Chief.",
+      "license": "",
+      "source": "the MasterChief header ('Helkern - Creator')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "auxnos",
+      "section": "Scripts",
+      "name": "Auxnos",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Bloodwater creator"
+      ],
+      "usedIn": [
+        "Main Scripts / Addict"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made bloodwater, which Addict uses.",
+      "license": "",
+      "source": "the Addict_1.lua header ('Auxnos (creator of bloodwater)')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "emper",
+      "section": "Scripts",
+      "name": "Emper",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Reanimate creator"
+      ],
+      "usedIn": [
+        "Main Scripts / Addict",
+        "Main Scripts / InternalWar",
+        "Main Scripts / Master Chief"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the reanimate in Addict, Internal War and Master Chief.",
+      "license": "",
+      "source": "the Addict_1.lua header ('Emper (reanimate creator)'); the InternalWar_FDless.lua header ('Emper - Reanimate creator'); the MasterChief header ('Emper - Reanimate')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "beezeldud",
+      "section": "Scripts",
+      "name": "BeezelduD",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "Internal War creator"
+      ],
+      "usedIn": [
+        "Main Scripts / InternalWar"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made Internal War, the script our InternalWar comes from.",
+      "license": "",
+      "source": "the InternalWar_FDless.lua header ('BeezelduD - Creator of Internal War')",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "0866",
+      "section": "Scripts",
+      "name": "0866",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "CLOVR co-author"
+      ],
+      "usedIn": [
+        "Scripts / FakeVR"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made CLOVR with Abacaxl. FakeVR's full-body setup comes from it.",
+      "license": "",
+      "source": "CLOVR's script header: made by 0866 and Abacaxl, thanks to unverified",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "abacaxl",
+      "section": "Scripts",
+      "name": "Abacaxl",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "CLOVR co-author"
+      ],
+      "usedIn": [
+        "Scripts / FakeVR"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made CLOVR with 0866. FakeVR's full-body setup comes from it.",
+      "license": "",
+      "source": "CLOVR's script header: made by 0866 and Abacaxl, thanks to unverified",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "im-patrick",
+      "section": "Scripts",
+      "name": "im_patrick",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "FakeVR author"
+      ],
+      "usedIn": [
+        "Scripts / FakeVR"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made the FakeVR script ours started from.",
+      "license": "",
+      "source": "FakeVR script header: @im_patrick on youtube",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "saucekid",
+      "section": "Scripts",
+      "name": "saucekid",
+      "handle": "",
+      "kind": "person",
+      "roles": [
+        "RERilla author"
+      ],
+      "usedIn": [
+        "Scripts / FakeVR"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made RERilla. FakeVR's arms follow its look.",
+      "license": "",
+      "source": "RERilla script header: saucekid created this script",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "dark-eccentric",
+      "section": "Scripts",
+      "name": "Dark Eccentric",
+      "handle": "DarkEccentric",
+      "kind": "person",
+      "roles": [
+        "Book Reader showcase"
+      ],
+      "usedIn": [
+        "Scripts / Book Reader"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "https://www.youtube.com/@DarkEccentric",
+        "website": "",
+        "roblox": "",
+        "other": [
+          "https://www.youtube.com/watch?v=221xjv9UYdo"
+        ]
+      },
+      "roblox": {
+        "username": "Dark_Eccentric",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Showcased the Fe Book Reader. Our Book Reader is rebuilt from his video.",
+      "license": "",
+      "source": "Roblox Fe Script Showcase Episode#131/Fe Book Reader on his YouTube channel (the second link); his channel says the scripts he shows are not his own",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "infinite-yield",
+      "section": "Commands",
+      "name": "Edge & the Infinite Yield team",
+      "handle": "",
+      "kind": "team",
+      "roles": [
+        "Command reference"
+      ],
+      "usedIn": [
+        "Commands"
+      ],
+      "links": {
+        "github": "https://github.com/EdgeIY/infiniteyield",
+        "discord": "https://discord.gg/78ZuWSq",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Made Infinite Yield. Its command list was a big help for ours.",
+      "license": "",
+      "source": "README credits table; latest.lua (Infinite Yield): its credits line and the EdgeIY/infiniteyield address in its update check",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "cmd-x",
+      "section": "Commands",
+      "name": "CMD-X",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "Command reference"
+      ],
+      "usedIn": [
+        "Commands"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.gg/JyzvQ6zdfg",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Admin script by fini.work, pigeon and curvn. One of the lists our commands came from.",
+      "license": "",
+      "source": "CMD-X.txt: its invite (cordCode), the 'Made by' line and the credits command",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "fates-admin",
+      "section": "Commands",
+      "name": "Fates Admin",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "Command reference"
+      ],
+      "usedIn": [
+        "Commands"
+      ],
+      "links": {
+        "github": "https://github.com/fatesc/fates-admin",
+        "discord": "",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Admin script. One of the lists our commands came from.",
+      "license": "",
+      "source": "Fates Admin.txt: the fatesc/fates-admin address in its update code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "scriptblox",
+      "section": "Music and services",
+      "name": "ScriptBlox",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Scripts tab"
+      ],
+      "usedIn": [
+        "Scripts (ScriptBlox) tab"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.com/invite/HrPBC2DKCu",
+        "youtube": "",
+        "website": "https://scriptblox.com",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Script site. The ScriptBlox tab shows their public list.",
+      "license": "",
+      "source": "README credits table; the ScriptBlox address in the hub code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "phineas-lanyard",
+      "section": "Music and services",
+      "name": "Phineas (Lanyard)",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Spotify through Discord"
+      ],
+      "usedIn": [
+        "Music"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.gg/UrXF2cfJ7F",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Phineas made Lanyard. Free Spotify accounts work in the hub through it.",
+      "license": "",
+      "source": "README credits table; Core.LANYARD_INVITE in AtsukoHub.lua",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "yt-dlp",
+      "section": "Music and services",
+      "name": "yt-dlp",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "YouTube client list"
+      ],
+      "usedIn": [
+        "Music",
+        "Video"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.gg/H5MNcFW63r",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Keeps the YouTube client list our youtube.json follows.",
+      "license": "",
+      "source": "README credits table",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "lrclib",
+      "section": "Music and services",
+      "name": "LRCLIB (tranxuanthang)",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Lyrics"
+      ],
+      "usedIn": [
+        "Music"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://lrclib.net",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "tranxuanthang's LRCLIB gives us the synced lyrics.",
+      "license": "",
+      "source": "README credits table; the LRCLIB address in the hub code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "ntfy",
+      "section": "Music and services",
+      "name": "ntfy (Philipp C. Heckel)",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Chat relay"
+      ],
+      "usedIn": [
+        "Chat"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.gg/cT7ECsZj9w",
+        "youtube": "",
+        "website": "https://ntfy.sh",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Philipp C. Heckel's ntfy runs the free relay the hub chat uses.",
+      "license": "",
+      "source": "README credits table; the ntfy address in the hub code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "spotify",
+      "section": "Music and services",
+      "name": "Spotify",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Music service"
+      ],
+      "usedIn": [
+        "Music"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://open.spotify.com",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "The player, library and search on the Spotify tab.",
+      "license": "",
+      "source": "the Spotify addresses in the hub code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "youtube-google",
+      "section": "Music and services",
+      "name": "YouTube (Google)",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Videos"
+      ],
+      "usedIn": [
+        "Video",
+        "Music"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://www.youtube.com",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "The videos and thumbnails the video picker finds.",
+      "license": "",
+      "source": "the YouTube addresses in the hub code",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "google-ai-studio",
+      "section": "Music and services",
+      "name": "Google AI Studio (Gemini)",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "AI page"
+      ],
+      "usedIn": [
+        "AI"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://aistudio.google.com/apikey",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "The free API key and Gemini model the AI page can use.",
+      "license": "",
+      "source": "README (the ai section)",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "lucide",
+      "section": "Libraries and assets",
+      "name": "Lucide",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "Icons"
+      ],
+      "usedIn": [
+        "Everywhere"
+      ],
+      "links": {
+        "github": "",
+        "discord": "https://discord.gg/EH6nSts",
+        "youtube": "",
+        "website": "",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "The icon set every icon in the hub comes from.",
+      "license": "ISC License (Hub/LUCIDE_LICENSE.txt)",
+      "source": "README credits table; Hub/LUCIDE_LICENSE.txt",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "weserv",
+      "section": "Libraries and assets",
+      "name": "images.weserv.nl",
+      "handle": "",
+      "kind": "service",
+      "roles": [
+        "Picture converter"
+      ],
+      "usedIn": [
+        "Script pictures"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://images.weserv.nl",
+        "roblox": "",
+        "other": []
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Turns a picture link into a PNG when you tap Convert.",
+      "license": "",
+      "source": "Hub/modules/scriptart.lua",
+      "verified": false,
+      "picture": ""
+    },
+    {
+      "id": "bluearchive",
+      "section": "Libraries and assets",
+      "name": "Blue Archive",
+      "handle": "",
+      "kind": "project",
+      "roles": [
+        "Voice characters"
+      ],
+      "usedIn": [
+        "The hub / Sounds"
+      ],
+      "links": {
+        "github": "",
+        "discord": "",
+        "youtube": "",
+        "website": "https://bluearchive.nexon.com/home",
+        "roblox": "",
+        "other": [
+          "https://store.steampowered.com/app/3557620/Blue_Archive/",
+          "https://apps.apple.com/us/app/blue-archive/id1571873795",
+          "https://play.google.com/store/apps/details?id=com.nexon.bluearchive"
+        ]
+      },
+      "roblox": {
+        "username": "",
+        "userId": null
+      },
+      "profileStyle": "full",
+      "description": "Voice characters, plus the click and notification sounds.",
+      "license": "",
+      "source": "Hub/sounds/README.md",
+      "verified": true,
+      "picture": "Hub/credits/bluearchive.jpg"
+    }
+  ]
+}
