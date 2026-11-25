@@ -1,6 +1,6 @@
 local hub = readsource("Hub/AtsukoHub.lua")
 
-local REAL = "Scripts/Hat/FDless/NeptunianV.lua"
+local REAL = "Scripts/Hat/NeptunianV.lua"
 local SHIPPED = 0
 for _ in pairs(jsondecode(readsource("Scripts/manifest.json")).scripts) do
 	SHIPPED += 1
@@ -172,10 +172,10 @@ for _, path in ipairs({
 	"Scripts/Hat/DubstepGun.lua",
 	"Scripts/Limb/Gelatek.lua",
 	"Scripts/Tools/a.txt",
-	"Scripts/Hat/FDless/DubstepGun.lua",
-	"Scripts/Hat/FDless/LastStar.lua",
-	"Scripts/Hat/FDless/NeptunianVGun.lua",
-	"Scripts/Hat/FDless/TheHotline.lua",
+	"Scripts/Hat/DubstepGunOriginal.lua",
+	"Scripts/Hat/LastStar.lua",
+	"Scripts/Hat/NeptunianVGun.lua",
+	"Scripts/Hat/TheHotline.lua",
 }) do
 	T.eq(Repo.isScript(path), true, path)
 end
@@ -228,7 +228,7 @@ local list = listOf({ "Scripts/Hat/Zebra.lua", REAL, "Scripts/Hat/Apple.lua", "S
 T.eq(list[2].name, "NeptunianV", "before the manifest the name is the file name")
 Repo.set(list)
 T.eq(Repo.byPath[REAL].name, "Neptunian V")
-T.eq(Repo.byPath[REAL].category, "Hat / FDless")
+T.eq(Repo.byPath[REAL].category, "Hat")
 T.eq(Repo.byPath[REAL].kind, "hat")
 T.same(Repo.byPath[REAL].credit, { "Tory", "NoobyGames12", "MyWorld & rqz" })
 T.same(Repo.byPath[REAL].reanim, { "atsuko", "fdless" }, "every hat script can run on either hat reanimation")
@@ -240,7 +240,7 @@ local order = {}
 for _, e in ipairs(Repo.entries) do
 	order[#order + 1] = e.path
 end
-T.same(order, { "Scripts/Hat/Apple.lua", "Scripts/Hat/Zebra.lua", REAL, "Scripts/Limb/Zed.lua" })
+T.same(order, { "Scripts/Hat/Apple.lua", REAL, "Scripts/Hat/Zebra.lua", "Scripts/Limb/Zed.lua" })
 T.ok(string.find(Repo.sig, REAL .. ":100", 1, true), "the list signature still follows path and size")
 
 T.section("repo_manifest: the details of a script")
@@ -285,7 +285,7 @@ fresh()
 disk["AtsukoHub/cache/manifest.json"] = readsource("Scripts/manifest.json")
 disk["AtsukoHub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
 disk[Core.LIST_CACHE] = '{"key":"atsukohakari/Atsuko@main","list":['
-	.. '{"path":"Scripts/Hat/FDless/NeptunianV.lua","size":263512},'
+	.. '{"path":"Scripts/Hat/NeptunianV.lua","size":263512},'
 	.. '{"path":"Reanimation/Hat/FDless.lua","size":900},'
 	.. '{"path":"Alignment/alignment.lua","size":900},'
 	.. '{"path":"Scripts/Hat/DubstepGun.lua","size":40}]}'

@@ -30,6 +30,9 @@ function Controller.isNative(entry)
 	if entry.native == true then
 		return true
 	end
+	if entry.needsfd == true then
+		return false
+	end
 	if string.find(entry.path, Controller.FDLESS_PATTERN) then
 		return false
 	end

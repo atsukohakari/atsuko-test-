@@ -535,3 +535,38 @@ do
 	task.wait(0.1)
 	T.eq(Art.converter().name, "images.weserv.nl", "no file means the default")
 end
+
+T.section("scriptart: pictures follow a script that moved")
+do
+	local good = "AtsukoHub/cache/art/abc.png"
+	local data = {
+		version = 1,
+		items = {
+			["Scripts/Hat/FDless/Addict.lua"] = { logo = { src = "file", value = "a.png", cached = good } },
+			["Scripts/Hat/FDless/DubstepGun.lua"] = { banner = { src = "asset", value = "111" } },
+			["Scripts/Hat/FDless/LastStar.lua"] = { logo = { src = "asset", value = "222" } },
+			["Scripts/Hat/LastStar.lua"] = { logo = { src = "asset", value = "333" } },
+			["Scripts/Hat/Other.lua"] = { logo = { src = "asset", value = "444" } },
+		},
+	}
+	local moved = {
+		["Scripts/Hat/FDless/Addict.lua"] = "Scripts/Hat/Addict.lua",
+		["Scripts/Hat/FDless/DubstepGun.lua"] = "Scripts/Hat/DubstepGunOriginal.lua",
+		["Scripts/Hat/FDless/LastStar.lua"] = "Scripts/Hat/LastStar.lua",
+	}
+	local world = W.new()
+	world.deps.movedPath = function(path)
+		return moved[path] or path
+	end
+	world.put(Art.DATA_FILE, jsonencode(data))
+	Art.init(world.ctx)
+	T.eq(Art.get("Scripts/Hat/Addict.lua", "logo").cached, good, "a logo moves to the new path")
+	T.eq(Art.get("Scripts/Hat/FDless/Addict.lua", "logo"), nil, "and is gone from the old one")
+	T.eq(Art.get("Scripts/Hat/DubstepGunOriginal.lua", "banner").value, "rbxassetid://111", "a renamed file keeps its banner")
+	T.eq(Art.get("Scripts/Hat/LastStar.lua", "logo").value, "rbxassetid://333", "a picture already on the new path wins")
+	T.eq(Art.get("Scripts/Hat/Other.lua", "logo").value, "rbxassetid://444", "other scripts are not touched")
+	local world2 = W.new()
+	world2.put(Art.DATA_FILE, jsonencode(data))
+	Art.init(world2.ctx)
+	T.eq(Art.get("Scripts/Hat/FDless/Addict.lua", "logo").cached, good, "without the helper nothing moves")
+end

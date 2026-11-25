@@ -213,3 +213,50 @@ local norm = string.find(src, "function Core.normalizeSettings()", 1, true)
 local nextFn = norm and string.find(src, "\nfunction ", norm + 10, true)
 T.ok(at ~= nil and norm ~= nil and nextFn ~= nil and at > norm and at < nextFn, "the cleaning call is inside normalizeSettings")
 T.eq(occurrences("Core.REANIM_NEED = 10\n"), 1)
+
+T.section("reanim_settings: saved paths follow the scripts that left the FDless folder")
+T.eq(Core.movedPath("Scripts/Hat/FDless/NeptunianV.lua"), "Scripts/Hat/NeptunianV.lua")
+T.eq(Core.movedPath("Scripts/Hat/FDless/DubstepGun.lua"), "Scripts/Hat/DubstepGunOriginal.lua", "the original dubstep gun got a new name")
+T.eq(Core.movedPath("Scripts/Hat/DubstepGun.lua"), "Scripts/Hat/DubstepGun.lua", "the hub's own dubstep gun stays")
+T.eq(Core.movedPath("Scripts/Hat/FDless/Mine.lua"), "Scripts/Hat/FDless/Mine.lua", "a script that never moved stays")
+T.eq(Core.movedPath(nil), nil)
+T.eq(Core.movedPath(5), 5)
+local moved = 0
+for from, to in pairs(Core.MOVED_SCRIPTS) do
+	moved += 1
+	T.ok(string.find(from, "^Scripts/Hat/FDless/") ~= nil and string.find(to, "^Scripts/Hat/[^/]+%.lua$") ~= nil, from .. " -> " .. to)
+end
+T.eq(moved, 10, "ten scripts moved")
+local s = {
+	recent = { "Scripts/Hat/FDless/LastStar.lua", "Scripts/Hat/LastStar.lua", "Scripts/Hat/AK47.lua", "Scripts/Hat/FDless/DubstepGun.lua" },
+	favorites = { ["Scripts/Hat/FDless/Addict.lua"] = true, ["Scripts/Hat/R6.lua"] = true },
+	perScript = { ["Scripts/Hat/FDless/TheHotline.lua"] = { a = 1 }, ["Scripts/Hat/MasterChief.lua"] = { b = 2 }, ["Scripts/Hat/FDless/MasterChief.lua"] = { c = 3 } },
+	reanimSel = "Scripts/Hat/FDless/RealityOrbGlitcher.lua",
+	theme = "midnight",
+}
+Core.moveSaved(s)
+T.eq(#s.recent, 3, "a script in the recent list twice is listed once")
+T.eq(s.recent[1], "Scripts/Hat/LastStar.lua")
+T.eq(s.recent[2], "Scripts/Hat/AK47.lua")
+T.eq(s.recent[3], "Scripts/Hat/DubstepGunOriginal.lua")
+T.eq(s.favorites["Scripts/Hat/Addict.lua"], true, "favorites move")
+T.eq(s.favorites["Scripts/Hat/FDless/Addict.lua"], nil)
+T.eq(s.favorites["Scripts/Hat/R6.lua"], true)
+T.eq(s.perScript["Scripts/Hat/TheHotline.lua"].a, 1, "per-script settings move")
+T.eq(s.perScript["Scripts/Hat/FDless/TheHotline.lua"], nil)
+T.eq(s.perScript["Scripts/Hat/MasterChief.lua"].b, 2, "settings already on the new path win")
+T.eq(s.reanimSel, "Scripts/Hat/RealityOrbGlitcher.lua", "the picked script moves")
+T.eq(s.theme, "midnight", "other settings are not touched")
+local broken = { recent = "x", favorites = 5 }
+Core.moveSaved(broken)
+T.eq(#broken.recent, 0, "a broken recent list becomes empty")
+T.eq(next(broken.favorites), nil, "broken favorites become empty")
+T.eq(next(broken.perScript), nil)
+T.eq(broken.reanimSel, nil)
+local once = { recent = { "Scripts/Hat/FDless/LastStar.lua" }, favorites = {}, perScript = {} }
+Core.moveSaved(once)
+Core.moveSaved(once)
+T.eq(once.recent[1], "Scripts/Hat/LastStar.lua", "running it twice changes nothing more")
+T.eq(occurrences("Core.moveSaved(S)"), 1, "saved paths are moved when settings load")
+local mv = string.find(src, "Core.moveSaved(S)", 1, true)
+T.ok(mv ~= nil and mv > norm and mv < nextFn, "inside normalizeSettings")

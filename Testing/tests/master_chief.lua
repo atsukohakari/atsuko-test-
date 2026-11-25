@@ -1,6 +1,6 @@
 local World = loadmodule("Testing/mocks/rbx_world.lua")
 local env = World.install({})
-local src = readsource("Scripts/Hat/FDless/MasterChief.lua")
+local src = readsource("Scripts/Hat/MasterChief.lua")
 
 local function near(a, b, eps)
 	return math.abs(a - b) <= (eps or 1e-3)

@@ -485,8 +485,9 @@ function Art.load()
 					entry[kind] = item
 				end
 			end
-			if entry.logo or entry.banner then
-				store.items[path] = entry
+			local key = deps.movedPath and deps.movedPath(path) or path
+			if (entry.logo or entry.banner) and (key == path or store.items[key] == nil) then
+				store.items[key] = entry
 			end
 		end
 	end
@@ -1231,6 +1232,7 @@ local function buildDeps(c)
 	}
 	return {
 		has = has,
+		movedPath = c.Core and c.Core.movedPath or nil,
 		fs = {
 			exists = function(path)
 				return FS.exists(path)

@@ -197,7 +197,7 @@ do
 	local realCurrent, realName, realRestart = R.current, R.name, R.restart
 	local restarts = 0
 	R.current = function()
-		return "Scripts/Hat/FDless/NeptunianV.lua"
+		return "Scripts/Hat/NeptunianV.lua"
 	end
 	R.name = function()
 		return "Neptunian V"

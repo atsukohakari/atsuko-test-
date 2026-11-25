@@ -319,11 +319,11 @@ local function setup(opts)
 			"Scripts/Hat/DubstepGun.lua",
 			"Scripts/Hat/SnakeBanisherV3.lua",
 			"Scripts/Hat/StudioDummyV4-Test.lua",
-			"Scripts/Hat/FDless/DubstepGun.lua",
-			"Scripts/Hat/FDless/LastStar.lua",
-			"Scripts/Hat/FDless/NeptunianV.lua",
-			"Scripts/Hat/FDless/NeptunianVGun.lua",
-			"Scripts/Hat/FDless/TheHotline.lua",
+			"Scripts/Hat/DubstepGunOriginal.lua",
+			"Scripts/Hat/LastStar.lua",
+			"Scripts/Hat/NeptunianV.lua",
+			"Scripts/Hat/NeptunianVGun.lua",
+			"Scripts/Hat/TheHotline.lua",
 		}) do
 			list[#list + 1] = Core.makeEntry(path, 1000)
 		end
@@ -450,17 +450,18 @@ do
 	T.eq(W.empties[1].title, "No favorites yet")
 	T.eq(W.empties[1].order, 1)
 	setup()
-	S.favorites["Scripts/Hat/FDless/LastStar.lua"] = true
+	S.favorites["Scripts/Hat/LastStar.lua"] = true
 	S.favorites["Scripts/Hat/SnakeBanisherV3.lua"] = true
 	Scripts.render(3)
 	local rows = rowsOf(Scripts.views[3])
 	T.eq(#rows, 2)
 	T.eq(rows[1].LayoutOrder, 1)
 	local sub = labelsIn(rows[1]).Sub.Text
-	T.eq(sub, "Hat  ·  by MLG Super Killer +1", "Favorites say the kind and the credit")
+	T.eq(sub, "Hat  ·  by Asarii_IV +4", "Favorites say the kind and the credit")
+	T.eq(labelsIn(rows[2]).Sub.Text, "Hat  ·  by MLG Super Killer +1", "sorted by name with the other hat scripts")
 	T.eq(Scripts.infos[3], nil)
 	setup()
-	S.recent = { "Scripts/Hat/FDless/TheHotline.lua", "Scripts/Hat/gone.lua" }
+	S.recent = { "Scripts/Hat/TheHotline.lua", "Scripts/Hat/gone.lua" }
 	Scripts.render(4)
 	rows = rowsOf(Scripts.views[4])
 	T.eq(#rows, 1, "a script that is gone is skipped")
@@ -520,7 +521,7 @@ T.section("scripts_page: row states follow the run")
 do
 	setup()
 	Scripts.render(1)
-	local path = "Scripts/Hat/FDless/LastStar.lua"
+	local path = "Scripts/Hat/LastStar.lua"
 	local rowOf = function(p)
 		for _, row in ipairs(rowsOf(Scripts.views[1])) do
 			if Scripts.refs[p] and Scripts.refs[p][1].e.name == labelsIn(row).Name then
@@ -572,7 +573,7 @@ T.section("scripts_page: selecting a script")
 do
 	setup()
 	Scripts.render(1)
-	local path = "Scripts/Hat/FDless/NeptunianV.lua"
+	local path = "Scripts/Hat/NeptunianV.lua"
 	local ref = Scripts.refs[path][1]
 	local plain = ref.sub.Text
 	T.eq(string.sub(plain, 1, 3), "by ")
@@ -594,7 +595,7 @@ T.section("scripts_page: what a tap does")
 do
 	setup()
 	Scripts.render(1)
-	local path = "Scripts/Hat/FDless/TheHotline.lua"
+	local path = "Scripts/Hat/TheHotline.lua"
 	local ref = Scripts.refs[path][1]
 	local row
 	for _, r in ipairs(rowsOf(Scripts.views[1])) do

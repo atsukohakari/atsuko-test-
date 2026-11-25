@@ -1,7 +1,7 @@
 local World = loadmodule("Testing/mocks/rbx_world.lua")
 local env = World.install({})
 local makeApi = loadmodule("Testing/mocks/fake_fd.lua").make
-local src = readsource("Scripts/Hat/FDless/MasterChief.lua")
+local src = readsource("Scripts/Hat/MasterChief.lua")
 _G.delay = function(t, f)
 	return task.delay(t, f)
 end

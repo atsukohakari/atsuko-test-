@@ -386,11 +386,11 @@ end
 
 local REL12 = A.holdOf({ mesh = LC1 }).mate.rel
 local GUNS = {
-	{ "The Hotline", "Scripts/Hat/FDless/TheHotline.lua" },
-	{ "Addict", "Scripts/Hat/FDless/Addict.lua" },
-	{ "Commander V2", "Scripts/Hat/FDless/CommanderV2.lua" },
-	{ "Neptunian V Gun", "Scripts/Hat/FDless/NeptunianVGun.lua" },
-	{ "Dubstep Gun (original)", "Scripts/Hat/FDless/DubstepGun.lua" },
+	{ "The Hotline", "Scripts/Hat/TheHotline.lua" },
+	{ "Addict", "Scripts/Hat/Addict.lua" },
+	{ "Commander V2", "Scripts/Hat/CommanderV2.lua" },
+	{ "Neptunian V Gun", "Scripts/Hat/NeptunianVGun.lua" },
+	{ "Dubstep Gun (original)", "Scripts/Hat/DubstepGunOriginal.lua" },
 }
 
 T.section("lc_pair: every gun script holds LC Gun 1 and keeps LC Gun 2 joined to it")
@@ -416,7 +416,7 @@ end
 
 T.section("lc_pair: The Hotline holds LC Gun 1 the way Uhhhhhh does")
 do
-	local S = runScript("Scripts/Hat/FDless/TheHotline.lua")
+	local S = runScript("Scripts/Hat/TheHotline.lua")
 	if S.api then
 		local held = S.j1.C1 * S.j1.C0:Inverse()
 		local uh = UH_HAND * C1[LC1]:Inverse()
@@ -450,7 +450,7 @@ do
 	local worn = { { mesh = LC1, tex = TEX, name = "LC Gun 1" }, { mesh = LC2, tex = TEX, name = "LC Gun 2" } }
 	old:addIds(A.parseAdd(LC1), worn)
 	old:addIds(A.parseAdd(LC2), worn)
-	local S = runScript("Scripts/Hat/FDless/TheHotline.lua")
+	local S = runScript("Scripts/Hat/TheHotline.lua")
 	if S.api then
 		local lead, mate = S.h1, S.h2
 		if S.j1.Part1 == S.h2 then
@@ -462,7 +462,7 @@ do
 		env.run(3)
 	end
 	hubWith({ LC1 .. " " .. LC2 })
-	local A1 = runScript("Scripts/Hat/FDless/TheHotline.lua", { alone = true })
+	local A1 = runScript("Scripts/Hat/TheHotline.lua", { alone = true })
 	if A1.api then
 		T.ok(A1.j1.Part1 ~= A1.api.V.Head, "LC Gun 1 alone is still held")
 		env.run(3)

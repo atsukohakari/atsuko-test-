@@ -136,7 +136,7 @@ end
 
 T.section("add_hats: Last Star's empty sword wings take an added hat")
 do
-	local src = readsource("Scripts/Hat/FDless/LastStar.lua")
+	local src = readsource("Scripts/Hat/LastStar.lua")
 	T.ok(type(src) == "string", "Last Star can be read")
 	if type(src) == "string" then
 		T.ok(string.find(src, 'pcall(A.match, "Last Star", "sword"', 1, true) ~= nil, "it asks the hat list for swords you added")

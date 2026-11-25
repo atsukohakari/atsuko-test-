@@ -2,7 +2,7 @@ local World = loadmodule("Testing/mocks/rbx_world.lua")
 local env = World.install({})
 CFrame = loadmodule("Testing/mocks/cframe_math.lua").make(Vector3)
 local makeApi = loadmodule("Testing/mocks/fake_fd.lua").make
-local src = readsource("Scripts/Hat/FDless/RealityOrbGlitcher.lua")
+local src = readsource("Scripts/Hat/RealityOrbGlitcher.lua")
 math.acos = math.acos or function(x)
 	x = math.max(-1, math.min(1, x))
 	return math.atan2(math.sqrt(1 - x * x), x)

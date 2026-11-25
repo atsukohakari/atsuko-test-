@@ -776,6 +776,36 @@ function Core.cleanLookOwn()
 	S.lookOwn = out
 end
 
+Core.MOVED_SCRIPTS = { ["Scripts/Hat/FDless/DubstepGun.lua"] = "Scripts/Hat/DubstepGunOriginal.lua" }
+for _, name in ipairs({ "Addict", "CommanderV2", "InternalWar", "LastStar", "MasterChief", "NeptunianV", "NeptunianVGun", "RealityOrbGlitcher", "TheHotline" }) do
+	Core.MOVED_SCRIPTS["Scripts/Hat/FDless/" .. name .. ".lua"] = "Scripts/Hat/" .. name .. ".lua"
+end
+function Core.movedPath(path)
+	return type(path) == "string" and Core.MOVED_SCRIPTS[path] or path
+end
+function Core.moveKeys(map)
+	if type(map) ~= "table" then return map end
+	local out = {}
+	for k, v in pairs(map) do
+		local to = Core.movedPath(k)
+		if to == k or out[to] == nil then out[to] = v end
+	end
+	return out
+end
+function Core.moveSaved(s)
+	local recent, seen = {}, {}
+	for _, p in ipairs(type(s.recent) == "table" and s.recent or {}) do
+		local to = Core.movedPath(p)
+		if not seen[to] then
+			seen[to] = true
+			recent[#recent + 1] = to
+		end
+	end
+	s.recent = recent
+	s.favorites = type(s.favorites) == "table" and Core.moveKeys(s.favorites) or {}
+	s.perScript = type(s.perScript) == "table" and Core.moveKeys(s.perScript) or {}
+	s.reanimSel = Core.movedPath(s.reanimSel)
+end
 function Core.normalizeSettings()
 	S.uiScale = math.clamp(tonumber(S.uiScale) or 0.75, 0.5, 1.5)
 	S.bgTint = math.clamp(tonumber(S.bgTint) or 0.4, 0, 1)
@@ -824,6 +854,7 @@ function Core.normalizeSettings()
 	for k, v in pairs(S.cmd) do
 		if type(k) ~= "string" or type(v) ~= "table" then S.cmd[k] = nil end
 	end
+	Core.moveSaved(S)
 	local clean = {}
 	for _, p in ipairs(S.recent) do
 		if type(p) == "string" and #clean < 12 then clean[#clean + 1] = p end

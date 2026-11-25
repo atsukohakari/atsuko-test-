@@ -232,7 +232,7 @@ end
 T.section("fdless_flow: Last Star style script, getgenv() and _G are different tables")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
+	local e = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
 	w.bodies[e.path] = sharedBody(w)
 	T.ok(w.RG ~= w.GE, "the two tables are different, like in a real executor")
 	w.R.start(e)
@@ -261,7 +261,7 @@ end
 T.section("fdless_flow: Dubstep Gun style script that ships its own FDless")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/FDless/DubstepGun.lua")
+	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/DubstepGunOriginal.lua")
 	w.bodies[e.path] = function(rec)
 		local FD = w.RG.GenesisFDless
 		if type(FD) == "table" then
@@ -312,7 +312,7 @@ end
 T.section("fdless_flow: a script that dies is reported and cleaned up")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/FDless/DubstepGun.lua")
+	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/DubstepGunOriginal.lua")
 	w.bodies[e.path] = function()
 		error("boom")
 	end
@@ -330,7 +330,7 @@ end
 T.section("fdless_flow: a shared script that never calls reanimate is reported")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
+	local e = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
 	w.bodies[e.path] = function() end
 	w.R.start(e)
 	task.wait(50)
@@ -343,7 +343,7 @@ end
 T.section("fdless_flow: an FDless that was already running is stopped first")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
+	local e = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
 	local on = true
 	local stops = 0
 	local foreign = {
@@ -373,7 +373,7 @@ end
 T.section("fdless_flow: an FDless that cannot be stopped blocks the start with a clear reason")
 do
 	local w = newWorld()
-	local e = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
+	local e = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
 	local stubborn = {
 		reanimate = function() end,
 		stopreanimate = function() end,
@@ -412,7 +412,7 @@ end
 T.section("fdless_flow: one table for both, as on executors where getgenv() is _G")
 do
 	local w = newWorld({ same = true })
-	local e = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
+	local e = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
 	w.bodies[e.path] = sharedBody(w)
 	T.ok(w.RG == w.GE)
 	w.R.start(e)
@@ -430,7 +430,7 @@ T.section("fdless_flow: a locked table still gets the shared copy")
 do
 	local w = newWorld()
 	setmetatable(w.RG, { __metatable = "locked" })
-	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/FDless/DubstepGun.lua")
+	local e = entryOf(w, "Dubstep Gun (Original)", "Scripts/Hat/DubstepGunOriginal.lua")
 	w.bodies[e.path] = sharedBody(w)
 	w.R.start(e)
 	task.wait(4)
@@ -520,8 +520,8 @@ end
 T.section("fdless_flow: switching between two FDless scripts never deanimates the hub")
 do
 	local w = newWorld()
-	local a = entryOf(w, "Last Star", "Scripts/Hat/FDless/LastStar.lua")
-	local b = entryOf(w, "Dubstep Gun", "Scripts/Hat/FDless/DubstepGun.lua")
+	local a = entryOf(w, "Last Star", "Scripts/Hat/LastStar.lua")
+	local b = entryOf(w, "Dubstep Gun", "Scripts/Hat/DubstepGunOriginal.lua")
 	local reanimations = 0
 	for _, e in ipairs({ a, b }) do
 		w.bodies[e.path] = function(rec)

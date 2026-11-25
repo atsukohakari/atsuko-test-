@@ -50,7 +50,7 @@
       ],
       "desc": "Dubstep Gun rebuilt for the hub, with emote support."
     },
-    "Scripts/Hat/FDless/Addict.lua": {
+    "Scripts/Hat/Addict.lua": {
       "name": "Addict",
       "kind": "hat",
       "reanim": [
@@ -68,7 +68,7 @@
       ],
       "desc": "Combat script with a sniper and a pistol. Z: sniper, X: pistol, C: slash, T: sit."
     },
-    "Scripts/Hat/FDless/CommanderV2.lua": {
+    "Scripts/Hat/CommanderV2.lua": {
       "name": "Commander V2",
       "kind": "hat",
       "reanim": [
@@ -83,7 +83,7 @@
       ],
       "desc": "Commander CR converted for hats. Z: shoot, X: shockwave, C: rain, V: slam, E: dash, Q: warp, T: taunt."
     },
-    "Scripts/Hat/FDless/DubstepGun.lua": {
+    "Scripts/Hat/DubstepGunOriginal.lua": {
       "name": "Dubstep Gun (Original)",
       "kind": "hat",
       "reanim": [
@@ -98,7 +98,7 @@
       ],
       "desc": "The original Dubstep Gun. Click: shoot. Z, X, C, V, B, L and K: change the song."
     },
-    "Scripts/Hat/FDless/InternalWar.lua": {
+    "Scripts/Hat/InternalWar.lua": {
       "name": "InternalWar",
       "kind": "hat",
       "reanim": [
@@ -114,7 +114,7 @@
       ],
       "desc": "Combat script with a floating Titan made of hats. Z: punch, E: throw, R: uppercut, T: roar, Y: take on."
     },
-    "Scripts/Hat/FDless/LastStar.lua": {
+    "Scripts/Hat/LastStar.lua": {
       "name": "Last Star",
       "kind": "hat",
       "reanim": [
@@ -131,7 +131,7 @@
       ],
       "desc": "Winged sword script. Six sword hats follow the wings. Includes phone controls."
     },
-    "Scripts/Hat/FDless/MasterChief.lua": {
+    "Scripts/Hat/MasterChief.lua": {
       "name": "Master Chief",
       "kind": "hat",
       "reanim": [
@@ -147,7 +147,7 @@
       ],
       "desc": "Rifle and shotgun script. Click: shoot, Q: switch weapon, Z: grenade, X: dash, 2: run."
     },
-    "Scripts/Hat/FDless/NeptunianV.lua": {
+    "Scripts/Hat/NeptunianV.lua": {
       "name": "Neptunian V",
       "kind": "hat",
       "reanim": [
@@ -162,7 +162,7 @@
       ],
       "desc": "Sword combat script with a three-hit combo, skills and five modes. F: equip."
     },
-    "Scripts/Hat/FDless/NeptunianVGun.lua": {
+    "Scripts/Hat/NeptunianVGun.lua": {
       "name": "Neptunian V Gun",
       "kind": "hat",
       "reanim": [
@@ -177,7 +177,7 @@
       ],
       "desc": "Sword and gun combat script. Click: combo, Q: switch between sword and gun."
     },
-    "Scripts/Hat/FDless/RealityOrbGlitcher.lua": {
+    "Scripts/Hat/RealityOrbGlitcher.lua": {
       "name": "Reality Orb Glitcher",
       "kind": "hat",
       "reanim": [
@@ -191,7 +191,7 @@
       ],
       "desc": "A glitcher with a floating orb made of the hats you wear. Q E R T Y: modes, Z: flower, N and M: fly, L: mute."
     },
-    "Scripts/Hat/FDless/TheHotline.lua": {
+    "Scripts/Hat/TheHotline.lua": {
       "name": "The Hotline",
       "kind": "hat",
       "reanim": [

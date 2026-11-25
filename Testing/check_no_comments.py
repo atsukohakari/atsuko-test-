@@ -167,10 +167,8 @@ def check(root, counts):
     for text in sorted(seen):
         have = counts.get(digest(text), 0)
         if seen[text] > have:
-            places = where[text] if have == 0 else where[text][have:]
-            for rel, line in places:
-                if is_reduction(text, derived_originals(root, rel, cache)):
-                    continue
+            plain = [(rel, line) for rel, line in where[text] if not is_reduction(text, derived_originals(root, rel, cache))]
+            for rel, line in plain[have:]:
                 failures.append("%s:%d  not in the baseline (baseline %d, package %d): %s" % (rel, line, have, seen[text], short(text)))
     return total, failures, errors
 

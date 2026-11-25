@@ -266,6 +266,10 @@ T.eq(Controller.isNative({ path = "Scripts/Hat/Other.lua", reanim = { "fdless" }
 T.eq(Controller.isNative({ path = "Scripts/Hat/Other.lua", reanim = { "atsuko", "fdless" } }), true)
 T.eq(Controller.isNative({ path = "Scripts/Hat/FDless/x.lua", native = true }), true, "an entry can say it is one of the hub's own")
 T.eq(Controller.isNative({ path = "Scripts/Hat/Other.lua", reanim = {} }), true)
+T.eq(Controller.isNative({ path = "Scripts/Hat/NeptunianV.lua", needsfd = true }), false, "a Main Script marked needsfd in the manifest runs on FDless wherever it sits")
+T.eq(Controller.isNative({ path = "Scripts/Hat/LastStar.lua", needsfd = false }), true)
+T.eq(Controller.isNative({ path = "Scripts/Hat/LastStar.lua", needsfd = "yes" }), true, "only a real true counts")
+T.eq(Controller.isNative({ path = "Scripts/Hat/x.lua", needsfd = true, native = true }), true, "an entry that says it is the hub's own still wins")
 T.eq(Controller.isNative({ path = "Scripts/Hat/Other.lua", reanim = "fdless" }), true, "a reanim that is not a list is ignored")
 T.eq(Controller.isNative({ path = 5 }), false)
 T.eq(Controller.isNative({ path = "MyScripts/Hat/X.lua" }), false)
@@ -462,7 +466,7 @@ T.section("reanim_ctl: a script the manifest ties to FDless runs on FDless whate
 do
 	local w = newWorld()
 	w.S.hatReanim = "atsuko"
-	local e = w.entry("Scripts/Hat/FDless/NeptunianV.lua", "Neptunian V", { reanim = { "fdless" } })
+	local e = w.entry("Scripts/Hat/NeptunianV.lua", "Neptunian V", { reanim = { "fdless" }, needsfd = true })
 	w.R.start(e)
 	task.wait(3)
 	T.eq(w.R.provider().id, "fdless")
@@ -521,7 +525,7 @@ do
 	w.S.hatReanim = "atsuko"
 	w.reg.providers.fdless = nil
 	w.reg:markFailed("fdless", "no connection")
-	local e = w.entry("Scripts/Hat/FDless/NeptunianV.lua", "Neptunian V", { reanim = { "fdless" } })
+	local e = w.entry("Scripts/Hat/NeptunianV.lua", "Neptunian V", { reanim = { "fdless" }, needsfd = true })
 	w.R.start(e)
 	task.wait(3)
 	T.eq(w.reg:state(), "idle")

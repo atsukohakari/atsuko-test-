@@ -1,6 +1,6 @@
 local Mod = loadmodule("Hub/modules/manifest.lua")
 
-local REAL_PATH = "Scripts/Hat/FDless/NeptunianV.lua"
+local REAL_PATH = "Scripts/Hat/NeptunianV.lua"
 
 local function keys(tbl)
 	local n = 0

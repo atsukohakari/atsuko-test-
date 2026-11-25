@@ -96,15 +96,15 @@ local REAL = {
 	"Scripts/Hat/DubstepGun.lua",
 	"Scripts/Hat/SnakeBanisherV3.lua",
 	"Scripts/Hat/StudioDummyV4-Test.lua",
-	"Scripts/Hat/FDless/DubstepGun.lua",
-	"Scripts/Hat/FDless/LastStar.lua",
-	"Scripts/Hat/FDless/NeptunianV.lua",
-	"Scripts/Hat/FDless/NeptunianVGun.lua",
-	"Scripts/Hat/FDless/TheHotline.lua",
-	"Scripts/Hat/FDless/Addict.lua",
-	"Scripts/Hat/FDless/CommanderV2.lua",
-	"Scripts/Hat/FDless/InternalWar.lua",
-	"Scripts/Hat/FDless/MasterChief.lua",
+	"Scripts/Hat/DubstepGunOriginal.lua",
+	"Scripts/Hat/LastStar.lua",
+	"Scripts/Hat/NeptunianV.lua",
+	"Scripts/Hat/NeptunianVGun.lua",
+	"Scripts/Hat/TheHotline.lua",
+	"Scripts/Hat/Addict.lua",
+	"Scripts/Hat/CommanderV2.lua",
+	"Scripts/Hat/InternalWar.lua",
+	"Scripts/Hat/MasterChief.lua",
 }
 
 local function loadReal(extra)
@@ -128,7 +128,7 @@ T.same(Core.VIEW_TABS, { "Hat", "Limb", "Favorites", "Recent" })
 
 T.section("scripts_view: names never show an extension")
 local pretty = {
-	["Scripts/Hat/FDless/NeptunianV.lua"] = "NeptunianV",
+	["Scripts/Hat/NeptunianV.lua"] = "NeptunianV",
 	["Neptunian V.lua"] = "Neptunian V",
 	["x.lua.txt"] = "x",
 	["Fly.LUA"] = "Fly",
@@ -311,7 +311,7 @@ rows, why2 = Core.scriptPlan(3, "")
 T.eq(why2, "nofavorites")
 rows, why2 = Core.scriptPlan(4, "")
 T.eq(why2, "norecent")
-S.favorites["Scripts/Hat/FDless/LastStar.lua"] = true
+S.favorites["Scripts/Hat/LastStar.lua"] = true
 S.favorites["Scripts/Hat/DubstepGun.lua"] = true
 S.favorites["Scripts/Hat/Gone.lua"] = true
 rows, why2, count = Core.scriptPlan(3, "")
@@ -319,7 +319,7 @@ T.same(namesOf(rows), { "Dubstep Gun (Hub)", "Last Star" }, "favorites follow th
 T.eq(count, 2)
 rows, why2 = Core.scriptPlan(3, "zzz")
 T.eq(why2, "search")
-S.recent = { "Scripts/Hat/FDless/TheHotline.lua", "Scripts/Hat/Gone.lua", "Scripts/Hat/StudioDummyV4-Test.lua", "Scripts/Hat/FDless/TheHotline.lua" }
+S.recent = { "Scripts/Hat/TheHotline.lua", "Scripts/Hat/Gone.lua", "Scripts/Hat/StudioDummyV4-Test.lua", "Scripts/Hat/TheHotline.lua" }
 rows, why2, count = Core.scriptPlan(4, "")
 T.eq(namesOf(rows)[1], "The Hotline", "recent keeps the order it was saved in")
 T.eq(namesOf(rows)[2], "Studio Dummy V4", "a script that is no longer there is skipped")
@@ -358,7 +358,7 @@ T.eq(count, 0, "no search text at all is fine")
 
 T.section("scripts_view: the line under a name")
 loadReal()
-local dub = Repo.byPath["Scripts/Hat/FDless/DubstepGun.lua"]
+local dub = Repo.byPath["Scripts/Hat/DubstepGunOriginal.lua"]
 T.eq(Core.rowSub(dub, 1), "by Supr14 +2")
 T.eq(Core.rowSub(dub, 2), "by Supr14 +2")
 T.eq(Core.rowSub(dub, 3), "Hat  ·  by Supr14 +2")

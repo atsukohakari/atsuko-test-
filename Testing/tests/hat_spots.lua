@@ -518,11 +518,11 @@ T.section("spots: the scripts tell the hub which hat is on each tab")
 do
 	local svc = hubWith({ LC1 .. " " .. LC2 })
 	local CASES = {
-		{ "The Hotline", "Scripts/Hat/FDless/TheHotline.lua", { LC1, LC1 } },
-		{ "Addict", "Scripts/Hat/FDless/Addict.lua", { LC1, LC1, false, false, false, false } },
-		{ "Commander V2", "Scripts/Hat/FDless/CommanderV2.lua", { LC1, LC1 } },
-		{ "Neptunian V", "Scripts/Hat/FDless/NeptunianVGun.lua", { false, LC1, LC1, false } },
-		{ "Dubstep Gun", "Scripts/Hat/FDless/DubstepGun.lua", { LC1, LC1, false, false, false, false } },
+		{ "The Hotline", "Scripts/Hat/TheHotline.lua", { LC1, LC1 } },
+		{ "Addict", "Scripts/Hat/Addict.lua", { LC1, LC1, false, false, false, false } },
+		{ "Commander V2", "Scripts/Hat/CommanderV2.lua", { LC1, LC1 } },
+		{ "Neptunian V", "Scripts/Hat/NeptunianVGun.lua", { false, LC1, LC1, false } },
+		{ "Dubstep Gun", "Scripts/Hat/DubstepGunOriginal.lua", { LC1, LC1, false, false, false, false } },
 		{ "Snake Banisher V3", "Scripts/Hat/SnakeBanisherV3.lua", { LC1, LC2, LC1 } },
 	}
 	for _, case in ipairs(CASES) do
@@ -559,12 +559,12 @@ end
 
 T.section("spots: Master Chief and Neptunian V tell their hats too")
 do
-	local mc = readsource("Scripts/Hat/FDless/MasterChief.lua")
+	local mc = readsource("Scripts/Hat/MasterChief.lua")
 	T.ok(string.find(mc, 'local r = M.slots[i == 1 and "rifle" or i == 2 and "shotgun" or ""]', 1, true) ~= nil, "Master Chief tells the rifle and the shotgun hat")
 	T.ok(string.find(mc, "function AL.hat(i)", 1, true) ~= nil)
-	local nv = readsource("Scripts/Hat/FDless/NeptunianV.lua")
+	local nv = readsource("Scripts/Hat/NeptunianV.lua")
 	T.ok(string.find(nv, 'return tostring(activeKey) .. ":" .. id, id, type(name) == "string" and name or nil, true', 1, true) ~= nil, "Neptunian V keys the spot by sword and hat, and keeps the spot it shows")
-	for _, path in ipairs({ "Scripts/Hat/FDless/MasterChief.lua", "Scripts/Hat/FDless/NeptunianV.lua" }) do
+	for _, path in ipairs({ "Scripts/Hat/MasterChief.lua", "Scripts/Hat/NeptunianV.lua" }) do
 		local f, err = loadstring(readsource(path), "=" .. path)
 		T.ok(f ~= nil, path .. " compiles: " .. tostring(err))
 	end

@@ -221,12 +221,12 @@ local function world(extra)
 end
 
 local FAMILY = {
-	{ file = "Scripts/Hat/FDless/DubstepGun.lua", title = "Dubstep Gun", tabs = 6, roll = true },
-	{ file = "Scripts/Hat/FDless/NeptunianVGun.lua", title = "Neptunian V", tabs = 4, roll = true, hats = true },
-	{ file = "Scripts/Hat/FDless/TheHotline.lua", title = "The Hotline", tabs = 2 },
+	{ file = "Scripts/Hat/DubstepGunOriginal.lua", title = "Dubstep Gun", tabs = 6, roll = true },
+	{ file = "Scripts/Hat/NeptunianVGun.lua", title = "Neptunian V", tabs = 4, roll = true, hats = true },
+	{ file = "Scripts/Hat/TheHotline.lua", title = "The Hotline", tabs = 2 },
 	{ file = "Scripts/_unlisted/TheSniper.lua", title = "The Sniper", tabs = 3, roll = true },
-	{ file = "Scripts/Hat/FDless/Addict.lua", title = "Addict", tabs = 6, roll = true, gunHat = true },
-	{ file = "Scripts/Hat/FDless/CommanderV2.lua", title = "Commander V2", tabs = 2, roll = true, gunHat = true },
+	{ file = "Scripts/Hat/Addict.lua", title = "Addict", tabs = 6, roll = true, gunHat = true },
+	{ file = "Scripts/Hat/CommanderV2.lua", title = "Commander V2", tabs = 2, roll = true, gunHat = true },
 }
 
 local PRELUDE = table.concat({
@@ -516,7 +516,7 @@ end
 
 T.section("main_adapters: Neptunian V")
 do
-	local path = "Scripts/Hat/FDless/NeptunianV.lua"
+	local path = "Scripts/Hat/NeptunianV.lua"
 	local src = readsource(path)
 	local startMark = '\tlocal HttpService = game:GetService("HttpService")\n\tlocal FILE = CONFIG.AlignFile\n'
 	local s = string.find(src, startMark, 1, true)
@@ -668,7 +668,7 @@ end
 
 T.section("main_adapters: InternalWar")
 do
-	local path = "Scripts/Hat/FDless/InternalWar.lua"
+	local path = "Scripts/Hat/InternalWar.lua"
 	local src = readsource(path)
 	local s1 = string.find(src, "local ALTAB = {", 1, true)
 	local e1 = s1 and string.find(src, "C.connect(UIS.InputBegan, function(io, gp)", s1, true)

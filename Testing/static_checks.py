@@ -191,14 +191,16 @@ def rule_leak():
 
 
 def rule_last_star():
-    body = read("Scripts/Hat/FDless/LastStar.lua")
+    body = read("Scripts/Hat/LastStar.lua")
     return [name + " is missing from Last Star" for name in PHONE_CONTROLS if name not in body]
 
 
 def rule_patched_scripts():
     hits = []
+    scripts = json.loads(read("Scripts/manifest.json")).get("scripts", {})
+    main = set(path for path, item in scripts.items() if item.get("needsfd") is True)
     for rel in shipped_scripts():
-        if not rel.startswith("Scripts/Hat/FDless/") and not rel.startswith("Scripts/_unlisted/"):
+        if rel not in main and not rel.startswith("Scripts/_unlisted/"):
             continue
         body = read(rel)
         if rel.endswith("LastStar.lua"):
