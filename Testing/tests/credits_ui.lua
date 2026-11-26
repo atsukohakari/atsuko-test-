@@ -247,7 +247,7 @@ do
 	T.ok(withText(d, "PERSON") ~= nil, "what he is")
 	T.ok(withText(d, "Neptunian V remake author") ~= nil, "his role")
 	T.ok(withText(d, "DESCRIPTION") ~= nil, "a Description heading")
-	T.ok(withText(first(d, "Description"), "Made the Neptunian V remake ours is built on, and hosts its music.") ~= nil, "his description")
+	T.ok(withText(first(d, "Description"), "Made the Neptunian V remake ours is built on and hosts its music, and made the Exotic Ban Hammer.") ~= nil, "his description")
 	T.eq(withText(d, "WHAT THEY DID"), nil, "no What they did any more")
 	T.eq(withText(d, "WHY THEY ARE HERE"), nil, "and no Why they are here")
 	T.eq(first(d, "Did"), nil)

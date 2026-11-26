@@ -32,7 +32,7 @@ do
 	T.eq(string.find(src, "humanoid.MoveDirection", 1, true), nil, "the move direction comes from the reanimation")
 	T.ok(string.find(src, "MC.arm({rifle = {part = riflez, frame = rifle.Handle, model = rifle}, shotgun = {part = shotgunz, frame = shg.shotgun, model = shg}, bullet = {part = Bullet}})", 1, true) ~= nil, "the hats go on the rifle, the shotgun and the bullet")
 	T.ok(string.find(src, "MC.free(effects)", 1, true) ~= nil, "the effects stay physical")
-	T.ok(string.find(src, "Helkern - Creator", 1, true) ~= nil, "the original credits stay in the header")
+	T.ok(table.find(jsondecode(readsource("Scripts/manifest.json")).scripts["Scripts/Hat/MasterChief.lua"].credit, "Helkern") ~= nil, "the original credits are in the manifest")
 end
 
 local a = string.find(src, "local function hubNotify(", 1, true)
