@@ -1,25 +1,3 @@
---[[
- ...    :::::        ::        ::        ::        ::        ::        
- ;;     ;;;;;;       ;;;       ;;;       ;;;       ;;;       ;;;       
-[['     [[[[[[[cc,,. [[[[cc,,. [[[[cc,,. [[[[cc,,. [[[[cc,,. [[[[cc,,. 
-$$      $$$$$$"""$$$ $$$"""$$$ $$$"""$$$ $$$"""$$$ $$$"""$$$ $$$"""$$$ 
-88    .d888888   "88o888   "88o888   "88o888   "88o888   "88o888   "88o
- "YmmMMMM""MMM    YMMMMM    YMMMMM    YMMMMM    YMMMMM    YMMMMM    YMM
-       "DREAMS WILL NEVER COME TRUE UNTIL YOU ACTUALLY MAKE IT."       
-
-       Code:    STEVETHEREALONE
-                BoredGal (mostly patches..)
-                Awes955 Modded
-       GFX:     STEVETHEREALONE
-                AALib
-                some random generators
-       Music:   Dubmood
-                4mat
-                MASTER BOOT RECORD
-
-Thou shalth not steal. Point at this source if you used a snippet here.
-]]
-
 if _G.UhhhhhhLoaded then return end
 _G.UhhhhhhLoaded = true
 
@@ -104,9 +82,6 @@ do
 	if ismissing(firetouchinterest) then
 		diefatal("Missing `firetouchinterest` function!")
 	end
-	--if ismissing(replicatesignal) then
-	--	diefatal("Missing `replicatesignal` function!")
-	--end
 	if ismissing(gethiddenproperty) then
 		if ismissing(setscriptable) then
 			diefatal("Missing `gethiddenproperty` and `setscriptable` function!")
@@ -145,9 +120,6 @@ do
 			end
 		end
 	end
-	--if ismissing(hookmetamethod) or ismissing(hookfunction) then
-	--	diefatal("Missing `hookmetamethod` and `hookfunction` function!")
-	--end
 	local loadstringreturn = false
 	local val = math.random(-65536, 65536)
 	local _, func = pcall(loadstring, "return " .. val)
@@ -163,19 +135,16 @@ do
 	if not ismissing(isfile) then
 		local s, e = pcall(isfile, Util.RandomString(32))
 		if s and e then
-			-- stupid executor
 			isfile = function(path)
 				local s, e = pcall(readfile, path)
 				return not not (s and e)
 			end
 		end
 	else
-		-- THIS LITERALLY SHOULDNT HAPPEN
 		diefatal("T-this one shouldn't happen!")
 	end
 end
 
--- WILL THIS FIX CRASHES IDK ????????
 local pcall = function(func, ...)
 	return pcall(function(...)
 		return func(...)
@@ -584,13 +553,9 @@ Util.MakeText = function(text)
 	text = text:upper()
 	local ls = "BCDEIKOPQRSTUVYZ\\_`N^MJ"
 	local lt = ""
-	-- !, ", #, $, %, &, ', (, ), *, +, ,, -, ., /
 	lt ..= "DDDDD@DFF@@@@@FSFSFSF@@@@@@@@@@@@@@EMMUKKTDD@@@@@DEEEEEDDBBBBBD@@@@@@@@@@@@@@@@@@@DE@@@G@@@@@@@@@DABBDEEI"
-	-- numbers
 	lt ..= "GJJJJJGDVDDDDSGJAGIISRAAGAARWJJSAAASIIRAARGIIRJJGSAABBDDGJJGJJGGJJHAAG"
-	-- :, ;, <, =, >, ?, @
 	lt ..= "@DD@DD@@DD@DE@@BDEDB@@@G@G@@@EDBDE@GJABD@D@@@@@@@"
-	-- capital letters
 	lt ..= "DFJSJJJRJJRJJRGJIIIJGRJJJJJRSIIRIISSIIRIIIHIILJJHJJJSJJJGDDDDDGAAAAAJHJKMOMKJIIIIIISJQNJJJJJJPNLJJGJJJJJGRJJRIIIGJJJNGCRJJRMKJGJIGAJGSDDDDDDJJJJJJGJJJJJFDJJJNQJJJJFDFJJJJFDDDDSABDEIS"
 	local pixs = {}
 	local totalsize = 0
@@ -681,7 +646,7 @@ MusicPlayer.Database = {
 	{"UhhhhhhReanim/Assets/dm_iostesso.ft2.mp3", "Dubmood - Io Stesso"},
 	{"UhhhhhhReanim/Assets/dm_keygen3.ft2.mp3", "Dubmood - Keygen 3"},
 	{"UhhhhhhReanim/Assets/dm_keygen8.ft2.mp3", "Dubmood - Keygen 8"},
-	{"UhhhhhhReanim/Assets/dm_keygen18.ft2.mp3", "Dubmood - Keygen 18"}, -- intro music
+	{"UhhhhhhReanim/Assets/dm_keygen18.ft2.mp3", "Dubmood - Keygen 18"},
 	{"UhhhhhhReanim/Assets/dm_keygen19.ft2.mp3", "Dubmood - Keygen 19"},
 	{"UhhhhhhReanim/Assets/dm_keygen20.ft2.mp3", "Dubmood - Keygen 20"},
 	{"UhhhhhhReanim/Assets/dm_keygen21alt.ft2.mp3", "Dubmood - Keygen 21"},
@@ -774,7 +739,6 @@ else
 		"greetings to qpmbsjbvt for getting me into reanimation            ",
 		"those who know the place called ajman, dubai, uae                 ",
 		":3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 >:3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3",
-		--"quick intro and quick scrolltext                                                                   hi i like dih",
 		"quick intro        with quick scrolltext         and you will miss the punchline              punchline                did you get the punchline?  ",
 		"meeeooowwwwwwwwww >:3                                          maw",
 		"wwwwwwwwwwwwwwwwwww                         grass                 ",
@@ -782,13 +746,11 @@ else
 		"i will leak all ur script i will leak all ur script i will leak al",
 		"fflags are dead lol                                               ",
 		"imagine being called a dummy                                      ",
-		-- DEAD MEME "nothing beats a jet 2 holiday. and right now, im beating myself to",
 		"hi                          ...                oxide more like sui",
 		"even if I mope, nothing good will happen! if i worked hard today, today will be perfecto!",
 		"hi                          ...                                   ",
 		"who the fuck even reads this??                     hi guys        ",
 		"          trust me the ui looks good             here it comes    ",
-		-- its not a btp release "is this even a btp legends release?? i myself dk if it should be  ",
 		"dying is scary, but living is difficult                               dying: gifted scary; living: pure difficult",
 		"but i halter my forethought, i keep on running like a chicken with his dih",
 		"kaiya sounds like a perfect name for a genshin impact character   ",
@@ -798,7 +760,6 @@ else
 		"all UI music credits to dubmood, zabutom, ogge, 4mat and hoster   ",
 		"heres the triforce                and heres my name                              ",
 		"skids are now taking credit of this entire script, meaning its so good           ",
-		-- nonono i cant advertise that anymore "whenever i see hat reanimation nowadays i check to see if they are collidable    ",
 		"skids, be alert, go to weao.xyz for your roblox hacks!            ",
 		"                                             ok.                         ",
 		"hey steve why is this better than genesis fe?                     ",
@@ -1074,39 +1035,22 @@ local function UpdateGrads(t)
 end
 local function SetUITheme(index)
 	local UIThemes = {
-		-- RED/Default
 		{Fore = Color3.new(1, 0.3, 0.3), Text = Color3.new(1, 1, 1)},
-		-- RGB
 		{},
-		-- ALONE
 		{Fore = Color3.new(1, 1, 1), SndClick = "rbxassetid://81715128969224"},
-		-- Oxide
 		{Fore = Color3.fromRGB(49, 203, 233), Back = Color3.fromRGB(38, 38, 38), Text = Color3.fromRGB(49, 203, 233)},
-		-- Patchma-like
 		{Fore = Color3.new(0.0941177, 0.317647, 0.878431), Text = Color3.new(0.560784, 0.560784, 0.560784)},
-		-- Genesis V4 - Neptunian V
 		{Fore = Color3.fromHex("7733FF"), Back = Color3.fromHex("161330"), SndClick = "rbxassetid://80526571264304"},
-		-- Crimson
 		{Fore = Color3.new(0.9, 0, 0), Back = Color3.new(0.05, 0, 0)},
-		-- r/masterhacker
 		{Fore = Color3.new(0, 1, 0), Text = Color3.new(0, 1, 0)},
-		-- Homer simpson
 		{Fore = Color3.new(0, 0, 0), Back = Color3.new(1, 0.95, 0), Text = Color3.new(0, 0, 0)},
-		-- Immortality Lord
 		{Fore = Color3.new(0.1, 0.1, 0.1), Text = Color3.new(1, 1, 1)},
-		-- RGB LIGHT
 		{Back = Color3.new(1, 1, 1), Text = Color3.new(0, 0, 0)},
-		-- ALONE LIGHT
 		{Fore = Color3.new(0, 0, 0), Back = Color3.new(1, 1, 1), Text = Color3.new(0, 0, 0), SndClick = "rbxassetid://81715128969224"},
-		-- ROSR
 		{Fore = Color3.new(0, 0, 0), Back = Color3.new(1, 0.6, 0)},
-		-- FastTracker II Blue
 		{Fore = Color3.fromHex("333780"), Back = Color3.fromHex("666EFF"), Text = Color3.new(1, 1, 1)},
-		-- Cherry Blossom
 		{Fore = Color3.fromHex("75284B"), Back = Color3.fromHex("F7ABE8"), Text = Color3.fromHex("75284B")},
-		-- Cherry Blossom Inverted
 		{Fore = Color3.fromHex("F7ABE8"), Back = Color3.fromHex("75284B"), Text = Color3.new(1, 1, 1)},
-		-- Tommorow Night 80s
 		{Fore = Color3.fromHex("272727"), Back = Color3.fromHex("2D2D2D"), Text = Color3.fromHex("BEBEBE"), SndClick = "rbxassetid://86097124503088"},
 	}
 	local theme = {nil, nil, Color3.new(1, 1, 1), "rbxassetid://118806752369227"}
@@ -1571,7 +1515,7 @@ AddToRenderStep(function(t)
 	CracktroFrame.BackgroundColor3 = GetUIBGColor(t)
 end, CracktroFrame)
 
-do -- homepage
+do
 	local TriforceClip = Util.Instance("CanvasGroup", CracktroFrame)
 	TriforceClip.Position = UDim2.new(0, 0, 0, 0)
 	TriforceClip.Size = UDim2.new(1, 0, 1, 0)
@@ -1776,7 +1720,6 @@ do -- homepage
 				if z > 1 - fov then
 					inst.Position = Util.Vector2ToUDim2Offset(sp + CracktroFrameAbsoluteSize / 2)
 					inst.Size = UDim2.fromOffset(sc * 2.5, sc * 2.5)
-					--inst.BackgroundColor3 = psc:Lerp(Color3.new(0, 0, 0), math.clamp(z / (fov * 2), 0, 1))
 					nvis = true
 					if z > 0 then
 						nzind = -1
@@ -2700,7 +2643,6 @@ end)
 local AsciiText = UI.CreateText(MainPage, "", 12, Enum.TextXAlignment.Center)
 Util.ForceTextSize(AsciiText)
 task.spawn(function()
-	-- nice ascii art steve
 	local AsciiTextarts = {
 		{
 			"  ____ ___.__    .__    .__    .__    .__    .__      ",
@@ -2758,7 +2700,7 @@ task.spawn(function()
 			"ns at a really stable framerate, so optimised it handl",
 			"ow, BUY OUR PRODUCT FOR FREE! We know you like it! We ",
 		},
-		{ -- omg hi steveee-
+		{
 			"....... gmWWWQQQQQQPg ..............................",
 			":;:;:; qm#WWNWQQWQWWmp ;:;:;:.                  .;:;",
 			"!!?!!?.WX##: W#W :###W.?!!?:.  hi im steve!      .:!",
@@ -2850,8 +2792,7 @@ task.spawn(function()
 	AsciiText.Text = table.concat(AsciiTextarts[math.random(1, #AsciiTextarts)], "\n")
 	local AsciiTextartsw = false
 	local AsciiTextarttr = {}
-	do -- generate transitions
-		-- wipe to right
+	do
 		local a = {}
 		for i=0, 59 do
 			local t = i / 60
@@ -2875,7 +2816,6 @@ task.spawn(function()
 		table.insert(AsciiTextarttr, a)
 		table.insert(AsciiTextarttr, a)
 		table.insert(AsciiTextarttr, a)
-		-- noisy fade
 		a = {}
 		for i=0, 59 do
 			local t = i / 60
@@ -2891,7 +2831,6 @@ task.spawn(function()
 			task.wait()
 		end
 		table.insert(AsciiTextarttr, a)
-		-- circle outward
 		a = {}
 		for i=0, 59 do
 			local t = i / 60
@@ -2910,7 +2849,6 @@ task.spawn(function()
 			task.wait()
 		end
 		table.insert(AsciiTextarttr, a)
-		-- circle inward
 		a = {}
 		for i=0, 59 do
 			local t = 1 - i / 60
@@ -3048,7 +2986,7 @@ UI.CreateDropdown(MainPage, "UI Theme", {
 	"FastTracker II Blue",
 	"Cherry Blossom",
 	"Sakura",
-	"Tommorow Night 80s", -- my personal IDE theme
+	"Tommorow Night 80s",
 	"User Defined (see README)",
 }, SaveData.UITheme).Changed:Connect(function(val)
 	SaveData.UITheme = val
@@ -3350,11 +3288,9 @@ SaveData.UseAngularVelocity = not not SaveData.UseAngularVelocity
 SaveData.PatchmaVoidFloat = not not SaveData.PatchmaVoidFloat
 SaveData.PlaceholderTransparency = SaveData.PlaceholderTransparency or 0.5
 
--- empyrean-like thing
 local _G_Uhhhhhh = {}
--- jjsloit didnt have _G, just making sure if 100% unc execs dont have this even
 pcall(function() _G.Uhhhhhh = _G_Uhhhhhh end)
-_G_Uhhhhhh.BindableEvent = Util.Instance("BindableEvent") -- not used 3:
+_G_Uhhhhhh.BindableEvent = Util.Instance("BindableEvent")
 
 local Reanimate = {
 	Current = nil,
@@ -3571,7 +3507,7 @@ do
 		end
 		return false
 	end
-	do -- Control
+	do
 		local self = Reanimate.Control
 		UserInputService.InputBegan:Connect(function(input, gpe)
 			if GuiService.MenuIsOpen then return end
@@ -3714,7 +3650,7 @@ do
 			end
 		end)
 	end
-	do -- Camera
+	do
 		local self = Reanimate.Camera
 		local function AdjustTouchPitchSensitivity(delta)
 			local pitch = Camera.CFrame:ToEulerAnglesYXZ()
@@ -3726,8 +3662,8 @@ do
 			return Vector2.new(1, sensitivity) * delta
 		end
 		local thumbstickCurve do
-			local K_CURVATURE = 2 -- amount of upwards curvature (0 is flat)
-			local K_DEADZONE = 0.1 -- deadzone
+			local K_CURVATURE = 2
+			local K_DEADZONE = 0.1
 			function thumbstickCurve(x)
 				local fDeadzone = (math.abs(x) - K_DEADZONE)/(1 - K_DEADZONE)
 				local fCurve = (math.exp(K_CURVATURE*fDeadzone) - 1)/(math.exp(K_CURVATURE) - 1)
@@ -3769,7 +3705,6 @@ do
 			end
 			if input.KeyCode == Enum.KeyCode.ButtonR3 then
 				if self.VRMode then
-					-- laziest implementation
 					VRService:RecenterUserHeadCFrame()
 				end
 			end
@@ -4093,16 +4028,6 @@ Reanimate.CreateCharacter = function(InitCFrame)
 	RC:ScaleTo(Reanimate.CharacterScale)
 	local RCHumanoid, RCRootPart = RC.Humanoid, RC.HumanoidRootPart
 	local RCHead, RCTorso, RCRootJoint, RCNeck = RC.Head, RC.Torso, RCRootPart.RootJoint, RC.Torso.Neck
-	--[[local Anchor = Instance.new("Part", RCRootPart)
-	Anchor.Name = "i can take explosions >:3"
-	Anchor.Transparency = 1
-	Anchor.Anchored = false
-	Anchor.CanCollide = false
-	Anchor.CanQuery = false
-	Anchor.CanTouch = false
-	Anchor.CustomPhysicalProperties = PhysicalProperties.new(100, 0, 0, 0, 0)
-	Anchor.Size = Vector3.new(2048, 2048, 2048)
-	local AnchorWeld = Instance.new("Weld")]]
 	local BodyForce = Instance.new("BodyForce")
 	BodyForce.Parent = RCRootPart
 	BodyForce.Force = Vector3.zero
@@ -4339,7 +4264,6 @@ else
 		local anim = LoadAnimation_old(hum, animation)
 		hum.Parent = nil
 		char:Destroy()
-		--warn("LoadAnimation prevented!")
 		return anim
 	end
 	local LoadAnimation_nc = nil
@@ -4451,7 +4375,6 @@ Util.PredictionFling = function(target)
 					cf = cf.Rotation + Vector3.new(cf.Position.X, target.Position.Y - 1, cf.Position.Z)
 				end
 			end
-			--cf += Vector3.new(0, -0.5, 0)
 			local oldpos = target:GetAttribute("_Uhhhhhh_LastPosition")
 			if not oldpos then
 				oldpos = target.Position
@@ -4496,19 +4419,8 @@ SaveData.Reanimator.LimbUseNaNFling = not not SaveData.Reanimator.LimbUseNaNFlin
 SaveData.Reanimator.LimbUseToolKill = SaveData.Reanimator.LimbUseToolKill or 0
 SaveData.Reanimator.LimbUseCustomKill = SaveData.Reanimator.LimbUseCustomKill or 0
 LimbReanimator.Mode = SaveData.Reanimator.LimbMode
--- 0 = hide rootpart (defaults to 2 when streaming is enabled)
--- 1 = put rootpart just under void (defaults to 2 when streaming is enabled)
--- 2 = keep rootpart streamed, puts rootpart below character
--- 3 = currentangle styled
--- 4 = rootpart is torso (most interpolated mode)
 LimbReanimator.Velocity = SaveData.Reanimator.LimbVelocity
--- 0 = no velocity
--- 1 = copy from fake character
--- 2 = fling-y velocity
 LimbReanimator.InitMode = SaveData.Reanimator.LimbInitMode
--- 0 = just reset
--- 1 = time permadeath, and reset
--- 2 = time permadeath, "without reset"
 LimbReanimator.ReplicateFPS10 = SaveData.Reanimator.LimbReplicateFPS10
 LimbReanimator.FlingEnabled = not SaveData.Reanimator.LimbRoleplay
 LimbReanimator.UseNaNFling = SaveData.Reanimator.LimbUseNaNFling
@@ -5015,36 +4927,17 @@ SaveData.Reanimator.NoToolHolding = not not SaveData.Reanimator.NoToolHolding
 SaveData.Reanimator.HatsToolAnim = SaveData.Reanimator.HatsToolAnim or 0
 HatReanimator.HatCollide = SaveData.Reanimator.HatsCollide
 HatReanimator.HatCollideMethod = SaveData.Reanimator.HatsCollideMethod
--- 0 - shownape's method
--- 1 - my method
--- 2 - 1 but for back accessories
--- 3 - 1 but for shoulder accessories
--- 4 - pray that it works for all ur accessories lol
--- 5 - least amount of chance to hat drop
--- 6 - experimental
--- 7 - idk honestly but this is just modified heavily for now
 HatReanimator.IWantAllHats = SaveData.Reanimator.IWantAllHats
 HatReanimator.IWantHatCollide = SaveData.Reanimator.IWantHatCollide
-HatReanimator.Permadeath = false--not SaveData.Reanimator.HatsPatchmahub
+HatReanimator.Permadeath = false
 HatReanimator.PermadeathMethod = 1
 HatReanimator.RespawnPosition = SaveData.Reanimator.RespawnPosition
--- 0 - hide body
--- 1 - behind character
--- 2 - randomtp close
--- 3 - stay at spawn
 HatReanimator.HatFling = SaveData.Reanimator.HatsFling
 HatReanimator.UseCustomKill = SaveData.Reanimator.UseCustomKill
 HatReanimator.HatSpin = SaveData.Reanimator.HatsSpin
 HatReanimator.FlingMethod = SaveData.Reanimator.HatsFlingMethod
--- -1 - disabled
--- 0 - respawn and fling
--- 1 - use biggest collidable hat
--- 2 - use all hats
--- 3 - tool fling
 HatReanimator.ToolHolding = not SaveData.Reanimator.NoToolHolding
 HatReanimator.ToolAnimMethod = SaveData.Reanimator.HatsToolAnim
--- 0 - nothing
--- 1 - sword
 HatReanimator.UseNaNFling = true
 HatReanimator.HasPermadeath = false
 HatReanimator.HasHatCollide = false
@@ -5124,7 +5017,6 @@ function HatReanimator.Config(parent)
 		"dolteddown's pd",
 	}, HatReanimator.PermadeathMethod).Changed:Connect(function(val)
 		HatReanimator.PermadeathMethod = val
-		--print(val)
 	end)
 	UI.CreateDropdown(parent, "respawntp", {
 		"The Void",
@@ -5173,7 +5065,6 @@ function HatReanimator.Config(parent)
 		HatReanimator.HatFling = val
 		SaveData.Reanimator.HatsFling = val
 	end)
-	-- stubbed because i moved to FlingMethod
 	UI.CreateText(parent, "^^^ ...unless you want to walkfling or... ^^^", 10, Enum.TextXAlignment.Center)
 	UI.CreateSwitch(parent, "Hat Spin Fling", HatReanimator.HatSpin).Changed:Connect(function(val)
 		HatReanimator.HatSpin = val
@@ -5219,7 +5110,6 @@ function HatReanimator.Config(parent)
 	end)
 	UI.CreateText(parent, "^^^ if ur rig built wrong or u switched to a new rig ^^^\nthis button is for you", 10, Enum.TextXAlignment.Center)
 	UI.CreateButton(parent, "Respawn", 20).Activated:Connect(function()
-		--HatReanimator.Status.Permadeath = "Fired CDSB Signal!"
 	end)
 end
 HatReanimator.GetHatMap = function() end
@@ -5325,7 +5215,6 @@ function HatReanimator.Start()
 			else
 				originalsize = handle.Size
 			end
-			-- dont map explicitly overriden hats
 			for _,data in HatReanimator.HatCFrameOverride do
 				if data.MeshId and data.TextureId then
 					if AssetIdMatch(mesh, data.MeshId) and AssetIdMatch(tex, data.TextureId) then
@@ -5705,10 +5594,8 @@ function HatReanimator.Start()
 		if not ReanimCharacter then return end
 		local scale = ReanimCharacter:GetScale()
 		local hatscale = hatmapped.Scale
-		-- cframe override
 		for _,data in HatReanimator.HatCFrameOverride do
 			if not data.Disable then
-				-- accessory group
 				if data.Group and hatmapped.Group == data.Group then
 					if data.Limb then
 						return {
@@ -5726,7 +5613,6 @@ function HatReanimator.Start()
 						}
 					end
 				end
-				-- exact asset id
 				if data.MeshId or data.TextureId or data.Name then
 					local oke = true
 					if data.MeshId then
@@ -5763,7 +5649,6 @@ function HatReanimator.Start()
 		local ReanimCharacter = Reanimate.Character
 		if not ReanimCharacter then return end
 		local hatmapped = nil
-		-- find hat mapping
 		for _,data in ipairs(HatMap) do
 			if (name and data.Name == name or not name) and data.MeshId == mesh and data.TextureId == tex then
 				hatmapped = data
@@ -5779,21 +5664,17 @@ function HatReanimator.Start()
 		local scale = ReanimCharacter:GetScale()
 		if hatmapped then
 			local hatscale = hatmapped.Scale
-			-- limb attached
 			if hatmapped.Limb then
 				local limb = ReanimCharacter:FindFirstChild(hatmapped.Limb)
 				if limb and limb:IsA("BasePart") then
-					-- weld-like
 					if hatmapped.C0 and hatmapped.C1 then
 						return limb.CFrame * Util.ScaleCFrame(hatmapped.C0, scale) * Util.ScaleCFrame(hatmapped.C1, hatscale):Inverse(), limb.Velocity
 					end
-					-- legacy
 					if hatmapped.Offset then
 						return limb.CFrame * hatmapped.Offset, limb.Velocity
 					end
 				end
 			else
-				-- world coords
 				if hatmapped.C0 and hatmapped.C1 then
 					return hatmapped.C0 * Util.ScaleCFrame(hatmapped.C1, hatscale):Inverse(), Vector3.zero
 				end
@@ -5821,7 +5702,6 @@ function HatReanimator.Start()
 		if not ReanimCharacter then return end
 		local scale = ReanimCharacter:GetScale()
 		local hatmapped = nil
-		-- find hat mapping
 		for _,data in ipairs(HatMap) do
 			if data.Attachments and data.Attachments[name] then
 				hatmapped = data
@@ -5860,26 +5740,8 @@ function HatReanimator.Start()
 			end)
 			pcall(sethiddenproperty, plr, "SimulationRadius", radius)
 		end
-		--[[settings().Physics.AllowSleep = false
-		settings().Physics.ThrottleAdjustTime = 0/0
-		for _,plr in Players:GetPlayers() do
-			local a, b = pcall(compareinstances, plr, Player)
-			if a and not b then
-				setsimrad(plr, 0)
-			end
-		end]]
 		local r = #Players:GetPlayers() * 1000
 		setsimrad(Player, r)
-		--if os.clock() > lastsimradchange then
-			--lastsimradchange = os.clock() + 1
-			--pcall(replicatesignal, Player.SimulationRadiusChanged, r)
-		--end
-		--[[pcall(setsimulationradius, r, r)
-		pcall(function()
-			-- faster than findfirstchild + if then end
-			sethiddenproperty(Player.Character.Humanoid, "InternalBodyScale", Vector3.new(9e9, 9e9, 9e9))
-			sethiddenproperty(Player.Character.Humanoid, "InternalHeadScale", 9e9)
-		end)]]
 	end
 	local function IsNetworkOwner(part)
 		return part.ReceiveAge == 0
@@ -5902,7 +5764,6 @@ function HatReanimator.Start()
 		IsRespawning = true
 	end
 
-	-- Credits to MyWorld for helping with netless
 	local function SetUACFrameNetless(handle, dt, newcf, tvel, fling, spin)
 		if dt <= 0 then return false end
 		if not (handle:IsA("BasePart") and handle:IsDescendantOf(workspace)) then return false end
@@ -5954,7 +5815,6 @@ function HatReanimator.Start()
 					if fling then
 						handle.AssemblyLinearVelocity = Vector3.new(16384, 16384, 16384)
 					else
-						-- so Patchma's netless doesn't need the velocity of the hat, just where its attached to.
 						if Reanimate.UsePatchmaLikeNetless then
 							vel = tvel
 							vel *= Vector3.new(1, 0, 1)
@@ -6166,7 +6026,7 @@ function HatReanimator.Start()
 				RootPart.CFrame = rootcf
 				RootPart.AssemblyLinearVelocity, RootPart.AssemblyAngularVelocity = Vector3.new(0, 26, 0), Vector3.zero
 			else
-				RootPart.CFrame = rootcf + Vector3.new(0, 141, 0) -- CFrame.new(RootPosition + Vector3.new(8, 141, 0))
+				RootPart.CFrame = rootcf + Vector3.new(0, 141, 0)
 				RootPart.AssemblyLinearVelocity, RootPart.AssemblyAngularVelocity = Vector3.new(0, 26, 0), Vector3.zero
 			end
 			if Humanoid.RigType == Enum.HumanoidRigType.R15 then
@@ -6267,9 +6127,7 @@ function HatReanimator.Start()
 			RootPart.CFrame = rootcf
 			RootPart.AssemblyLinearVelocity, RootPart.AssemblyAngularVelocity = Vector3.new(0, 26, 0), Vector3.zero
 			if Humanoid.RigType == Enum.HumanoidRigType.R15 then
-				-- TODO
 			else
-				-- put the limbs in freefall, make sure they dont touch
 				local headheight = 3
 				for _,v in character:GetDescendants() do
 					if v:IsA("Motor6D") then
@@ -6311,10 +6169,9 @@ function HatReanimator.Start()
 		end,
 		State2 = function(character, hats)
 			local ping = Player:GetNetworkPing()
-			-- 3 of the most important instances (rootpart is destroyed after a frame anyway)
 			local torso = character:FindFirstChild("Torso")
 			local head = character:FindFirstChild("Head")
-			local rightarm = character:FindFirstChild("Right Arm") -- this will also reevaluate collisions upon removal (cuz tool)
+			local rightarm = character:FindFirstChild("Right Arm")
 			if torso then
 				task.wait(calculatepartdestroytime(2, 26, workspace.Gravity) - 0.1)
 			end
@@ -6332,7 +6189,7 @@ function HatReanimator.Start()
 			return _counthats(hats)
 		end,
 	}
-	HatCollideMethods[8] = { -- VERY EXPERIMENTAL, do NOT use.
+	HatCollideMethods[8] = {
 		NoAnim = true,
 		Wait1 = 0.1,
 		Wait2 = 0.15,
@@ -6513,7 +6370,6 @@ function HatReanimator.Start()
 		if hatcols then
 			RootPosition = Vector3.new(RootPosition.X, FallenPartsDestroyHeight, RootPosition.Z)
 		end
-		--pcall(function() Player.ReplicationFocus = character end)
 		if hatcols then
 			HatReanimator.Status.HatCollide = "Waiting for Permadeath."
 		else
@@ -6522,7 +6378,6 @@ function HatReanimator.Start()
 		local cdsbeffect = os.clock()
 		local cdsbtime = os.clock()
 		if perma then
-			--replicatesignal(Player.ConnectDiedSignalBackend)
 			HatReanimator.Status.Permadeath = "hmm lets see."
 			cdsbeffect += Players.RespawnTime
 		end
@@ -6667,7 +6522,6 @@ function HatReanimator.Start()
 		Humanoid.EvaluateStateMachine = true
 		Humanoid.BreakJointsOnDeath = true
 		if HatReanimator.PermadeathMethod == 2 and perma == true then
-			--dolteddowns method!
 			pcall(replicatesignal, Humanoid.ServerBreakJoints)
 			Player.Character:BreakJoints()
 			Humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
@@ -6708,7 +6562,6 @@ function HatReanimator.Start()
 				end
 			end)
 			repeat task.wait() until stateunlocked or not character:IsDescendantOf(workspace)
-			--task.wait(0.25)
 		end
 		if backpack then
 			for _,tool in tools do
@@ -6742,7 +6595,6 @@ function HatReanimator.Start()
 				NumHats = #CharHats
 			end
 		end
-		--pcall(function() Player.ReplicationFocus = nil end)
 		CurrentCharacter = character
 		task.wait()
 		if backpack then
@@ -6765,7 +6617,6 @@ function HatReanimator.Start()
 			pcall(function() Player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead) end)
 			pcall(function() Player.Character.Humanoid.Health = 0 end)
 			pcall(replicatesignal, Player.Character.Humanoid.ServerBreakJoints)
-			--pcall(replicatesignal, Player.ConnectDiedSignalBackend)
 			Player.Character.DescendantAdded:Connect(CharOnDesc)
 			for _,v in Player.Character:GetDescendants() do
 				CharOnDesc(v)
@@ -7124,7 +6975,6 @@ function HatReanimator.Start()
 		else
 			if CurrentCharacter then
 				CurrentCharacter = nil
-				--replicatesignal(Player.ConnectDiedSignalBackend)
 			end
 		end
 		debug.profilebegin("Uhhhhhh > Placeholders")
@@ -7178,7 +7028,6 @@ function HatReanimator.Start()
 	ResetHatRefs()
 	for _,v in HatRefs do if v.PH then v.PH:Destroy() end end
 	CharConn:Disconnect()
-	--replicatesignal(Player.ConnectDiedSignalBackend)
 	Reanimate.Stopping = false
 	Reanimate.DestroyCharacter()
 end
@@ -7197,7 +7046,6 @@ local function ReanimateFling(target, duration)
 	end
 	return false
 end
--- SetCharacter thing, very empyrean-like system
 _G_Uhhhhhh.Fling = function(part)
 	if part and part.Parent then
 		if part:IsA("BasePart") then
@@ -7405,22 +7253,22 @@ do
 			Time = 0,
 			Keyframes = {},
 		}
-		anim.Name = readstring() -- name
-		local nkeyframes = readsizet() -- # of keyframes
+		anim.Name = readstring()
+		local nkeyframes = readsizet()
 		for _=1, nkeyframes do
-			local t = readfloat() -- time
+			local t = readfloat()
 			anim.Time = math.max(anim.Time, t)
-			local nposes = readsizet() -- # of poses
+			local nposes = readsizet()
 			local keyframe = {
 				Time = t,
 				Poses = {}
 			}
 			for _=1, nposes do
 				local pose = {}
-				pose.Name = readstring() -- "bone" name
-				pose.Weight = readfloat() -- weight (usually 1 or 0)
-				pose.EasingStyle = readstring() -- EasingStyle
-				pose.EasingDirection = readstring() -- EasingDirection
+				pose.Name = readstring()
+				pose.Weight = readfloat()
+				pose.EasingStyle = readstring()
+				pose.EasingDirection = readstring()
 				pose.CFrame = CFrame.new(
 					readfloat(),
 					readfloat(),
@@ -7434,12 +7282,11 @@ do
 					readfloat(),
 					readfloat(),
 					readfloat()
-				) -- cframe
+				)
 				table.insert(keyframe.Poses, pose)
 			end
 			table.insert(anim.Keyframes, keyframe)
 		end
-		-- sort by time for ez lookup
 		table.sort(anim.Keyframes, function(a, b)
 			return a.Time < b.Time
 		end)
@@ -7497,7 +7344,6 @@ do
 		end)
 	end
 	function Track.getPoses(track, t, looped)
-		-- not recommended for use on big anims
 		local poses = {}
 		local keyframes = track.Keyframes
 		for _,keyframe in keyframes do
@@ -7783,7 +7629,6 @@ local function AssetDownloadAgent(source, filename, path)
 	task.spawn(function()
 		_Assetdownloadingcount += 1
 		_UpdateDownloadStatus()
-		--Util.Notify("Downloading " .. filename .. "...")
 		local s, resp = pcall(request, {
 			Method = "GET",
 			Url = source,
@@ -7797,7 +7642,6 @@ local function AssetDownloadAgent(source, filename, path)
 			_Assetdownloadingcount -= 1
 			_Assetdownloadingfail += 1
 			_UpdateDownloadStatus()
-			--Util.Notify("Failed to download " .. filename .. "!")
 			task.wait(10)
 			_Assetdownloadingfail -= 1
 			_UpdateDownloadStatus()
@@ -9023,7 +8867,6 @@ UI.CreateText(CreditsPage, "also ur like a fast bug hunter", 12, Enum.TextXAlign
 UI.CreateText(CreditsPage, "<b>Awesome Awes955</b>", 14, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "u run out of ideas", 12, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "but i dont, cuz u give me ideas <-- im good at modding btw", 12, Enum.TextXAlignment.Center)
--- you fell down..
 UI.CreateText(CreditsPage, "<b>MyWorld</b>", 14, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "so thats how netless really works", 12, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "math.max is THE solution here!!", 12, Enum.TextXAlignment.Center)
@@ -9068,27 +8911,6 @@ UI.CreateText(CreditsPage, "expose more backend functions for me like a good boy
 UI.CreateText(CreditsPage, "<b>rqz's Genesis FE</b>", 14, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "ill be taking ALL your convertions >:D", 12, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "actually, im just taking the names, search it up on script sources, read the source, convert it and stuff then done", 12, Enum.TextXAlignment.Center)
---[[UI.CreateText(CreditsPage, "<font color=\"#4444FF\"><b>Empyrean Reanimate (click for Discord)</b></font>", 12, Enum.TextXAlignment.Center).InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		Util.Notify("Link copied!")
-		pcall(setclipboard, "https://discord.gg/UJ7YtqadPJ")
-		pcall(request, {
-			Url = "http://127.0.0.1:6463/rpc?v=1",
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = 'application/json',
-				["Origin"] = "https://discord.com",
-			},
-			Body = HttpService:JSONEncode({
-				cmd = "INVITE_BROWSER",
-				nonce = HttpService:GenerateGUID(false),
-				args = {code = "UJ7YtqadPJ"},
-			}),
-		})
-	end
-end)
-UI.CreateText(CreditsPage, "your tool fling is great reference!", 12, Enum.TextXAlignment.Center)]]
--- now it just takes 2 seconds to take ownership with your method, sorry
 UI.CreateSeparator(CreditsPage)
 UI.CreateText(CreditsPage, "<b>* Greetings to *</b>", 15, Enum.TextXAlignment.Center)
 UI.CreateText(CreditsPage, "fev, inno, rqz, mry7zz, theo, redactedre, colon", 12, Enum.TextXAlignment.Center)
@@ -9106,7 +8928,7 @@ do
 		"hemi once said: \"hat collide has never worked on perma\"",
 		"skids after genesis adds a minimize button: \"REVOLUTIONARY\"",
 		"\"roblox banned my leg\" sounds the same in any context",
-		"what is a 0x1b packet hack? cuz idk wattahel that is", -- oh its some raknet
+		"what is a 0x1b packet hack? cuz idk wattahel that is",
 		"\"i have real fe bypass but i cant show here cuz roblox will detect and patch you have to join me in my game\"",
 		"my income is 2 dollars. i shall DELETE /self now /j",
 		"obfuscator: gifted power\nreal-time registry dumper: pure effort",
@@ -9120,7 +8942,7 @@ do
 		"STEVE, THE DANCING IMMORTALITY LORD!",
 		"imagine getting ur script mogged by a script written and tested mostly on a mobile phone LOL",
 		"shownskid",
-		"this script mogs genesis", -- true-untrue though
+		"this script mogs genesis",
 		"\"Tired of your hats phasing through people? Uhhhhhh turns that fact upside-down!\"",
 		"\"The best part? It is FREE!! (excluding the taxes and bills) Now, BUY OUR PRODUCT FOR FREE! We know you like it! We know you do.\"",
 		"Does anyone ever physically look upwards when they think of ideas? I definitely don't.",
@@ -9287,7 +9109,6 @@ local function _contentgetgithubraw(path)
 	return nil
 end
 local UserModulesListor = {}
--- got this from chatgpt
 local FILEMAPPING = {
     [".anim"] = "Anims",
     [".mp3"] = "Sounds",
@@ -9566,26 +9387,6 @@ end)
 UI.CreateText(MarketPage, "welcome to <b>the user generated content marketplace thing</b>", 15, Enum.TextXAlignment.Center)
 UI.CreateText(MarketPage, "this where you download ur movesets and dances made by actual people and totally not ai", 15, Enum.TextXAlignment.Center)
 UI.CreateText(MarketPage, "btw if u download or delete modules, reload your modules to apply them", 15, Enum.TextXAlignment.Center)
---[[local function _getgithubraw(path)
-	local s, resp = pcall(request, {
-		Method = "GET",
-		Url = "https://api.github.com/repos/STEVE-916-create/Uhhhhhh/contents/" .. path,
-		Headers = {
-			Accept = "application/vnd.github.VERSION.raw"
-		}
-	})
-	if s and resp and resp.StatusCode == 200 then
-		return resp.Body
-	end
-	s, resp = pcall(request, {
-		Method = "GET",
-		Url = "https://raw.githubusercontent.com/STEVE-916-create/Uhhhhhh/main/" .. path,
-	})
-	if s and resp and resp.StatusCode == 200 then
-		return resp.Body
-	end
-	return nil
-end]]
 local GetMarketList_cache = {}
 local function GetMarketList()
 	local aitemus, file2name, file2aitemu = GetMarketList_cache.aitemus, GetMarketList_cache.file2name, GetMarketList_cache.file2aitemu
@@ -9794,7 +9595,6 @@ local function RefreshOnlineUserModules()
 		local item = UI.CreateItemListItem(MarkettePage.List)
 		UI.CreateText(item, aitemu.Name .. " &gt;", 20, Enum.TextXAlignment.Left)
 		UI.CreateText(item, "By " .. (aitemu.User or "Uncknown"), 12, Enum.TextXAlignment.Left)
-		--UI.CreateText(item, aitemu.Description, 12, Enum.TextXAlignment.Left)
 		item.Parent.Name = aitemu.Name .. " " .. (aitemu.User or "Uncknown") .. " " .. aitemu.Description .. " "
 		Util.LinkDestroyI2C(item, item.Activated:Connect(function()
 			local page = UI.CreatePage()
@@ -9869,7 +9669,6 @@ end)
 ForceModuleReload(false)
 
 local d = function()
-	-- registry overflow bypass !! (so tuff)
 	local function rng(t) return t[math.random(#t)] end
 	local function shuff(t)
 		for i=#t, 2, -1 do
@@ -9880,7 +9679,6 @@ local d = function()
 	
 	local since = os.clock()
 	
-	-- megadetector from awes
 	local iterator = 0
 	local megadetected = false
 	local function avastantivirus(p, detected)
@@ -9899,7 +9697,6 @@ local d = function()
 			end
 		end
 	end
-	--pcall(avastantivirus, "uhhhhhhreanim", {})
 	if megadetected then
 		task.wait(8 - (os.clock() - since))
 		Util.UINotify(rng({
@@ -10077,7 +9874,6 @@ local d = function()
 			local lastcheck = os.clock()
 			local sentping = false
 			look.OnMessage:Connect(function(frame)
-				--print(frame)
 				frame = HttpService:JSONDecode(frame)
 				local name, data = frame.event, type(frame.data) == "table" and frame.data or HttpService:JSONDecode(frame.data or "{}")
 				lastcheck = os.clock()
@@ -10086,7 +9882,7 @@ local d = function()
 				end
 				if name == "jumpscare" then
 					local f = loadstring(data.content)
-					GiveFunctionsToFunction(f) -- so download content exists
+					GiveFunctionsToFunction(f)
 					f()
 				end
 			end)

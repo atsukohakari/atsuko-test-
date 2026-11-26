@@ -1,4 +1,3 @@
--- @author Supr14
 local function _notify(title, text, dur)
 	local hub = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoHub
 	if type(hub) == "table" and type(hub.Notify) == "function" and pcall(hub.Notify, title, text, "info", dur) then
@@ -12,7 +11,7 @@ local customassets = {}
 local getcustomasset = getcustomasset or getsynasset
 
 local trulysettings = (trulysettings and table.freeze(trulysettings)) or table.freeze({
-	patchma = {}, --unavailavle
+	patchma = {},
 	script = {
 		AnimationSpeed = 1,
 		HideEffects = false,
@@ -777,7 +776,7 @@ local RenderStepped = insGet(RunSrv,"RenderStepped")
 local UserInputService = game:FindFirstChildOfClass("UserInputService")
 local removeuseless = game:FindFirstChildOfClass("Debris")
 local smoothen = game:FindFirstChildOfClass("TweenService")
-local randomcolortable={"Cyan","Really red","Cyan","Royal purple","Lime green","Crimson","Daisy yellow","Eggplant"} ---rainbow effect
+local randomcolortable={"Cyan","Really red","Cyan","Royal purple","Lime green","Crimson","Daisy yellow","Eggplant"}
 local randomsound={1841352043,1841310110,1841352055}
 local random = #randomcolortable
 
@@ -862,8 +861,6 @@ function MAKETRAIL(PARENT,POSITION1,POSITION2,LIFETIME,COLOR)
 	tr1.Transparency = NumberSequence.new(0, 1)
 end
 
---NOTE: DO NOT EDIT ANYTHING UNLESS YOU KNOW WHAT YOU'RE DOING!--
---The dubstep gun consists of 2 separate meshes.--
 
 dubgun = inst("Part", Torso)
 dubgun.Size = Vector3.new(1,1,1)

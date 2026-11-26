@@ -1,59 +1,3 @@
---[[
-   Credits:
-   MelonScripter - Converted and Aligned (the og hat version)
-   FDless conversion - the Titan scale command, smooth 60 Hz blending for both rigs and the on-screen buttons were added on top 
-   BeezelduD - Creator of Internal War
-   Emper - Reanimate creator
-   MyWorld - Optimization on reanimate
-
-   Titan/Stand Hats:
-   [PAID] https://www.roblox.com/catalog/17270178857/Huge-Void-Backpack
-   [PAID] https://www.roblox.com/catalog/17270001635/Void-Backpack
-   [PAID] https://www.roblox.com/catalog/17269998373/Middle-Void-Block
-   [PAID] https://www.roblox.com/catalog/17269952801/Right-Void-Wall
-   [PAID] https://www.roblox.com/catalog/17269983359/Left-Void-Wall
-
-   Black Rig:
-   // https://www.roblox.com/catalog/14255528083/Torso-Extension
-   // https://www.roblox.com/catalog/17374846953/Extra-Right-Black-Arm
-   // https://www.roblox.com/catalog/17374851733/Extra-Left-Black-Arm
-   // https://www.roblox.com/catalog/17401151565/Extra-Right-Black-Leg
-   // https://www.roblox.com/catalog/17387616772/Extra-Left-Black-Leg
-   White Arms:
-   // https://www.roblox.com/catalog/14255554762/Extra-Left-White-Arm
-   // https://www.roblox.com/catalog/14255556501/Extra-Right-White-Arm
-
-   Cheap Paid Rig:
-   // https://www.roblox.com/catalog/12344545199/Extra-Left-hand-moving-Blocky-white
-   // https://www.roblox.com/catalog/12344591101/Extra-Right-hand-moving-Blocky-white
-   // https://www.roblox.com/catalog/13779879140/Black-Fluffy-Fur-Body
-   // https://www.roblox.com/catalog/11263254795/Dummy-Head-For-Headless
-   // https://www.roblox.com/catalog/11159410305/Rectangle-Head-For-Headless
-   
-   Free Rig:
-   // https://www.roblox.com/catalog/3033910400/International-Fedora-Germany
-   // https://www.roblox.com/catalog/3409612660/International-Fedora-USA
-   // https://www.roblox.com/catalog/3398308134/International-Fedora-Canada
-   // https://www.roblox.com/catalog/3033908130/International-Fedora-France
-   // https://www.roblox.com/catalog/4819740796/Robox
-   
-   Socials:
-   // https://x.com/MelonScripter
-   // https://www.youtube.com/@MelonScripter
-
-   FDless reanimate by MyWorld & rqz
-
-   How it works:
-   - your own rig (the small one) is the FDless rig, the 5 moves (Z E R T Y) are the og animations
-   - the Titan is computed from the same joint maths as the og clone and the Void hats are glued to it every frame
-   - -size (number) changes the Titan scale only (same idea as the Uhhhhhh "Character Scale"), -align or P opens the Titan hat align panel
-   - the Titan uses the Void hats, or the UGC limb set (LLeg, RArm, RLeg, LArm, Torso) found by their accessory names. The align panel has a Set button for both
-   - -hats lists what the Titan found (and copies it if your executor can). The 5 UGC pieces are looked up by their catalog id, so the exact mesh is known
-   - your rig uses the og walk, the Titan keeps its og poses (no walk cycle was added to it)
-   - Titan scale: the Void hat rig is the og size (1), the UGC limb set (RLeg, LLeg, RArm, LArm, Torso) starts at 1.8. Each keeps its own saved size
-   - -stop (or /e -stop) stops everything, the Stop button in the size panel does too
-]]
-
 local function hubNotify(title, text, kind, dur)
 	local env = (typeof(getgenv) == "function" and getgenv()) or _G
 	local f = env.AtsukoNotify
@@ -66,20 +10,11 @@ local IW_OK, IW_ERR = pcall(function()
 hubNotify("Internal War", "Loading...", "info", 3)
 local FD = (function()
 --!optimize 2
---no need to load the whole thing cuz u can use the last one
 if _G.GenesisFDless then 
 	return _G.GenesisFDless 
 end
 
---oh you're still here? queue the reanimate
 
---[[
-	FDless Reanimate by MyWorld continued by rqz
-	"var"
-	Patchma Hub Discord: https://discord.com/invite/QMy5f6DrbH
-]]
-
---no need to get and index the library tables with function names every time the script uses them
 local osclock=os.clock
 local tspawn=task.spawn
 local tdelay=task.delay
@@ -105,8 +40,6 @@ local crunning=coroutine.running
 local vmagnitude=(type(vector)=="table" and vector.magnitude) or function(v) return v.Magnitude end
 local vnormalize=(type(vector)=="table" and vector.normalize) or function(v) return v.Unit end
 
---the script doesnt have to read global varaibles every time to get them
---why not have them saved in local varaibles for faster access times
 local next=next
 local pcall=pcall
 local xpcall=xpcall
@@ -123,7 +56,7 @@ local v3=Vector3.new
 local c3=Color3.new 
 local cf=CFrame.new
 local cfl=CFrame.lookAt
-local angles=CFrame.fromEulerAngles --faster than .Angles
+local angles=CFrame.fromEulerAngles
 local u2=UDim2.new 
 local e=Enum 
 local rp=RaycastParams.new 
@@ -153,7 +86,6 @@ local humstatesbl=e.HumanoidStateType:GetEnumItems()
 table.remove(humstatesbl,tfind(humstatesbl,enumrunning))
 table.remove(humstatesbl,tfind(humstatesbl,e.HumanoidStateType.None))
 
---not "local function rs" to not assign debug names
 local rs=function()
 	local s=""
 	for i=1,mrandom(8,15) do
@@ -166,7 +98,6 @@ local rs=function()
 	return s
 end
 
---it runs even faster if u call __index and __newindex metamethods directly
 local getMetamethodFromErrorStack=function(userdata,f,test)
 	local ret=nil
 	xpcall(f,function()
@@ -184,10 +115,7 @@ local cfMul=getMetamethodFromErrorStack(cf_0,function(a,b) return a*b end,functi
 local cfAdd=getMetamethodFromErrorStack(cf_0,function(a,b) return a+b end,function(f) return cf(1,2,3)+v3(1,2,3)==f(cf(1,2,3),v3(1,2,3)) end)
 local v3Get=getMetamethodFromErrorStack(v3_0,function(a,b) return a[b] end,function(f) return v3(1,2,3).Unit==f(v3(1,2,3),"Unit") end)
 local v2Get=getMetamethodFromErrorStack(v2(),function(a,b) return a[b] end,function(f) return f(v2(1,2),"Y")==2 end)
---multiplying and adding vector3 is faster if you use the * and + operators
---its faster to multiply X and Y of vector2 than to multiply vector2 and then get X and Y from it
 
---no need to index instances every time to call their functions
 local Clone=insGet(game,"Clone")
 local ClearAllChildren=insGet(game,"ClearAllChildren")
 local Destroy=insGet(game,"Destroy")
@@ -222,7 +150,6 @@ do
 end
 local GetPropertyChangedSignal=insGet(game,"GetPropertyChangedSignal")
 
---findfirstchildofclass faster than getservice
 local plrs=FindFirstChildOfClass(game,"Players")
 local rus=FindFirstChildOfClass(game,"RunService")
 local ws=FindFirstChildOfClass(game,"Workspace")
@@ -259,37 +186,16 @@ local Inverse=cfGet(cf_0,"Inverse")
 local Lerp=cfGet(cf_0,"Lerp")
 
 local aligns={
-	--[[
-		example: 
-		{PartName="Right Arm",meshid="123456789",textureid="123456789",AccessoryName="Name",C0=cf(1,2,3)*angles(1,2,3)},
 
-		PartName (required) - the name of the body part you want to align the hat to
-		meshid (optional) - mesh id of the mesh of the accessory you want to align
-		textureid (optional) - texture id of the mesh of the accessory you want to align
-		AccessoryName (optional) - instance name of the accessory you want to align 
-		C0 (optional) - offset from the target body part to the accessory (defaults to cf(0,0,0) if unspecified)
-		
-		accessories will align to the first entry whose criteria they match
-		(unspecified meshid/textureid/accessoryname accepts all accessories)
-		
-		each entry aligns one accessory at most
-	]]
-
-	-- unknown head
 	{PartName="Head",meshid="11601535857",C0=angles(0,3.141592653589793,0)},
 
-	-- patchma gear arms
 	{PartName="Left Arm",meshid="13831073174",C0=cfMul(cf(0.017,0,-0.23),angles(-1.4835298641951802,-0.15707963267948966,2.199114857512855))},
 	{PartName="Right Arm",meshid="13839903766",C0=cfMul(cf(0,-0.62,-0.01),angles(1.6580627893946132,0.15707963267948966,-2.199114857512855))},
 
-	-- patchma yellow leg
 	{PartName="Left Leg",meshid="11159370334",textureid="11159285454",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 
-	-- patchma lego piece leg
 	{PartName="Right Leg",meshid="12652772399",textureid="12652775021",C0=cf(0,-0.125,0)},
 
-	-- offsale white rig
-	-- a ton of offsaled black torso's
 	{PartName="Torso",meshid="14768666349"},
 	{PartName="Torso",meshid="14241018198"},
 	{PartName="Torso",meshid="13421774668"},
@@ -298,7 +204,6 @@ local aligns={
 	{PartName="Left Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 
-	-- og fur body, r15 arms, smiley legs rig
 	{PartName="Head",meshid="13953154391"},
 	{PartName="Torso",meshid="13778226115"},
 	{PartName="Left Leg",meshid="11159370334",textureid="11159284657",C0=angles(1.5707963267948966,0,1.5707963267948966)},
@@ -306,28 +211,22 @@ local aligns={
 	{PartName="Left Arm",meshid="12344207333",C0=angles(2,0,0)},
 	{PartName="Right Arm",meshid="12344206657",C0=angles(2,0,0)},
 
-	-- torso for both "white limbs black torso rig" and "black rig"
 	{PartName="Torso",meshid="110684113028749"},
-	-- white limbs black torso rig
 	{PartName="Head",meshid="13058343355",C0=angles(0,3.141592653589793,0)},
 	{PartName="Left Leg",meshid="139733645770094",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="99608462237958",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="90736849096372",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105141400603933",C0=angles(0,0,1.5707963267948966)},
-	-- head for black rigs
 	{PartName="Head",meshid="13953153289"},
-	-- lay offsale black rig
 	{PartName="Left Leg",meshid="17387586286",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="17387586286",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="17374767929",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="17374767929",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
-	-- 7ws offsale black rig
 	{PartName="Left Leg",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 
-	-- meshless rig
 	{PartName="Head",meshid="13953094351"},
 	{PartName="Torso",meshid="127552124837034",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Leg",meshid="121304376791439"},
@@ -335,32 +234,26 @@ local aligns={
 	{PartName="Left Arm",meshid="117287001096396"},
 	{PartName="Right Arm",meshid="117287001096396"},
 
-	-- head for noob rig
 	{PartName="Head",meshid="13058309233",C0=angles(0,3.141592653589793,0)},
-	-- lay offsale noob rig
 	{PartName="Torso",meshid="18640899369"},
 	{PartName="Left Leg",meshid="18640901641"},
 	{PartName="Right Leg",meshid="18640901641"},
 	{PartName="Left Arm",meshid="18640914129"},
 	{PartName="Right Arm",meshid="18640914129"},
-	-- 7ws offsale noob rig
 	{PartName="Torso",meshid="126825022897778"},
 	{PartName="Left Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 
-	-- white torso
 	{PartName="Torso",meshid="126825022897778"},
 
-	-- lay onsale gray torso white arm black leg rig
 	{PartName="Torso",meshid="139792224823925"},
 	{PartName="Left Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 
-	-- shownape/geecee auto rig
 	{PartName="Head",AccessoryName="Accessory (autorig_Head)"},
 	{PartName="Torso",AccessoryName="Accessory (autorig_Torso)"},
 	{PartName="Left Leg",AccessoryName="Accessory (autorig_LeftLeg)"},
@@ -368,16 +261,6 @@ local aligns={
 	{PartName="Left Arm",AccessoryName="Accessory (autorig_LeftArm)"},
 	{PartName="Right Arm",AccessoryName="Accessory (autorig_RightArm)"},
 
-	-- free rig
-	--[[{PartName="Left Arm",meshid="4324138105",textureid="4324138210",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Left Arm",meshid="4154474745",textureid="4154474807",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(-0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3650191503",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3443321249",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360974849",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(-0.125,-0.35,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360978739",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3033898741",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(0.125,-0.35,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3409604993",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)}]]
 	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)},
 	{PartName="Left Leg",meshid="4094864753",textureid="4094881938",C0=angles(0,0,-1.5707963267948966)},
 	{PartName="Right Leg",meshid="4154474745",textureid="4154474807",C0=angles(0,0,1.5707963267948966)},
@@ -411,8 +294,6 @@ local emptyfunction=function() end
 local fling=fling~=false
 local allowshiftlock=allowshiftlock~=false
 local ctrltp=ctrltp~=false
---local invisiblekeybind=false --invisiblekeybind~=false
---local invisibleoffset=(type(invisibleoffset)=="number" and v3_010*-invisibleoffset) or v3_010*-100
 local placeholders=placeholders~=false
 local clickfling=false
 local flingdirection=(type(flingdirection)=="number" and flingdirection) or 0
@@ -440,7 +321,6 @@ if (flingtargetting==2) and not setscriptable then
 	flingtargetting=0
 end	
 local highlightflingtargets=highlightflingtargets~=false
---local rainbowflinghighlights=rainbowflinghighlights~=false
 local discharscripts=discharscripts~=false and function(v) if IsA(v,"Script") then insSet(v,"Disabled",true) end end
 local flingchangestate=(type(flingchangestate)=="number" and flingchangestate) or 3
 local respawntp=(type(respawntp)=="number" and respawntp) or 3
@@ -477,7 +357,7 @@ local stopreanimate=function()
 			hrpcon0=nil
 		end
 		for i,v in next,flingtable do
-			if v then --it could be false
+			if v then
 				Destroy(v)
 			end
 		end
@@ -497,26 +377,20 @@ local stopreanimate=function()
 	return false
 end
 local reanimate=function()
-	--[[
-		FDless reanimate by MyWorld continued by rqz
-		optimize the optimized
-	]]
 
-	local novoid=true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
+	local novoid=true
 	local antivoid=true
-	local speedlimit=3000 --makes your parts move slower if the magnitude of their velocity is higher than this
-	local retVelTime=0.51 --time that claimed parts have velocity to reclaim in case u lose them
-	local smoothNet=true --true: Uhhhhhh-style netless (velocity matches real movement, tiny idle jitter) so other players see less wiggle. false: old FDless behaviour
-	local walkSpeed=16 --your walkspeed (can be changed at runtime)
-	local jumpPower=50 --your jump power (can be changed at runtime)
-	local gravity=196.2 --how fast the characters velocity decreases while falling (can be changed at runtime)
-	local ctrlclicktp=ctrltp --makes you teleport where u point ur mouse cursor at when click and hold ctrl down
-	--local invisible = false --moves your parts underground so you are not visible by pressing "i"
+	local speedlimit=3000
+	local retVelTime=0.51
+	local smoothNet=true
+	local walkSpeed=16
+	local jumpPower=50
+	local gravity=196.2
+	local ctrlclicktp=ctrltp
 
 	if stopreanimate() then return end
 
 	local cam=nil
-	--theres a way to have ws.currentcamera nil on heartbeat and still have the game run normally
 	local refcam=function()
 		local newcam=insGet(ws,"CurrentCamera")
 		while not newcam do
@@ -977,7 +851,7 @@ local reanimate=function()
 	tinsert(cons,Connect(insGet(plrs,"PlayerAdded"),onplayer))
 	if disguiscripts then
 		tinsert(cons,Connect(insGet(pg,"DescendantAdded"),function(v)
-			if IsA(v,"Script") then --mind Enum.RunContext.Client
+			if IsA(v,"Script") then
 				insSet(v,"Disabled",true) 
 			end
 		end))
@@ -1332,7 +1206,6 @@ local reanimate=function()
 	refreshKeyboardMovement()
 
 	local keyShift=KeyCode.LeftShift
-	--local keyI=KeyCode.I
 	tinsert(cons,Connect(insGet(uis,"InputBegan"),function(a)
 		if insGet(gs,"MenuIsOpen") or GetFocusedTextBox(uis) then
 			return
@@ -1354,8 +1227,6 @@ local reanimate=function()
 			jumpingInput=true
 		elseif a==keyShift then
 			shiftlock=allowshiftlock and not shiftlock
-			--elseif invisiblekeybind and a==keyI then
-			--invisible=not invisible
 		elseif modes[a] then
 			local modeLeft=modes[mode].modeLeft
 			if modeLeft then
@@ -1587,15 +1458,6 @@ local reanimate=function()
 			end
 			return true
 		end
-		--[[if highlightflingtargets and rainbowflinghighlights then
-			local c3hsv=Color3.fromHSV
-			tinsert(cons,Connect(insGet(rus,"RenderStepped"),function()
-				local c=c3hsv((sine*0.3)%1,1,1)
-				for i,v in next,flingtable do
-					insSet(v,"OutlineColor",c)
-				end
-			end))
-		end]]
 	else
 		fling=emptyfunction
 	end
@@ -1974,7 +1836,7 @@ local reanimate=function()
 
 		local sine15=sine*15
 		local idlerv=v3(sin(sine15),sin(sine15+1.0471975511965976),sin(sine15+2.0943951023931953))
-		local idleoff=idlerv*0.003910064697265625 --0.0156402587890625/4
+		local idleoff=idlerv*0.003910064697265625
 		local netY=25.01
 		local idleav=idlerv
 		if smoothNet then
@@ -2001,9 +1863,6 @@ local reanimate=function()
 
 		for i,v in next,cframes do
 			local part=i.p
-			--if invisible then
-			--v=cfAdd(v,invisibleoffset)
-			--end
 			if part then
 				if (insGet(part,"ReceiveAge")==0) and not GetJoints(part)[1] then
 					local placeholder=i.v
@@ -2014,7 +1873,7 @@ local reanimate=function()
 					local lastpos=i.l
 					local vel=(vpos-lastpos)/delta
 					local mag=vmagnitude(vel)
-					if mag<0.11730194091796875 then --0.0156402587890625*15/2
+					if mag<0.11730194091796875 then
 						if placeholder and i.b then
 							insSet(placeholder,"Parent",nil)
 							i.b=false
@@ -2045,9 +1904,9 @@ local reanimate=function()
 						if (sine-claimtime)<retVelTime then
 							local offsetToPrimaryPart=claimpos-cfGet(v,"Position")
 							local a=625.5001+wsGravity*-2*v3Get(offsetToPrimaryPart,"Y")
-							if a>0 then --part can reach primary part
+							if a>0 then
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/((25.01+sqrt(a))/wsGravity))
-							else --part cant reach primary part so at least aim for closest point
+							else
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/(30.010999900019996/wsGravity))
 							end
 						else
@@ -2091,15 +1950,15 @@ local reanimate=function()
 	tinsert(cons,Connect(heartbeat,mainFunction))
 	mainFunction()
 
-	local refreshjoints=function(v) --use this on the main part if u have parts that
-		refreshjointsI(v) --are connected with each other but arent connected to rootpart
+	local refreshjoints=function(v)
+		refreshjointsI(v)
 		tclear(refreshedjoints)
 	end
 
 	local legcfR=cf(1,-1,0)
 	local legcfL=cf(-1,-1,0)
 	local raydir=v3_010*-2
-	local raycastlegs=function() --this returns 2 values: right leg raycast offset, left leg raycast offset
+	local raycastlegs=function()
 		local rY=Raycast(ws,cfGet(cfMul(cfr,legcfR),"Position"),raydir,raycastparams)
 		local lY=Raycast(ws,cfGet(cfMul(cfr,legcfL),"Position"),raydir,raycastparams)
 		if rY then
@@ -2115,7 +1974,7 @@ local reanimate=function()
 		end
 	end
 
-	local velbycfrvec=function() --this returns 2 values: forward/backwards movement (from -1 to 1), right/left movement (from -1 to 1)
+	local velbycfrvec=function()
 		local fw=cfGet(cfr,"LookVector")*xzvel/walkSpeed
 		local rt=cfGet(cfr,"RightVector")*xzvel/walkSpeed
 		return v3Get(fw,"X")+v3Get(fw,"Z"),v3Get(rt,"X")+v3Get(rt,"Z")
@@ -2123,8 +1982,8 @@ local reanimate=function()
 
 	local lastvel=v3_0
 	local velchg1=v3_0
-	local velchgbycfrvec=function() --this returns 2 values: forward/backwards velocity change, right/left velocity change
-		velchg1=velchg1+(lastvel-xzvel) --i recommend setting velchg1 to v3_0 when u start using this function or it will look worse
+	local velchgbycfrvec=function()
+		velchg1=velchg1+(lastvel-xzvel)
 		lastvel=xzvel
 		velchg1=velchg1-velchg1*(deltaTime/2)
 		local fw=cfGet(cfr,"LookVector")*velchg1/32
@@ -2134,22 +1993,22 @@ local reanimate=function()
 
 	local lastYvel=0
 	local velYchg1=0
-	local velYchg=function() --this returns Y axis velocity change
-		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50) --i recommend setting velYchg1 to 0 when u start using this function or it will look worse
+	local velYchg=function()
+		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50)
 		lastYvel=Yvel
 		velYchg1=velYchg1-velYchg1*(deltaTime/2)
 		return velYchg1
 	end
 
-	local rotToMouse=function(alpha) --this rotates ur character towards your mouse hit position
+	local rotToMouse=function(alpha)
 		local pos1=pos*v3_010+cfGet(insGet(mouse,"Hit"),"Position")*v3_101
-		if pos~=pos1 then --could make nan rotation
+		if pos~=pos1 then
 			cfr=Lerp(cfr,cfl(pos,pos1),alpha or deltaTime)
 		end
 	end
 
 	local glitchJoint=function(joint,targetGlitchTime,delayFrom,delayTo,radiansFrom,radiansTo) 
-		if sine>targetGlitchTime then --example usage: local glitchtime=0 addMode("x",{idle=function() glitchtime=glitchJoint(joint,glitchtime,0.2,0.4,-0.1,0.1) end})
+		if sine>targetGlitchTime then
 			radiansFrom=radiansFrom*100
 			radiansTo=radiansTo*100
 			joint.C0=cfMul(joint.C0,angles(mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100)) 
@@ -2176,7 +2035,7 @@ local reanimate=function()
 		end
 		gravity=n
 	end
-	local setCfr=function(v) --sets character cframe
+	local setCfr=function(v)
 		if typeof(v)=="CFrame" then
 			local newpos=cfGet(v,"Position")
 			camcf=cfAdd(camcf,newpos-pos)
@@ -2190,22 +2049,22 @@ local reanimate=function()
 			pos=v
 		end
 	end
-	local getVel=function() --returns character velocity
-		return xzvel+v3_010*Yvel --important: use only in lerps or it might not work
+	local getVel=function()
+		return xzvel+v3_010*Yvel
 	end
-	local setShiftlock=function(b) --turns shift lock on/off (same as pressing Shift)
+	local setShiftlock=function(b)
 		shiftlock=allowshiftlock and (b==true)
 	end
 	local getShiftlock=function()
 		return shiftlock
 	end
-	local getCamCF=function() --returns camera cframe
+	local getCamCF=function()
 		return camcf
 	end
-	local isFirstPerson=function() --returns true if user is in first person camera mode
+	local isFirstPerson=function()
 		return firstperson
 	end
-	local setCameraMoveable=function(b) --prevents the player from moving his camera
+	local setCameraMoveable=function(b)
 		cameraMoveable=b
 	end
 	local isOnGround=function()
@@ -2281,12 +2140,10 @@ local reanimate=function()
 	}
 end
 
--- gp backwards compatibility \240\159\151\191
 local gp=function(p,n,c)
 	return QueryDescendants(p,">"..c.."[Name=\""..n.."\"]")[1]
 end
 
--- again no need to load the whole thing cuz u can use the last one
 _G.GenesisFDless={reanimate=reanimate,stopreanimate=stopreanimate,gp=gp,rs=rs,insSet=insSet,insGet=insGet,cfMul=cfMul,mouse=mouse,isReanimated=function() return c end}
 return _G.GenesisFDless
 end)()
@@ -2979,12 +2836,11 @@ local function IWCore(FD, CFG)
 end
 
 
--- settings you can change
 local IW = {
-	TitanSizeVoid = 1, -- Titan scale with the Void hats, 1 = the og script size
-	TitanSizeUGC = 1.8, -- Titan scale with the UGC limb set (RLeg, LLeg, RArm, LArm, Torso). -size in chat (or the Size button) changes the set you wear and remembers it. Only the Titan, never your own rig
-	AlignKey = "p", -- Titan hat align panel (Head, Torso, Arms, Legs)
-	Music = true, -- the Internal War song
+	TitanSizeVoid = 1,
+	TitanSizeUGC = 1.8,
+	AlignKey = "p",
+	Music = true,
 	MusicVolume = 1.5,
 	WalkSpeed = 16,
 }
@@ -3033,7 +2889,6 @@ local function Clerp(a, b, t)
 	return a:Lerp(b, t)
 end
 
--- ---------------------------------------------------------------- animation constants (same as the og)
 local Animation_Speed = 3
 local Speed = IW.WalkSpeed
 local ROOTC0 = CF(0, 0, 0) * ANGLES(RAD(-90), RAD(0), RAD(180))
@@ -3054,7 +2909,6 @@ local Disable_Jump = false
 local KEY
 local ghostOn = false
 
--- ---------------------------------------------------------------- saved settings
 local DEFSIZE = {void = IW.TitanSizeVoid or 1, ugc = IW.TitanSizeUGC or 1.8}
 local SET = {file = "InternalWarSettings.json", void = DEFSIZE.void, ugc = DEFSIZE.ugc}
 pcall(function()
@@ -3075,13 +2929,10 @@ local function saveSettings()
 		writefile(SET.file, HttpService:JSONEncode({sizeVoid = SET.void, sizeUgc = SET.ugc}))
 	end)
 end
--- TS.set is the rig worn right now: "ugc" when any UGC limb piece is on the Titan, else "void". Each has its own scale
 local TS = {set = "void", goal = SET.void, k = SET.void}
 local T0 = os.clock()
--- SIZE is the og Titan (always 2) so every animation keeps its og numbers, TK is the scale command: the whole Titan skeleton is scaled by TK around its root every frame
 local SIZE, TK = 2, TS.k
 
--- ---------------------------------------------------------------- joints (the sim runs at a fixed 60, the screen blends the last two ticks)
 local JL = {}
 local function newJ(c0, c1)
 	local j = {C0 = c0, C1 = c1, pC0 = c0, pC1 = c1}
@@ -3106,7 +2957,6 @@ local LeftShoulder2 = newJ(CF(-1.5 * SIZE, 0.5 * SIZE, 0) * LEFTSHOULDERC0, CF(0
 local RightHip2 = newJ(CF(SIZE, -SIZE, 0) * ANGLES(0, RAD(90), 0), CF(0.5 * SIZE, SIZE, 0) * ANGLES(0, RAD(90), 0))
 local LeftHip2 = newJ(CF(-SIZE, -SIZE, 0) * ANGLES(0, RAD(-90), 0), CF(-0.5 * SIZE, SIZE, 0) * ANGLES(0, RAD(-90), 0))
 
--- ---------------------------------------------------------------- the Titan (root + joint chain, same maths as the Motor6Ds of the og clone)
 local T = {R2 = C.rootCF() * CF(0, -20 * TK, 5 * TK), pR2 = nil}
 T.pR2 = T.R2
 local function jv(j, a)
@@ -3203,7 +3053,6 @@ local SHADOW = setmetatable({}, {
 	end,
 })
 
--- ---------------------------------------------------------------- your own rig (the small one) through FDless
 local RP = {has = false, cf = IDENT, pcf = IDENT}
 local YAW = {last = nil, rate = 0}
 local function actualRoot()
@@ -3273,12 +3122,10 @@ local function setRootCF(cf)
 	fd.cframes[C.Root] = cf
 end
 
--- scaled follow point: where the Titan wants to be around you (the og numbers x the Titan scale)
 local function TF(x, y, z)
 	return RootPart.CFrame * CF(x * TK, y * TK, z * TK)
 end
 
--- ---------------------------------------------------------------- aim (mouse on PC, the middle of the screen on phones)
 local function AimPoint()
 	if onPhone then
 		local cam = workspace.CurrentCamera
@@ -3317,7 +3164,6 @@ local Mouse = setmetatable({KeyDown = newSignal(), KeyUp = newSignal(), Button1D
 	end,
 })
 
--- ---------------------------------------------------------------- helpers the og attacks use
 local function Raycast(POSITION, DIRECTION, RANGE, IGNORE)
 	return C.ray(POSITION, DIRECTION, RANGE, IGNORE)
 end
@@ -3365,7 +3211,6 @@ local function CreateFlyingDebree(FLOOR, POSITION, AMOUNT, BLOCKSIZE, SWAIT, STR
 	end
 end
 
--- the dark face gradient on your head (only you see it)
 local FACE = {parts = {}, on = false}
 local function FacialShadow()
 	local SHADOWS = {}
@@ -3388,11 +3233,9 @@ local function FacialShadow()
 	end
 end
 
--- ---------------------------------------------------------------- Titan hats (the 6 Void hats OR the UGC limb set, glued to the Titan parts every frame)
 local ALIGNFILE = "InternalWarAlign.json"
 local ALIGN = {{0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}}
 local TABNAME = {"Head", "Torso", "Arms", "Legs"}
--- the UGC limb set (LLeg, RArm, RLeg, LArm, Torso): every piece has its own tab
 local ALIGN2 = {{0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}}
 local TABNAME2 = {"Torso", "R Arm", "L Arm", "R Leg", "L Leg"}
 local KEYS2 = {"UTorso", "URArm", "ULArm", "URLeg", "ULLeg"}
@@ -3444,7 +3287,6 @@ local function saveAlign()
 end
 loadAlign()
 
--- asset id out of any kind of content string (rbxassetid://123, .../asset/?id=123, plain 123)
 local function idOf(s)
 	if type(s) ~= "string" then
 		return ""
@@ -3464,7 +3306,6 @@ end
 local function hasId(s, id)
 	return type(s) == "string" and type(id) == "string" and id ~= "" and s:find(id, 1, true) ~= nil
 end
--- tab = Void set align tab, alt = accessory names of the UGC limb piece for that slot, tab2 = its tab in the UGC set
 local RIG = {
 	{key = "head", mesh = "17375312569", pos = VT(0, 2.75, 0), rot = ANGLES(0, 3.15, 0), tab = 1, nextScan = 0},
 	{key = "torso", mesh = "17269636541", pos = VT(0, 0, 0), rot = IDENT, tab = 2, alt = {"torso"}, tab2 = 1, nextScan = 0},
@@ -3510,7 +3351,6 @@ local function hubJob(slot, e)
 	local ok, row = pcall(A.match, "InternalWar", slot, {mesh = idOf(rawget(e, "m")), tex = idOf(rawget(e, "t")), name = accName(e)})
 	return ok and type(row) == "table" and row.src == "user" and row or nil
 end
--- what the catalog assets turned out to be (filled in by the loader below)
 local UGCMETA = {}
 local UGCIDS = {torso = "118799338103138", rarm = "132416515427938", larm = "101379144205559", rleg = "80628080423002", lleg = "121360936156823"}
 local function uniqueMetaName(key)
@@ -3555,7 +3395,6 @@ local function sizeOf(e)
 	end
 	return nil
 end
--- the UGC pieces are unknown meshes, so the mesh is turned by its own size: the long side goes up the limb, the thin side of the torso goes front to back
 local function autoRot(h, s)
 	if not s then
 		return IDENT
@@ -3616,7 +3455,6 @@ local function scanHats()
 	if #need == 0 then
 		return
 	end
-	-- pass 1: UGC limb piece by its mesh (loaded from the catalog id, or the one it had last time), pass 2: by its accessory name, pass 3: the Void hats by mesh id
 	for pass = 0, 3 do
 		for _, h in ipairs(need) do
 			if not h.e and (pass == 0 or pass == 3 or h.alt) then
@@ -3698,7 +3536,6 @@ local function readHandle(root)
 	end
 	return {name = (string.lower(acc.Name):gsub("[^%w]", "")), mesh = idOf(mesh), tex = idOf(tex), size = handle.Size}
 end
--- the 5 UGC limb pieces are looked up by their catalog id, so the exact mesh is known without guessing from names
 for key, id in pairs(UGCIDS) do
 	task.spawn(function()
 		local ok, root = pcall(loadCatalog, id)
@@ -3720,7 +3557,6 @@ for key, id in pairs(UGCIDS) do
 		end
 	end)
 end
--- names of the hats you wear that no Titan slot took
 local function unplacedHats()
 	local used = {}
 	for _, h in ipairs(RIG) do
@@ -3736,7 +3572,6 @@ local function unplacedHats()
 	end
 	return names
 end
--- total hats on the Titan, and how many of them are UGC limb pieces
 local function hatCount()
 	local n, u = 0, 0
 	for _, h in ipairs(RIG) do
@@ -3749,7 +3584,6 @@ local function hatCount()
 	end
 	return n, u
 end
--- -hats: what the Titan found, plus every hat on you, so a wrong one is easy to report
 local function hatReport()
 	local lines = {}
 	for _, h in ipairs(RIG) do
@@ -3776,7 +3610,6 @@ local function hatReport()
 	return table.concat(lines, "\n")
 end
 
--- ghost body (the white neon Titan only you see)
 local GHOST = {}
 do
 	local defs = {
@@ -3801,7 +3634,6 @@ local function applyTitanSize()
 	end
 end
 applyTitanSize()
--- which scale applies: UGC limbs found -> ugc, Void hats found -> void, nothing found -> whatever it was
 local function wantedSet()
 	local n, u = hatCount()
 	if u > 0 then
@@ -3811,7 +3643,6 @@ local function wantedSet()
 	end
 	return TS.set
 end
--- start at the scale of the hats you wear right now, so the Titan never visibly grows at the start
 do
 	pcall(scanHats)
 	TS.set = wantedSet()
@@ -4769,7 +4600,6 @@ local function TakeOn()
 	Rooted = false
 end
 
--- ---------------------------------------------------------------- skills
 local function KeyDown(Key)
 	if Key == "z" and ATTACK == false then
 		Punch()
@@ -4792,7 +4622,6 @@ local SKILLS = {
 }
 local SKILLKEY = {z = true, e = true, r = true, t = true, y = true}
 
--- if a move ever errors, put everything back so you are never stuck
 local function resetState()
 	ATTACK = false
 	Rooted = false
@@ -4810,7 +4639,6 @@ local function resetState()
 	end
 end
 
--- ---------------------------------------------------------------- ui
 local WHITE = C3(1, 1, 1)
 local gui = inst("ScreenGui", nil, {Name = "InternalWar", ResetOnSpawn = false, DisplayOrder = 55, ZIndexBehavior = Enum.ZIndexBehavior.Sibling})
 gui.Parent = C.guiParent()
@@ -4835,7 +4663,6 @@ local function button(parent, props)
 	return b
 end
 
--- Titan scale panel (the Uhhhhhh "Character Scale" slider: 0.5 to 5 in steps of 0.5, you can type 0.001 to 20)
 local sizePanel = inst("Frame", gui, {
 	Name = "TitanScale", Size = UDim2.fromOffset(280, 138), Position = UDim2.new(0.5, -140, 0.2, 0), BackgroundColor3 = COL.bg, BackgroundTransparency = 0.05,
 	BorderSizePixel = 0, Visible = false, Active = true,
@@ -5074,7 +4901,6 @@ C.connect(UIS.InputBegan, function(io, gp)
 	end
 end)
 
--- ---------------------------------------------------------------- chat commands
 local function sizeCmd(arg)
 	local a = string.lower(arg or ""):gsub("x$", "")
 	if a == "" then
@@ -5110,7 +4936,6 @@ local function onChat(msg, src)
 	end
 	local raw = msg:gsub("^%s+", ""):gsub("%s+$", "")
 	local body = string.lower(raw)
-	-- "/e -stop" (the /e keeps the command out of the chat)
 	body = body:gsub("^/emote%s+", "")
 	body = body:gsub("^/e%s+", "")
 	body = body:gsub("^/e([%-;])", "%1")
@@ -5163,11 +4988,8 @@ C.onStop(function()
 	end
 end)
 
--- ---------------------------------------------------------------- what the rigs are really doing (measured, not guessed)
--- your rig: how fast the FD root really moves (drives the og walk / jump / fall of your rig)
 local MV = {v = VT(0, 0, 0), last = nil}
 
--- ---------------------------------------------------------------- the loop that never ends: walk / jump / fall / idle for both rigs
 local function mainStep()
 	local vel = MV.v
 	local TORSOVELOCITY = (vel * VT(1, 0, 1)).Magnitude
@@ -5179,7 +5001,6 @@ local function mainStep()
 			HITFLOOR = true
 		end
 	end
-	-- FDless knows if you are walking or in the air, so it has the last word when the measuring is late
 	local st = C.state
 	if st == "Walk" and TORSOVELOCITY < 1.5 then
 		TORSOVELOCITY = 1.5
@@ -5295,7 +5116,6 @@ local function mainLoop()
 	end
 end
 
--- ---------------------------------------------------------------- 60 Hz logic: snapshot first, then the moves run, the screen blends the two
 C.snapshot = function()
 	for i = 1, #JL do
 		local j = JL[i]
@@ -5380,7 +5200,6 @@ C.keyDown = function(k)
 	end
 end
 
--- ---------------------------------------------------------------- every rendered frame
 local function glueHats(rootInv, P2)
 	scanHats()
 	for _, h in ipairs(RIG) do
@@ -5465,7 +5284,6 @@ local function onFrame(state, a)
 	end
 end
 
--- ---------------------------------------------------------------- go
 C.start(onFrame)
 task.spawn(function()
 	local ok, e = pcall(mainLoop)

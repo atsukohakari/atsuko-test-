@@ -1,0 +1,33 @@
+MIT License
+
+Copyright (c) 2025 STEVETHEREALONE
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Uhhhhhh: https://github.com/STEVE-916-create/Uhhhhhh
+Code: STEVETHEREALONE, BoredGal (mostly patches), Awes955 Modded
+GFX: STEVETHEREALONE, AALib
+Music: Dubmood, 4mat, MASTER BOOT RECORD
+Some dance songs and animations in Uhhhhhh come from Dubmood and Solary-3.
+
+Used here in Reanimation/Limb/Uhhhhhh.lua, Hub/Emotes.lua, Addict's emotes, and
+the AK-47, Banisher, Linked Sword and R6 hat scripts with the movesets they run on.
+
+From the author: "Thou shalth not steal. Point at this source if you used a
+snippet here."

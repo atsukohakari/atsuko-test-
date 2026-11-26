@@ -1,5 +1,3 @@
-
-
 if not getgenv().Settings.AllowNetBypass then getgenv().Settings.AllowNetBypass = true end
 spawn(function()
 	while getgenv().Settings.AllowNetBypass == true do
@@ -60,15 +58,12 @@ local function Align(P0,P1,Position,Rotate)
     Track(AlignOrientation)
     Track(Attachment1)
     Track(Attachment2)
-    -- Main Attach Thingy:
-    AlignPosition.Attachment0,AlignPosition.Attachment1 = Attachment1,Attachment2 -- Shortcut
-    AlignOrientation.Attachment0,AlignOrientation.Attachment1 = Attachment1,Attachment2 -- Shortcut
-    -- Properties:
+    AlignPosition.Attachment0,AlignPosition.Attachment1 = Attachment1,Attachment2
+    AlignOrientation.Attachment0,AlignOrientation.Attachment1 = Attachment1,Attachment2
     AlignPosition.RigidityEnabled = true
     AlignOrientation.MaxTorque = 1600000000
     AlignPosition.Responsiveness = 200
     AlignOrientation.Responsiveness = 200
-    -- Rotate/Position
     Attachment1.Position = Position or Vector3.new(0,0,0)
     Attachment1.Rotation = Rotate or Vector3.new(0,0,0)
 end
@@ -88,7 +83,7 @@ local Human = game.Players.LocalPlayer.Character.Humanoid
     
 if Human.RigType == Enum.HumanoidRigType.R6 then
     
-    if getgenv().Settings.Reanimation == "Simple" then -- R6 Simple
+    if getgenv().Settings.Reanimation == "Simple" then
         
         
         
@@ -113,7 +108,7 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
     end
     local Reanim = Track(Character:Clone())
     Reanim.Parent = getgenv().Settings.CloneParent or Character
-    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
     
     for i,v in pairs(Reanim:GetChildren()) do 
         if v:IsA("BasePart") then v.Transparency = 1
@@ -186,14 +181,13 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
     
     
     
-    elseif getgenv().Settings.Reanimation == "Fling" then -- R6 Fling
+    elseif getgenv().Settings.Reanimation == "Fling" then
     
     
     
     
     
     
-    -- Main (R6)
     local Character = workspace[game.Players.LocalPlayer.Name]
     local Humanoid = Character:FindFirstChild("Humanoid")
     Character.Archivable = true
@@ -213,7 +207,7 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
     end
     local Reanim = Track(Character:Clone())
     Reanim.Parent = getgenv().Settings.CloneParent or Character
-    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
     
     for i,v in pairs(Reanim:GetChildren()) do 
         if v:IsA("BasePart") then v.Transparency = 1
@@ -291,14 +285,13 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
     
     
     
-    elseif getgenv().Settings.Reanimation == "Bullet" then -- R6 Bullet
+    elseif getgenv().Settings.Reanimation == "Bullet" then
         
         if not game.Players.LocalPlayer.Character:WaitForChild("Pal Hair") then
             hubNotify("Not Reanimated!", "Missing: Pal Hair..", "error", 6)
             return
         end
         
-        -- Main (R6)
         local Character = workspace[game.Players.LocalPlayer.Name]
         local Humanoid = Character:FindFirstChild("Humanoid")
         Character.Archivable = true
@@ -319,7 +312,7 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
 
         local Reanim = Track(Character:Clone())
         Reanim.Parent = getgenv().Settings.CloneParent or Character  
-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
                     
         for i,v in pairs(Reanim:GetChildren()) do 
             if v:IsA("BasePart") then v.Transparency = 1
@@ -404,11 +397,11 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
         local Mouse = game.Players.LocalPlayer:GetMouse()
         local MouseHolding = false
         Conn(Mouse.Button1Down, function()
-            MouseHolding = true --BP.Position = Mouse.Hit.p
+            MouseHolding = true
         end)
         
         Conn(Mouse.Button1Up, function()
-            MouseHolding = false --BP.Position = Character.Torso.Position
+            MouseHolding = false
         end)
         
         
@@ -428,15 +421,11 @@ if Human.RigType == Enum.HumanoidRigType.R6 then
     
 
 
------------------------------------------------
 elseif Human.RigType == Enum.HumanoidRigType.R15 then
------------------------------------------------   
 
 
-
-    if getgenv().Settings.Reanimation == "Simple" then -- R15 Simple
+    if getgenv().Settings.Reanimation == "Simple" then
         
-        -- Main (R15)
         local Character = workspace[game.Players.LocalPlayer.Name]
         local Humanoid = Character:FindFirstChild("Humanoid")
         Character.Archivable = true
@@ -457,7 +446,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         end)
         local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
         Reanim.Parent = getgenv().Settings.CloneParent or Character  
-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
         Character.Animate:Destroy()
         Humanoid.Animator:Destroy()
         for i,v in pairs(Reanim:GetChildren()) do 
@@ -539,7 +528,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         end)
         workspace:FindFirstChildOfClass("Camera").CameraSubject = Reanim.Humanoid
 
-    elseif getgenv().Settings.Reanimation == "Fling" then -- R15 Fling
+    elseif getgenv().Settings.Reanimation == "Fling" then
         local Character = workspace[game.Players.LocalPlayer.Name]
         local Humanoid = Character:FindFirstChild("Humanoid")
         Character.Archivable = true
@@ -560,7 +549,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         end)
         local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
         Reanim.Parent = Character
-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
         Character.Animate:Destroy()
         Humanoid.Animator:Destroy()
         for i,v in pairs(Reanim:GetChildren()) do 
@@ -645,7 +634,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         end)
         workspace:FindFirstChildOfClass("Camera").CameraSubject = Reanim.Humanoid
         
-    elseif getgenv().Settings.Reanimation == "Bullet" then -- R15 Bullet
+    elseif getgenv().Settings.Reanimation == "Bullet" then
         local Character = workspace[game.Players.LocalPlayer.Name]
         local Humanoid = Character:FindFirstChild("Humanoid")
         Character.Archivable = true
@@ -668,7 +657,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
 
         local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
         Reanim.Parent = Character
-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
 
         for i,v in pairs(Reanim:GetChildren()) do 
             if v:IsA("BasePart") then v.Transparency = 1
@@ -704,7 +693,6 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
     end)
 
 
-
         Character.HumanoidRootPart:Destroy()
 
         Humanoid:ChangeState("Physics")
@@ -718,9 +706,7 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         end
 
 
-
         Reanim.HumanoidRootPart.CFrame = Character.UpperTorso.CFrame
-
 
 
         
@@ -780,11 +766,11 @@ elseif Human.RigType == Enum.HumanoidRigType.R15 then
         local Mouse = game.Players.LocalPlayer:GetMouse()
         local MouseHolding = false
         Conn(Mouse.Button1Down, function()
-            MouseHolding = true --BP.Position = Mouse.Hit.p
+            MouseHolding = true
         end)
 
         Conn(Mouse.Button1Up, function()
-            MouseHolding = false --BP.Position = Character.Torso.Position
+            MouseHolding = false
         end)
 
 

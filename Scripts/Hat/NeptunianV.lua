@@ -1,27 +1,3 @@
---[[
-	Neptunian V  |  FDless edition
-	Original limb script converted to run on the FDless reanimate (embedded below).
-
-	Keys:  F equip / unequip     LMB 3-hit combo (equipped)
-	       Q smack   E darkspin   Z spinnyblade   X eightbit megablade   C blade spin   (equipped)
-	       R super jump   V teleport to mouse   L mute music
-	       1 / 2 / 3 / 4 / 5 change mode (speed + music + idle / walk animations)
-	Chat:  /stop (turn everything off)   /sword (re-find the sword)   /sit   /glitch (mode 4 only)   id/<soundid>   pitch/<n>   vol/<n>   skip/<seconds>
-
-	Swords: Corrupt Demonic Greatsword, Hacklords Venom Greatsword or The Beasthammer - wear one before running the
-	       script (or tap Find sword / type /sword after putting it on). The Align panel switches between them.
-]]
-
--- ====================================== SWORDS + ALIGN ======================================
--- Supported swords (wear one before running the script - no server command is used):
---   Corrupt Demonic Greatsword   https://www.roblox.com/catalog/4506945409
---   Hacklords Venom Greatsword   https://www.roblox.com/catalog/121290673270759
---   The Beasthammer              https://www.roblox.com/catalog/90947601297494
--- "words" = lowercase pieces of the accessory name used to recognise it.
--- align = {X, Y, Z, rotX, rotY, rotZ} in studs / degrees: sword = in hand (equipped), swordback = on your back,
--- base = how the hat sits in the hand before the align is applied {rotX, rotY, rotZ}.
--- Every sword keeps its OWN alignment. Use the on-screen "Align" button (top left, or P) to change them live;
--- Save writes NeptunianFDlessAlign.json and it is loaded again next time you run the script.
 local SWORDS = {
 	{key = "corrupt", name = "Corrupt Demonic Greatsword", id = 4506945409, words = {"corrupt", "demonic"},
 		align = {sword = {0.5, 2.9, -0.4, 0, 0, -140}, swordback = {-0.6, 2.9, 0, 0, 0, -45}, base = {0, 0, 90}}},
@@ -31,22 +7,19 @@ local SWORDS = {
 		align = {sword = {0.5, 2.9, -0.4, 0, 0, -140}, swordback = {-0.6, 2.9, 0, 0, 0, -45}, base = {0, 0, 90}}},
 }
 
--- the sword that is active right now (filled in by the script from SWORDS[...].align, edited by the Align panel)
 local ALIGN = {
 	sword     = {0.5, 2.9, -0.4, 0, 0, -140},
 	swordback = {-0.6, 2.9, 0, 0, 0, -45},
 }
 
 local CONFIG = {
-	SwordAccessoryName = "",    -- optional: exact name of the accessory if your sword has a custom name (uses the first sword's align)
-	SwordMeshId = "",            -- optional: digits of the sword's MeshId if auto detection ever fails
-	SwordTextureId = "",         -- optional: digits of the sword's TextureId
-	-- how the hat sits in the hand BEFORE the ALIGN above is applied (degrees, XYZ).
-	-- Tweak this first if the blade points the wrong way (Base tab in the align panel).
+	SwordAccessoryName = "",
+	SwordMeshId = "",
+	SwordTextureId = "",
 	SwordBaseRotation = {0, 0, 90},
 	AssetFolder = "NeptunianAssets",
 	AlignFile = "NeptunianFDlessAlign.json",
-	IgnoreMenusOnTap = false,    -- true = a tap on the joystick area / chat / topbar does not attack (default: tapping the screen always attacks)
+	IgnoreMenusOnTap = false,
 }
 
 
@@ -58,24 +31,14 @@ local function hubNotify(title, text, kind, dur)
 	end
 	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
 end
--- FDless reanimate (MyWorld, continued by rqz) - embedded so this script is self-contained
 do
 local __fdless = function()
 --!optimize 2
---no need to load the whole thing cuz u can use the last one
 if _G.GenesisFDless then 
 	return _G.GenesisFDless 
 end
 
---oh you're still here? queue the reanimate
 
---[[
-	FDless Reanimate by MyWorld continued by rqz
-	"var"
-	Patchma Hub Discord: https://discord.com/invite/QMy5f6DrbH
-]]
-
---no need to get and index the library tables with function names every time the script uses them
 local osclock=os.clock
 local tspawn=task.spawn
 local tdelay=task.delay
@@ -98,11 +61,9 @@ local tfind=table.find
 local cyield=coroutine.yield
 local cresume=coroutine.resume
 local crunning=coroutine.running
-local vmagnitude=vector.magnitude --faster than indexing with Magnitude
-local vnormalize=vector.normalize --faster than indexing with Unit
+local vmagnitude=vector.magnitude
+local vnormalize=vector.normalize
 
---the script doesnt have to read global varaibles every time to get them
---why not have them saved in local varaibles for faster access times
 local next=next
 local pcall=pcall
 local xpcall=xpcall
@@ -119,7 +80,7 @@ local v3=Vector3.new
 local c3=Color3.new 
 local cf=CFrame.new
 local cfl=CFrame.lookAt
-local angles=CFrame.fromEulerAngles --faster than .Angles
+local angles=CFrame.fromEulerAngles
 local u2=UDim2.new 
 local e=Enum 
 local rp=RaycastParams.new 
@@ -149,7 +110,6 @@ local humstatesbl=e.HumanoidStateType:GetEnumItems()
 table.remove(humstatesbl,tfind(humstatesbl,enumrunning))
 table.remove(humstatesbl,tfind(humstatesbl,e.HumanoidStateType.None))
 
---not "local function rs" to not assign debug names
 local rs=function()
 	local s=""
 	for i=1,mrandom(8,15) do
@@ -162,7 +122,6 @@ local rs=function()
 	return s
 end
 
---it runs even faster if u call __index and __newindex metamethods directly
 local getMetamethodFromErrorStack=function(userdata,f,test)
 	local ret=nil
 	xpcall(f,function()
@@ -180,10 +139,7 @@ local cfMul=getMetamethodFromErrorStack(cf_0,function(a,b) return a*b end,functi
 local cfAdd=getMetamethodFromErrorStack(cf_0,function(a,b) return a+b end,function(f) return cf(1,2,3)+v3(1,2,3)==f(cf(1,2,3),v3(1,2,3)) end)
 local v3Get=getMetamethodFromErrorStack(v3_0,function(a,b) return a[b] end,function(f) return v3(1,2,3).Unit==f(v3(1,2,3),"Unit") end)
 local v2Get=getMetamethodFromErrorStack(v2(),function(a,b) return a[b] end,function(f) return f(v2(1,2),"Y")==2 end)
---multiplying and adding vector3 is faster if you use the * and + operators
---its faster to multiply X and Y of vector2 than to multiply vector2 and then get X and Y from it
 
---no need to index instances every time to call their functions
 local Clone=insGet(game,"Clone")
 local ClearAllChildren=insGet(game,"ClearAllChildren")
 local Destroy=insGet(game,"Destroy")
@@ -195,7 +151,6 @@ local IsDescendantOf=insGet(game,"IsDescendantOf")
 local QueryDescendants=insGet(game,"QueryDescendants")
 local GetPropertyChangedSignal=insGet(game,"GetPropertyChangedSignal")
 
---findfirstchildofclass faster than getservice
 local plrs=FindFirstChildOfClass(game,"Players")
 local rus=FindFirstChildOfClass(game,"RunService")
 local ws=FindFirstChildOfClass(game,"Workspace")
@@ -232,37 +187,16 @@ local Inverse=cfGet(cf_0,"Inverse")
 local Lerp=cfGet(cf_0,"Lerp")
 
 local aligns={
-	--[[
-		example: 
-		{PartName="Right Arm",meshid="123456789",textureid="123456789",AccessoryName="Name",C0=cf(1,2,3)*angles(1,2,3)},
 
-		PartName (required) - the name of the body part you want to align the hat to
-		meshid (optional) - mesh id of the mesh of the accessory you want to align
-		textureid (optional) - texture id of the mesh of the accessory you want to align
-		AccessoryName (optional) - instance name of the accessory you want to align 
-		C0 (optional) - offset from the target body part to the accessory (defaults to cf(0,0,0) if unspecified)
-		
-		accessories will align to the first entry whose criteria they match
-		(unspecified meshid/textureid/accessoryname accepts all accessories)
-		
-		each entry aligns one accessory at most
-	]]
-
-	-- unknown head
 	{PartName="Head",meshid="11601535857",C0=angles(0,3.141592653589793,0)},
 
-	-- patchma gear arms
 	{PartName="Left Arm",meshid="13831073174",C0=cfMul(cf(0.017,0,-0.23),angles(-1.4835298641951802,-0.15707963267948966,2.199114857512855))},
 	{PartName="Right Arm",meshid="13839903766",C0=cfMul(cf(0,-0.62,-0.01),angles(1.6580627893946132,0.15707963267948966,-2.199114857512855))},
 
-	-- patchma yellow leg
 	{PartName="Left Leg",meshid="11159370334",textureid="11159285454",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 
-	-- patchma lego piece leg
 	{PartName="Right Leg",meshid="12652772399",textureid="12652775021",C0=cf(0,-0.125,0)},
 
-	-- offsale white rig
-	-- a ton of offsaled black torso's
 	{PartName="Torso",meshid="14768666349"},
 	{PartName="Torso",meshid="14241018198"},
 	{PartName="Torso",meshid="13421774668"},
@@ -271,7 +205,6 @@ local aligns={
 	{PartName="Left Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 
-	-- og fur body, r15 arms, smiley legs rig
 	{PartName="Head",meshid="13953154391"},
 	{PartName="Torso",meshid="13778226115"},
 	{PartName="Left Leg",meshid="11159370334",textureid="11159284657",C0=angles(1.5707963267948966,0,1.5707963267948966)},
@@ -279,28 +212,22 @@ local aligns={
 	{PartName="Left Arm",meshid="12344207333",C0=angles(2,0,0)},
 	{PartName="Right Arm",meshid="12344206657",C0=angles(2,0,0)},
 
-	-- torso for both "white limbs black torso rig" and "black rig"
 	{PartName="Torso",meshid="110684113028749"},
-	-- white limbs black torso rig
 	{PartName="Head",meshid="13058343355",C0=angles(0,3.141592653589793,0)},
 	{PartName="Left Leg",meshid="139733645770094",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="99608462237958",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="90736849096372",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105141400603933",C0=angles(0,0,1.5707963267948966)},
-	-- head for black rigs
 	{PartName="Head",meshid="13953153289"},
-	-- lay offsale black rig
 	{PartName="Left Leg",meshid="17387586286",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="17387586286",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="17374767929",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="17374767929",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
-	-- 7ws offsale black rig
 	{PartName="Left Leg",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 
-	-- meshless rig
 	{PartName="Head",meshid="13953094351"},
 	{PartName="Torso",meshid="127552124837034",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Leg",meshid="121304376791439"},
@@ -308,32 +235,26 @@ local aligns={
 	{PartName="Left Arm",meshid="117287001096396"},
 	{PartName="Right Arm",meshid="117287001096396"},
 
-	-- head for noob rig
 	{PartName="Head",meshid="13058309233",C0=angles(0,3.141592653589793,0)},
-	-- lay offsale noob rig
 	{PartName="Torso",meshid="18640899369"},
 	{PartName="Left Leg",meshid="18640901641"},
 	{PartName="Right Leg",meshid="18640901641"},
 	{PartName="Left Arm",meshid="18640914129"},
 	{PartName="Right Arm",meshid="18640914129"},
-	-- 7ws offsale noob rig
 	{PartName="Torso",meshid="126825022897778"},
 	{PartName="Left Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 
-	-- white torso
 	{PartName="Torso",meshid="126825022897778"},
 
-	-- lay onsale gray torso white arm black leg rig
 	{PartName="Torso",meshid="139792224823925"},
 	{PartName="Left Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 
-	-- shownape/geecee auto rig
 	{PartName="Head",AccessoryName="Accessory (autorig_Head)"},
 	{PartName="Torso",AccessoryName="Accessory (autorig_Torso)"},
 	{PartName="Left Leg",AccessoryName="Accessory (autorig_LeftLeg)"},
@@ -341,16 +262,6 @@ local aligns={
 	{PartName="Left Arm",AccessoryName="Accessory (autorig_LeftArm)"},
 	{PartName="Right Arm",AccessoryName="Accessory (autorig_RightArm)"},
 
-	-- free rig
-	--[[{PartName="Left Arm",meshid="4324138105",textureid="4324138210",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Left Arm",meshid="4154474745",textureid="4154474807",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(-0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3650191503",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3443321249",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360974849",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(-0.125,-0.35,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360978739",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3033898741",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(0.125,-0.35,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3409604993",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)}]]
 	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)},
 	{PartName="Left Leg",meshid="4094864753",textureid="4094881938",C0=angles(0,0,-1.5707963267948966)},
 	{PartName="Right Leg",meshid="4154474745",textureid="4154474807",C0=angles(0,0,1.5707963267948966)},
@@ -384,8 +295,6 @@ local emptyfunction=function() end
 local fling=fling~=false
 local allowshiftlock=allowshiftlock~=false
 local ctrltp=ctrltp~=false
---local invisiblekeybind=false --invisiblekeybind~=false
---local invisibleoffset=(type(invisibleoffset)=="number" and v3_010*-invisibleoffset) or v3_010*-100
 local placeholders=placeholders~=false
 local clickfling=clickfling==true
 local flingdirection=(type(flingdirection)=="number" and flingdirection) or 0
@@ -413,7 +322,6 @@ if (flingtargetting==2) and not setscriptable then
 	flingtargetting=0
 end	
 local highlightflingtargets=highlightflingtargets~=false
---local rainbowflinghighlights=rainbowflinghighlights~=false
 local discharscripts=discharscripts~=false and function(v) if IsA(v,"Script") then insSet(v,"Disabled",true) end end
 local flingchangestate=(type(flingchangestate)=="number" and flingchangestate) or 3
 local respawntp=(type(respawntp)=="number" and respawntp) or 3
@@ -450,7 +358,7 @@ local stopreanimate=function()
 			hrpcon0=nil
 		end
 		for i,v in next,flingtable do
-			if v then --it could be false
+			if v then
 				Destroy(v)
 			end
 		end
@@ -470,24 +378,18 @@ local stopreanimate=function()
 	return false
 end
 local reanimate=function()
-	--[[
-		FDless reanimate by MyWorld continued by rqz
-		optimize the optimized
-	]]
 
-	local novoid=true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
-	local speedlimit=3000 --makes your parts move slower if the magnitude of their velocity is higher than this
-	local retVelTime=0.51 --time that claimed parts have velocity to reclaim in case u lose them
-	local walkSpeed=16 --your walkspeed (can be changed at runtime)
-	local jumpPower=50 --your jump power (can be changed at runtime)
-	local gravity=196.2 --how fast the characters velocity decreases while falling (can be changed at runtime)
-	local ctrlclicktp=ctrltp --makes you teleport where u point ur mouse cursor at when click and hold ctrl down
-	--local invisible = false --moves your parts underground so you are not visible by pressing "i"
+	local novoid=true
+	local speedlimit=3000
+	local retVelTime=0.51
+	local walkSpeed=16
+	local jumpPower=50
+	local gravity=196.2
+	local ctrlclicktp=ctrltp
 
 	if stopreanimate() then return end
 
 	local cam=nil
-	--theres a way to have ws.currentcamera nil on heartbeat and still have the game run normally
 	local refcam=function()
 		local newcam=insGet(ws,"CurrentCamera")
 		while not newcam do
@@ -947,7 +849,7 @@ local reanimate=function()
 	tinsert(cons,Connect(insGet(plrs,"PlayerAdded"),onplayer))
 	if disguiscripts then
 		tinsert(cons,Connect(insGet(pg,"DescendantAdded"),function(v)
-			if IsA(v,"Script") then --mind Enum.RunContext.Client
+			if IsA(v,"Script") then
 				insSet(v,"Disabled",true) 
 			end
 		end))
@@ -1302,7 +1204,6 @@ local reanimate=function()
 	refreshKeyboardMovement()
 
 	local keyShift=KeyCode.LeftShift
-	--local keyI=KeyCode.I
 	tinsert(cons,Connect(insGet(uis,"InputBegan"),function(a)
 		if insGet(gs,"MenuIsOpen") or GetFocusedTextBox(uis) then
 			return
@@ -1324,8 +1225,6 @@ local reanimate=function()
 			jumpingInput=true
 		elseif a==keyShift then
 			shiftlock=allowshiftlock and not shiftlock
-			--elseif invisiblekeybind and a==keyI then
-			--invisible=not invisible
 		elseif modes[a] then
 			local modeLeft=modes[mode].modeLeft
 			if modeLeft then
@@ -1551,15 +1450,6 @@ local reanimate=function()
 			end
 			return true
 		end
-		--[[if highlightflingtargets and rainbowflinghighlights then
-			local c3hsv=Color3.fromHSV
-			tinsert(cons,Connect(insGet(rus,"RenderStepped"),function()
-				local c=c3hsv((sine*0.3)%1,1,1)
-				for i,v in next,flingtable do
-					insSet(v,"OutlineColor",c)
-				end
-			end))
-		end]]
 	else
 		fling=emptyfunction
 	end
@@ -1928,15 +1818,12 @@ local reanimate=function()
 
 		local sine15=sine*15
 		local idlerv=v3(sin(sine15),sin(sine15+1.0471975511965976),sin(sine15+2.0943951023931953))
-		local idleoff=idlerv*0.003910064697265625 --0.0156402587890625/4
+		local idleoff=idlerv*0.003910064697265625
 
 		local claimpos=insGet(primarypart,"Position")
 
 		for i,v in next,cframes do
 			local part=i.p
-			--if invisible then
-			--v=cfAdd(v,invisibleoffset)
-			--end
 			if part then
 				if (insGet(part,"ReceiveAge")==0) and not GetJoints(part)[1] then
 					local placeholder=i.v
@@ -1947,7 +1834,7 @@ local reanimate=function()
 					local lastpos=i.l
 					local vel=(vpos-lastpos)/delta
 					local mag=vmagnitude(vel)
-					if mag<0.11730194091796875 then --0.0156402587890625*15/2
+					if mag<0.11730194091796875 then
 						if placeholder and i.b then
 							insSet(placeholder,"Parent",nil)
 							i.b=false
@@ -1978,9 +1865,9 @@ local reanimate=function()
 						if (sine-claimtime)<retVelTime then
 							local offsetToPrimaryPart=claimpos-cfGet(v,"Position")
 							local a=625.5001+wsGravity*-2*v3Get(offsetToPrimaryPart,"Y")
-							if a>0 then --part can reach primary part
+							if a>0 then
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/((25.01+sqrt(a))/wsGravity))
-							else --part cant reach primary part so at least aim for closest point
+							else
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/(30.010999900019996/wsGravity))
 							end
 						else
@@ -2034,15 +1921,15 @@ local reanimate=function()
 	tinsert(cons,Connect(heartbeat,mainFunction))
 	mainFunction()
 
-	local refreshjoints=function(v) --use this on the main part if u have parts that
-		refreshjointsI(v) --are connected with each other but arent connected to rootpart
+	local refreshjoints=function(v)
+		refreshjointsI(v)
 		tclear(refreshedjoints)
 	end
 
 	local legcfR=cf(1,-1,0)
 	local legcfL=cf(-1,-1,0)
 	local raydir=v3_010*-2
-	local raycastlegs=function() --this returns 2 values: right leg raycast offset, left leg raycast offset
+	local raycastlegs=function()
 		local rY=Raycast(ws,cfGet(cfMul(cfr,legcfR),"Position"),raydir,raycastparams)
 		local lY=Raycast(ws,cfGet(cfMul(cfr,legcfL),"Position"),raydir,raycastparams)
 		if rY then
@@ -2058,7 +1945,7 @@ local reanimate=function()
 		end
 	end
 
-	local velbycfrvec=function() --this returns 2 values: forward/backwards movement (from -1 to 1), right/left movement (from -1 to 1)
+	local velbycfrvec=function()
 		local fw=cfGet(cfr,"LookVector")*xzvel/walkSpeed
 		local rt=cfGet(cfr,"RightVector")*xzvel/walkSpeed
 		return v3Get(fw,"X")+v3Get(fw,"Z"),v3Get(rt,"X")+v3Get(rt,"Z")
@@ -2066,8 +1953,8 @@ local reanimate=function()
 
 	local lastvel=v3_0
 	local velchg1=v3_0
-	local velchgbycfrvec=function() --this returns 2 values: forward/backwards velocity change, right/left velocity change
-		velchg1=velchg1+(lastvel-xzvel) --i recommend setting velchg1 to v3_0 when u start using this function or it will look worse
+	local velchgbycfrvec=function()
+		velchg1=velchg1+(lastvel-xzvel)
 		lastvel=xzvel
 		velchg1=velchg1-velchg1*(deltaTime/2)
 		local fw=cfGet(cfr,"LookVector")*velchg1/32
@@ -2077,22 +1964,22 @@ local reanimate=function()
 
 	local lastYvel=0
 	local velYchg1=0
-	local velYchg=function() --this returns Y axis velocity change
-		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50) --i recommend setting velYchg1 to 0 when u start using this function or it will look worse
+	local velYchg=function()
+		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50)
 		lastYvel=Yvel
 		velYchg1=velYchg1-velYchg1*(deltaTime/2)
 		return velYchg1
 	end
 
-	local rotToMouse=function(alpha) --this rotates ur character towards your mouse hit position
+	local rotToMouse=function(alpha)
 		local pos1=pos*v3_010+cfGet(insGet(mouse,"Hit"),"Position")*v3_101
-		if pos~=pos1 then --could make nan rotation
+		if pos~=pos1 then
 			cfr=Lerp(cfr,cfl(pos,pos1),alpha or deltaTime)
 		end
 	end
 
 	local glitchJoint=function(joint,targetGlitchTime,delayFrom,delayTo,radiansFrom,radiansTo) 
-		if sine>targetGlitchTime then --example usage: local glitchtime=0 addMode("x",{idle=function() glitchtime=glitchJoint(joint,glitchtime,0.2,0.4,-0.1,0.1) end})
+		if sine>targetGlitchTime then
 			radiansFrom=radiansFrom*100
 			radiansTo=radiansTo*100
 			joint.C0=cfMul(joint.C0,angles(mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100)) 
@@ -2119,7 +2006,7 @@ local reanimate=function()
 		end
 		gravity=n
 	end
-	local setCfr=function(v) --sets character cframe
+	local setCfr=function(v)
 		if typeof(v)=="CFrame" then
 			local newpos=cfGet(v,"Position")
 			camcf=cfAdd(camcf,newpos-pos)
@@ -2133,16 +2020,16 @@ local reanimate=function()
 			pos=v
 		end
 	end
-	local getVel=function() --returns character velocity
-		return xzvel+v3_010*Yvel --important: use only in lerps or it might not work
+	local getVel=function()
+		return xzvel+v3_010*Yvel
 	end
-	local getCamCF=function() --returns camera cframe
+	local getCamCF=function()
 		return camcf
 	end
-	local isFirstPerson=function() --returns true if user is in first person camera mode
+	local isFirstPerson=function()
 		return firstperson
 	end
-	local setCameraMoveable=function(b) --prevents the player from moving his camera
+	local setCameraMoveable=function(b)
 		cameraMoveable=b
 	end
 	local isOnGround=function()
@@ -2197,12 +2084,10 @@ local reanimate=function()
 	}
 end
 
--- gp backwards compatibility \240\159\151\191
 local gp=function(p,n,c)
 	return QueryDescendants(p,">"..c.."[Name=\""..n.."\"]")[1]
 end
 
--- again no need to load the whole thing cuz u can use the last one
 _G.GenesisFDless={reanimate=reanimate,stopreanimate=stopreanimate,gp=gp,rs=rs,insSet=insSet,insGet=insGet,cfMul=cfMul,mouse=mouse,isReanimated=function() return c end}
 return _G.GenesisFDless
 end
@@ -2210,9 +2095,6 @@ __fdless()
 end
 
 
-----------------------------------------------------------------------------------------------------
--- runtime setup
-----------------------------------------------------------------------------------------------------
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -2230,7 +2112,6 @@ local function notify(text, dur)
 	hubNotify("Neptunian", text, "info", dur)
 end
 
--- running it twice? clean the previous run first
 do
 	local old = _G.NeptunianFDless
 	if type(old) == "table" and type(old.cleanup) == "function" then
@@ -2241,7 +2122,6 @@ local NEP = {conns = {}, alive = true}
 _G.NeptunianFDless = NEP
 local function track(c) NEP.conns[#NEP.conns + 1] = c return c end
 
--- assets (music): downloaded in the background so the script starts instantly ---------------------
 local ASSET_DIR = CONFIG.AssetFolder
 local ASSET_URL = "https://github.com/Jskfhggjxu/nep-remake-tory-assets/blob/main/"
 local ASSET_FILES = {
@@ -2272,7 +2152,6 @@ local function fetchAsset(name)
 	warn("[Neptunian] could not download " .. name)
 	return false
 end
--- sets kan.SoundId as soon as the file is available (downloads it first if needed)
 function NEP_track(name)
 	task.spawn(function()
 		if fetchAsset(name) and NEP.alive and kan then
@@ -2287,8 +2166,6 @@ task.spawn(function()
 	end
 end)
 
--- sword accessory: the Corrupt Demonic Greatsword you already wear --------------------------------------
--- (no server command is used; the hat has to be on your character before / while the script runs)
 local function swordDefFor(name)
 	name = tostring(name):lower()
 	for _, def in ipairs(SWORDS) do
@@ -2301,7 +2178,7 @@ local function swordDefFor(name)
 end
 
 local char0 = plr.Character or plr.CharacterAdded:Wait()
-local chosen = nil          -- {acc, handle, md, size, def, key}
+local chosen = nil
 
 local function hubSword(md, name)
 	local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
@@ -2360,7 +2237,6 @@ local function pickSword()
 	return nil
 end
 
--- every recognised sword that is worn (in SWORDS order)
 local function scanSwords()
 	local out, seen = {}, {}
 	for _, c in ipairs({plr.Character, char0}) do
@@ -2387,12 +2263,10 @@ function NEP_applySwordKey(key)
 	if NEP_setSwordKey then NEP_setSwordKey(key) end
 end
 
--- pick it BEFORE FDless takes the character over
 chosen = pickSword()
 local swordCache = scanSwords()
 if chosen and chosen.key then NEP_applySwordKey(chosen.key) end
 
--- start FDless right away ------------------------------------------------------------------------------
 local FD = _G.GenesisFDless
 pcall(FD.stopreanimate)
 local RE = FD.reanimate()
@@ -2424,7 +2298,6 @@ local function findTracked()
 	return nil
 end
 
--- background watcher: finds the greatsword, attaches it, keeps trying for a while ----------------------
 function NEP_findSword(force)
 	if force then chosen = nil end
 	if NEP.finding then return end
@@ -2461,7 +2334,6 @@ function NEP_findSword(force)
 end
 NEP_findSword()
 
--- switch between the swords you are wearing (Sword button in the Align panel)
 function NEP_cycleSword()
 	local list = scanSwords()
 	local have = {}
@@ -2489,7 +2361,6 @@ function NEP_cycleSword()
 	notify("Using " .. nxt.def.name, 3)
 end
 
--- R6 parts / joints of the FDless virtual rig ---------------------------------------------------------
 local jRoot, jNeck = RE.getJoint("RootJoint"), RE.getJoint("Neck")
 local jRS, jLS = RE.getJoint("Right Shoulder"), RE.getJoint("Left Shoulder")
 local jRH, jLH = RE.getJoint("Right Hip"), RE.getJoint("Left Hip")
@@ -2497,14 +2368,12 @@ local FDP = {
 	root = jRoot.Part0, torso = jRoot.Part1, head = jNeck.Part1,
 	rarm = jRS.Part1, larm = jLS.Part1, rleg = jRH.Part1, lleg = jLH.Part1,
 }
--- the limb script uses welds with 1.5 stud shoulders, so the shoulder joints are rebuilt that way
 jRS.C0 = CFrame.new(1.5, 0.5, 0); jRS.C1 = CFrame.new(0, 0.5, 0)
 jLS.C0 = CFrame.new(-1.5, 0.5, 0); jLS.C1 = CFrame.new(0, 0.5, 0)
 local iRoot, iNeck = jRoot.C1:Inverse(), jNeck.C1:Inverse()
 local iRS, iLS = jRS.C1:Inverse(), jLS.C1:Inverse()
 local iRH, iLH = jRH.C1:Inverse(), jLH.C1:Inverse()
 
--- container for every effect + invisible stand-ins for the limbs ---------------------------------------
 local function randName()
 	local t = {}
 	for i = 1, math.random(8, 14) do t[i] = string.char(math.random(97, 122)) end
@@ -2541,7 +2410,6 @@ RightArm, LeftArm, RightLeg, LeftLeg = rarm, larm, rleg, lleg
 rl, ll, ra, la = rleg, lleg, rarm, larm
 Root = root
 
--- humanoid stand-in: WalkSpeed / JumpPower go to FDless ----------------------------------------------
 local humStore = {WalkSpeed = 16, JumpPower = 50, Health = 100, MaxHealth = 100, CameraOffset = Vector3.new(), PlatformStand = false, Jump = false}
 hum = setmetatable({}, {
 	__index = humStore,
@@ -2558,13 +2426,11 @@ Humanoid = hum
 RE.setWalkSpeed(16)
 RE.setJumpPower(50)
 
--- shorthand used all over the original code ------------------------------------------------------------
 local it, vt, bc, br = Instance.new, Vector3.new, BrickColor.new, BrickColor.random
 local cf, ceuler, euler, angles = CFrame.new, CFrame.fromEulerAnglesXYZ, CFrame.fromEulerAnglesXYZ, CFrame.Angles
 local RootCF = euler(-1.57, 0, 3.14)
 local necko = cf(0, 1, 0, -1, -0, -0, 0, 0, 1, 0, 1, 0)
 
--- logic joints: the animation code writes C0 here at a fixed 60Hz, the display copy is interpolated -------
 local LJ = {}
 local function mkLogic(fdj, c0)
 	local L = {C0 = c0, p = c0, c = c0, fd = fdj}
@@ -2575,7 +2441,6 @@ local RW, LW = mkLogic(jRS, jRS.C0), mkLogic(jLS, jLS.C0)
 local RH, LH = mkLogic(jRH, jRH.C0), mkLogic(jLH, jLH.C0)
 local RootJoint, Neck = mkLogic(jRoot, jRoot.C0), mkLogic(jNeck, jNeck.C0)
 
--- scheduler: swait = wait N logic ticks (1 tick = 1/60 s, independent of the real frame rate) -------------
 local TICK = 1 / 60
 local tickCount = 0
 local waiting = {}
@@ -2598,12 +2463,10 @@ function so(id, par, vol, pit)
 	end))
 end
 
--- frame independent lerp (CFrame:Lerp is a quaternion slerp, same maths as the old clerp) -----------------
 function clerp(a, b, t)
 	return a:Lerp(b, t)
 end
 
--- weapon "weld" stand-in (the sword used to be welded to the torso / right arm) ------------------------------
 local ww ={Part0 = tors, C0 = CFrame.new(), C1 = cf(-3, 0, -0.5) * CFrame.Angles(0, 0, math.rad(-40))}
 ww.p, ww.c = ww.C1, ww.C1
 local partToFD = {[root] = FDP.root, [tors] = FDP.torso, [hed] = FDP.head, [rarm] = FDP.rarm, [larm] = FDP.larm, [rleg] = FDP.rleg, [lleg] = FDP.lleg}
@@ -2611,7 +2474,6 @@ weaponweld = setmetatable({}, {
 	__index = function(_, k) return ww[k] end,
 	__newindex = function(_, k, v)
 		if k == "Part0" and v ~= ww.Part0 then
-			-- keep the sword exactly where it is when it changes hands (torso <-> right arm)
 			local oldHolder = cframes[partToFD[ww.Part0]]
 			local newHolder = cframes[partToFD[v]]
 			if oldHolder and newHolder then
@@ -2626,7 +2488,6 @@ weaponweld = setmetatable({}, {
 	end,
 })
 
--- tiny RbxUtility.Create replacement --------------------------------------------------------------------------
 local function Create(className)
 	return function(props)
 		local o = Instance.new(className)
@@ -2645,7 +2506,6 @@ local function Create(className)
 	end
 end
 
--- fling through FDless ----------------------------------------------------------------------------------------
 local flingDebounce = setmetatable({}, {__mode = "k"})
 function NEP_fling(dude, force)
 	if typeof(dude) ~= "Instance" or type(RE.fling) ~= "function" then return false end
@@ -2665,7 +2525,6 @@ function NEP_setRoot(c)
 	root.CFrame = c
 end
 
--- globals the original code expects ---------------------------------------------------------------------------
 attacktype = 1
 cloaked = false
 attack = false
@@ -2684,10 +2543,6 @@ Speed = 16
 rotVelY = 0
 velNow = Vector3.new()
 
-
-----------------------------------------------------------------------------------------------------
--- original helpers / effects / attacks
-----------------------------------------------------------------------------------------------------
 
 function CameraShake(Times, Power)
 coroutine.resume(coroutine.create(function()
@@ -2716,12 +2571,7 @@ for _,c in pairs(v:children()) do
 if c.ClassName=="Part" and (c.Position - de).magnitude < Distan then
 local Noob=v.Humanoid
 if Noob~=nil then
-if Noob:FindFirstChild("CamShake")==nil then-- and Noob == Character then
---[[local ss=script.CamShake:clone()
-ss.Parent=Noob
-ss.Power.Value=Power
-ss.Times.Value=Times
-ss.Disabled=false]]
+if Noob:FindFirstChild("CamShake")==nil then
 CameraShake(Times, Power)
 end
 end
@@ -2934,7 +2784,6 @@ CFuncs = {
 }
 
 
-
 New = function(Object, Parent, Name, Data)
 	local Object = Instance.new(Object)
 	for Index, Value in pairs(Data or {}) do
@@ -2995,9 +2844,6 @@ weld.C1 = CFrame.new(C1X,C1Y,C1Z)*CFrame.Angles(C1Xa,C1Ya,C1Za)
 weld.C0 = CFrame.new(C0X,C0Y,C0Z)*CFrame.Angles(C0Xa,C0Ya,C0Za)
 return weld
 end
----- WEAPON OR STUFF
--- The sword itself is now the Corrupt Demonic Greatsword hat (positioned every frame in applyPose).
--- "rarmor" is the invisible anchor the old sword was welded to; effects, sounds and the trail still use it.
 local rarmor = CreateParta(m,1,0,"SmoothPlastic",BrickColor.Random())
 rarmor.Anchored = true
 rarmor.CanQuery = false
@@ -3016,7 +2862,6 @@ tl1.Color = ColorSequence.new(BrickColor.new('Royal purple').Color)
 tl1.Lifetime = 0.6
 tl1.Enabled = false
 
---------------- WINGS (anchored, positioned every frame relative to the torso)
 local mainpart = CreateParta(m,1,0,"SmoothPlastic",BrickColor.Random())
 mainpart.Anchored = true
 mainpart.CanQuery = false
@@ -3035,7 +2880,6 @@ local wng1a = makeWing(0.1,4,4, CFrame.new(0,-2,-2.5)*CFrame.Angles(math.rad(0),
 local wng2a = makeWing(0.1,4,4, CFrame.new(0,-2,-2.5)*CFrame.Angles(math.rad(0),math.rad(-70),math.rad(-5)))
 local wng1b = makeWing(0.1,1.5,3, CFrame.new(0,-1,-2.25)*CFrame.Angles(math.rad(180),math.rad(-110),math.rad(-5)))
 local wng2b = makeWing(0.1,1.5,3, CFrame.new(0,-1,-2.25)*CFrame.Angles(math.rad(180),math.rad(110),math.rad(5)))
-------
 
 function lerp(object, newCFrame, alpha)
   return object:lerp(newCFrame, alpha)
@@ -3332,9 +3176,6 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 end
 
 
-
-
-
 function ShowDamage(Pos, Text, Time, Color)
   local Rate = 0.1
   local Pos = Pos or Vector3.new(0, 0, 0)
@@ -3413,10 +3254,9 @@ function MagniDamage(Part, magni, mindam, maxdam, knock, Type, Sound)
 end
 
 
-function rayCast(Pos, Dir, Max, Ignore)  -- Origin Position , Direction, MaxDistance , IgnoreDescendants
+function rayCast(Pos, Dir, Max, Ignore)
 return game:service("Workspace"):FindPartOnRay(Ray.new(Pos, Dir.unit * (Max or 999.999)), Ignore) 
 end 
-----
 
 function dmg(dude)
     if dude and dude.Name ~= plr.Name then
@@ -3591,9 +3431,6 @@ end))
 end
 
 
--- first vector is Position
--- second vector is Orientation
-
 function darkspin()
 attack = true
 hum.WalkSpeed = 16
@@ -3762,8 +3599,8 @@ a.Anchored = true
 a.Transparency = 1
 a.CanCollide = false
 local ray = Ray.new(
-orb.CFrame.p,                           -- origin
-(mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+orb.CFrame.p,
+(mouse.Hit.p - orb.CFrame.p).unit * 500
 ) 
 local ignore = orb
 local hit, position, normal = workspace:FindPartOnRay(ray, ignore)
@@ -3776,8 +3613,8 @@ orb.CFrame = a.CFrame
 for i = 0, 7, 0.1 do
 swait()
 ray = Ray.new(
-orb.CFrame.p,                           -- origin
-(mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+orb.CFrame.p,
+(mouse.Hit.p - orb.CFrame.p).unit * 500
 ) 
 hit, position, normal = workspace:FindPartOnRay(ray, ignore)
 distance = (orb.CFrame.p - position).magnitude
@@ -3849,7 +3686,6 @@ hum.JumpPower = 50
 end
 
 
-
 function smack()
 attack = true
 hum.WalkSpeed = 3
@@ -3882,7 +3718,6 @@ CFuncs["Sound"].Create("rbxassetid://313205954", root, 4,1)
 CFuncs["Sound"].Create("rbxassetid://1368637781", rarmor, 4,1)
 CFuncs["Sound"].Create("rbxassetid://763718160", rarmor, 5, 1.1)
 CFuncs["Sound"].Create("rbxassetid://782353443", rarmor, 6, 1)
---CFuncs["Sound"].Create("rbxassetid://1548538202", rarmor, 4,1)
 for i = 0, 2, 0.1 do
 		swait()
 MagniDamage(hitb, 8, 92,158, 0, "Normal",153092213)
@@ -4096,7 +3931,6 @@ local floatmode = false
 local OWS = hum.WalkSpeed
 equipped = false
 
-------------------
 function equip()
 	attack = true
 	equipped = true
@@ -4174,7 +4008,6 @@ weaponweld.Part0 = tors
 	attack = false
 end
 
-------------------
 function attackone()
 attack = true
 hum.WalkSpeed = 4
@@ -4305,7 +4138,6 @@ end
 attack = false
 hum.WalkSpeed = 24
 end
-------------------
 function spinnyblade()
 attack = true
 hum.WalkSpeed = 1
@@ -4502,8 +4334,8 @@ a.Anchored = true
 a.Transparency = 1
 a.CanCollide = false
 local ray = Ray.new(
-orb.CFrame.p,                           -- origin
-(mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+orb.CFrame.p,
+(mouse.Hit.p - orb.CFrame.p).unit * 500
 ) 
 local ignore = orb
 local hit, position, normal = workspace:FindPartOnRay(ray, ignore)
@@ -4517,8 +4349,8 @@ for i = 0, 8, 0.1 do
 swait()
 sphere2(5,"Add",orb.CFrame*CFrame.new(math.random(-20,20),math.random(-20,20),math.random(-20,20)),vt(1,1,1),0.01,0.01,0.01,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
 ray = Ray.new(
-orb.CFrame.p,                           -- origin
-(mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+orb.CFrame.p,
+(mouse.Hit.p - orb.CFrame.p).unit * 500
 ) 
 hit, position, normal = workspace:FindPartOnRay(ray, ignore)
 distance = (orb.CFrame.p - position).magnitude
@@ -4688,7 +4520,6 @@ CFuncs["Sound"].Create("rbxassetid://313205954", root, 4,1)
 CFuncs["Sound"].Create("rbxassetid://1368637781", rarmor, 4,1)
 CFuncs["Sound"].Create("rbxassetid://763718160", rarmor, 5, 1.1)
 CFuncs["Sound"].Create("rbxassetid://782353443", rarmor, 6, 1)
---CFuncs["Sound"].Create("rbxassetid://1548538202", rarmor, 4,1)
 for i = 0, 2, 0.1 do
 		swait()
 MagniDamage(hitb, 8, 92,158, 0, "Normal",153092213)
@@ -4709,11 +4540,6 @@ hum.JumpPower = 50
 end
 
 
-
-
-----------------------------------------------------------------------------------------------------
--- super jump (the old version used BodyVelocity on the real root part, FDless moves the rig itself)
-----------------------------------------------------------------------------------------------------
 local flight = nil
 local rayParams = RaycastParams.new()
 rayParams.FilterType = Enum.RaycastFilterType.Exclude
@@ -4747,7 +4573,6 @@ function superjump()
 		LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(10),math.rad(0),math.rad(-40)),.4)
 	end
 
-	-- launch: forward + a little up (same direction the old BodyVelocity pushed), held for ~0.5s, then it is just momentum
 	local rcf = root.CFrame
 	local dir = (rcf * CFrame.new(0, 1, -4)).Position - rcf.Position
 	flight = {pos = rcf.Position, vel = dir.Unit * 125, t = 0, hold = 31 * TICK}
@@ -4819,7 +4644,6 @@ function superjump()
 	hum.JumpPower = 50
 end
 
--- moves the rig while a super jump is active (called every real frame)
 local function flightStep(dt)
 	local f = flight
 	if not f then return end
@@ -4828,7 +4652,6 @@ local function flightStep(dt)
 		f.vel = f.vel - Vector3.new(0, 196.2 * dt, 0)
 	end
 	local step = f.vel * dt
-	-- wall: stop the horizontal part
 	if step.Magnitude > 0 then
 		local wall = workspace:Raycast(f.pos, step + step.Unit * 2, rayParams)
 		if wall then
@@ -4850,9 +4673,6 @@ local function flightStep(dt)
 	RE.setCfr(np)
 end
 
-----------------------------------------------------------------------------------------------------
--- music + gui
-----------------------------------------------------------------------------------------------------
 muter = false
 ORVOL = 1.15
 ORPIT = 1.01
@@ -4867,7 +4687,6 @@ kan.TimePosition = 0
 kan:Play()
 
 
---------------------------- GUI STUFF
 basgui = Instance.new("ScreenGui")
 basgui.Parent = plr.PlayerGui
 basgui.Name = randName()
@@ -4925,7 +4744,6 @@ ned.TextStrokeTransparency = 0
 ned.Text = "Yeh! Im Tory"
 ned.TextSize = 24
 ned.Rotation = 1
---ned.TextXAlignment = "Right"
 ned.TextYAlignment = "Bottom"
 NEP_track("Neptunian V.mp3")
 
@@ -4946,9 +4764,6 @@ local function guiStep(dt)
 	ned.Position = UDim2.new(0.6, 0 - 10 * math.cos(sine / 32), 0.8, 0 - 10 * math.cos(sine / 45))
 end
 
-----------------------------------------------------------------------------------------------------
--- animation step (the old main loop body, runs once per 60Hz logic tick)
-----------------------------------------------------------------------------------------------------
 BanishMode = 1
 function animStep()
     sine = sine + change
@@ -5289,9 +5104,6 @@ end
 end
 
 
-----------------------------------------------------------------------------------------------------
--- display: logic poses are interpolated between ticks, so it stays smooth at any frame rate
-----------------------------------------------------------------------------------------------------
 local poseAlpha = 0
 fdState = "idle"
 local lastApply = os.clock()
@@ -5301,7 +5113,6 @@ local function alignCF(t)
 end
 local GRIP = CFrame.Angles(math.rad(CONFIG.SwordBaseRotation[1]), math.rad(CONFIG.SwordBaseRotation[2]), math.rad(CONFIG.SwordBaseRotation[3]))
 local ALIGN_SWORD, ALIGN_BACK = alignCF(ALIGN.sword), alignCF(ALIGN.swordback)
--- one alignment profile per sword: {sword(6), swordback(6), base = {0,0,0,rx,ry,rz}}
 local PROFILES, DEFS = {}, {}
 local function defaultProfile(def)
 	local b = def.align.base
@@ -5343,7 +5154,6 @@ local function applyPose(state)
 		L.fd.C0 = L.p:Lerp(L.c, a)
 	end
 
-	-- fresh pose of every limb (cframes still holds last frame's values at this point)
 	local rootCF = cframes[FDP.root]
 	local torsoCF = rootCF * jRoot.C0 * iRoot
 	local headCF = torsoCF * jNeck.C0 * iNeck
@@ -5357,7 +5167,6 @@ local function applyPose(state)
 	rleg.CFrame = torsoCF * jRH.C0 * iRH
 	lleg.CFrame = torsoCF * jLH.C0 * iLH
 
-	-- turning speed for the walk animations
 	local _, yaw = rootCF:ToOrientation()
 	local d = yaw - lastYaw
 	lastYaw = yaw
@@ -5365,7 +5174,6 @@ local function applyPose(state)
 	rotVelY = rotVelY + (d / dt - rotVelY) * math.min(1, dt * 12)
 	rotVelY = math.clamp(rotVelY, -15, 15)
 
-	-- sword
 	local C1d = ww.p:Lerp(ww.c, a)
 	local holder = (ww.Part0 == rarm) and rarmCF or torsoCF
 	local rarmorCF = holder * ww.C0 * C1d:Inverse()
@@ -5375,7 +5183,6 @@ local function applyPose(state)
 		swordJoint.C1 = torsoCF:Inverse() * (rarmorCF * GRIP * (equipped and ALIGN_SWORD or ALIGN_BACK))
 	end
 
-	-- wings
 	local mainCF = torsoCF * CFrame.new(0, 0.5, 0.75)
 	mainpart.CFrame = mainCF
 	for i = 1, #wingRel do
@@ -5390,9 +5197,6 @@ RE.addmode("default", {
 	fall = function() applyPose("fall") end,
 })
 
-----------------------------------------------------------------------------------------------------
--- fixed 60Hz logic clock
-----------------------------------------------------------------------------------------------------
 local acc = 0
 local lastErr = 0
 local function runTicks(dt)
@@ -5435,9 +5239,6 @@ track(RunService.Heartbeat:Connect(function(dt)
 	guiStep(dt)
 end))
 
-----------------------------------------------------------------------------------------------------
--- input
-----------------------------------------------------------------------------------------------------
 local lastKey = {}
 local function handleKey(k)
 	if not NEP.alive then return end
@@ -5529,8 +5330,6 @@ function NEP_click()
 		end
 	end
 end
--- Tap / click anywhere on the screen to attack (same as the original script). Pressing this script's own panel or
--- buttons never swings the sword. Optional: CONFIG.IgnoreMenusOnTap = true also ignores the joystick area / chat / topbar.
 NEP.guiPress = 0
 local function markGui(obj)
 	pcall(function()
@@ -5571,7 +5370,7 @@ track(mouse.Button1Down:Connect(function()
 		if okb and blocked then return end
 	end
 	task.spawn(function()
-		task.wait()                                   -- let our own GUI mark the press first
+		task.wait()
 		if os.clock() - NEP.guiPress < 0.2 then return end
 		NEP_click()
 	end)
@@ -5620,7 +5419,6 @@ do
 	local HttpService = game:GetService("HttpService")
 	local FILE = CONFIG.AlignFile
 
-	-- values per sword: [1] = in hand, [2] = on back, [3] = base rotation (only the three Turn rows are used)
 	local TAB = {"Hand", "Back", "Base"}
 	local VAL = PROFILES[activeKey]
 	local function rebuild() applyActive() end
@@ -5634,7 +5432,7 @@ do
 		if not ok3 or type(data) ~= "table" then return false, FILE .. " is damaged" end
 		local profiles = data.profiles
 		if type(profiles) ~= "table" and type(data.sword) == "table" then
-			profiles = {corrupt = data}           -- file saved by the old single-sword version
+			profiles = {corrupt = data}
 		end
 		if type(profiles) ~= "table" then return false, FILE .. " is damaged" end
 		local keys = {"sword", "swordback", "base"}
@@ -5850,9 +5648,6 @@ do
 	end))
 end
 
-----------------------------------------------------------------------------------------------------
--- cleanup (running the script again, or stopping it from the console with _G.NeptunianFDless.cleanup())
-----------------------------------------------------------------------------------------------------
 function NEP.cleanup()
 	if not NEP.alive then return end
 	NEP.alive = false

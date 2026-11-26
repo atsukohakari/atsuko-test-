@@ -1,9 +1,63 @@
 --- a/MasterChief.lua
 +++ b/MasterChief.lua
-@@ -46,732 +46,1070 @@
-    https://www.youtube.com/@MelonScripter
- ]]
+@@ -1,777 +1,1067 @@
+--- open sourcing fixed scripts cause they were already open sourced --
+--- converted by melon -- 
++local function hubNotify(title, text, kind, dur)
++	local env = (typeof(getgenv) == "function" and getgenv()) or _G
++	local f = env.AtsukoNotify
++	if type(f) == "function" then
++		return pcall(f, title, text, kind, dur)
++	end
++	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
++end
++hubNotify("Master Chief", "Master Chief by Helkern, converted by MelonScripter", "info", 5)
  
+---[[
+-   "this script was originally converted by me in 2022 (and 2023) and
+-    recently i recovered my scripts folder and found it
+-    so expect a few classic scripts returning soon " - MelonScripter   
+-
+-   Credits:
+-   Helkern - Creator
+-   Emper - Reanimate
+-   MyWorld - Optimization
+-
+-   Paid Weapons:
+-   https://www.roblox.com/catalog/6775283114/Tactical-Cyberpunk-Railgun
+-   https://www.roblox.com/catalog/5064344615/Type-12-Scattershot
+-
+-   Free Weapon:
+-   https://www.roblox.com/catalog/5552252553/Kinetic-Staff
+-   https://www.roblox.com/catalog/15254947445/24k-Gold-Plunger
+-
+-   Paid Rig:
+-   https://www.roblox.com/catalog/14768701869/White-Extended-Left-Arm
+-   https://www.roblox.com/catalog/14255554762/Extra-Left-White-Arm
+-   https://www.roblox.com/catalog/14768693948/White-Extended-Right-Arm
+-   https://www.roblox.com/catalog/14255556501/Extra-Right-White-Arm
+-   https://www.roblox.com/catalog/14255528083/Torso-Extension
+- 
+-   Can also be used:
+-   https://www.roblox.com/catalog/4504231783/Elemental-Crystal-Golem-Shoulder-Rock
+-   https://www.roblox.com/catalog/12344545199/Extra-Left-hand-moving-Blocky-white
+-   https://www.roblox.com/catalog/12344591101/Extra-Right-hand-moving-Blocky-white
+-   https://www.roblox.com/catalog/13779879140/Black-Fluffy-Fur-Body
+-   https://www.roblox.com/catalog/17374846953/Extra-Right-Black-Arm
+-   https://www.roblox.com/catalog/17374851733/Extra-Left-Black-Arm 
+-
+-   Free Rig
+-   https://www.roblox.com/catalog/3033910400/International-Fedora-Germany
+-   https://www.roblox.com/catalog/3409612660/International-Fedora-USA
+-   https://www.roblox.com/catalog/3398308134/International-Fedora-Canada
+-   https://www.roblox.com/catalog/3033908130/International-Fedora-France
+-   https://www.roblox.com/catalog/4819740796/Robox
+-
+-   Socials:
+-   https://twitter.com/MelonScripter
+-   https://www.youtube.com/@MelonScripter
+-]]
+-
 -game:GetService("StarterGui"):SetCore("SendNotification", { Title = "Melon's (FE) Converts/Scripts"; Text = "Thanks for using!"; Icon = "rbxthumb://type=Asset&id=13446503788&w=150&h=150"})
 -game:GetService("StarterGui"):SetCore("SendNotification", { Title = "BananaMan/Diegombv03"; Text = "has extreme skibidi ohio sussy rizz"; Icon = "rbxthumb://type=Asset&id=10034527904&w=150&h=150"})
 -
@@ -150,90 +204,6 @@
 -		for _, Instance in pairs(GetDescendants(Parent)) do
 -			if IsA(Instance, "JointInstance") then
 -				Destroy(Instance)
--			end
--		end
--	end
--
--	local function CameraSubject()
--		CurrentCamera.CameraSubject = RigHumanoid
--		Wait(PreRender)
--		CurrentCamera.CFrame = CameraCFrame
--	end
--
--	local function CameraType()
--		if CurrentCamera.CameraType ~= Track then
--			CurrentCamera.CameraType = Track
--		end
--	end
--
--	local function Camera()
--		local Camera = Workspace.CurrentCamera
--
--		if Camera then
--			CameraCFrame = Camera.CFrame
--			CurrentCamera = Camera
--
--			CameraSubject()
--			CameraType()
--
--			tableinsert(RBXScriptConnections, Connect(GetPropertyChangedSignal(Camera, "CameraSubject"), CameraSubject))
--			tableinsert(RBXScriptConnections, Connect(GetPropertyChangedSignal(Camera, "CameraType"), CameraType))
--		end
--	end
--
--	local function FindFirstChildOfClassAndName(Parent, ClassName, Name)
--		for Index, Instance in pairs(GetChildren(Parent)) do
--			if IsA(Instance, ClassName) and Instance.Name == Name then
--				return Instance
--			end
--		end
--	end
--
--	local function WaitForChildOfClassAndName(Parent, ...)
--		local Instance = FindFirstChildOfClassAndName(Parent, ...)
--
--		while not Instance and typeof(Parent) == "Instance" do
--			Instance = FindFirstChildOfClassAndName(Parent, ...)
--			Wait(Parent.ChildAdded)
--		end
--
--		return Instance
--	end
--
--	local function Invisible(Instance)
--		if IsA(Instance, "BasePart") or IsA(Instance, "Decal") then
--			Instance.Transparency = OptionsRigTransparency
--		elseif IsA(Instance, "ForceField") or IsA(Instance, "Explosion") then
--			Instance.Visible = false
--		elseif IsA(Instance, "ParticleEmitter") or IsA(Instance, "Fire") or IsA(Instance, "Sparkles") then
--			Instance.Enabled = false
--		end
--	end
--
--	local function DescendantAdded(Instance)
--		if IsA(Instance, "Attachment") then
--			local Handle = Instance.Parent
--
--			if IsA(Handle, "BasePart") then
--				local AttachmentsAttachment = Attachments[Instance.Name]
--
--				if AttachmentsAttachment then
--					local MeshId = ""
--					local TextureId = ""
--
--					if IsA(Handle, "MeshPart") then
--						MeshId = Handle.MeshId
--						TextureId = Handle.TextureID
-+local function hubNotify(title, text, kind, dur)
-+	local env = (typeof(getgenv) == "function" and getgenv()) or _G
-+	local f = env.AtsukoNotify
-+	if type(f) == "function" then
-+		return pcall(f, title, text, kind, dur)
-+	end
-+	return pcall(warn, "[" .. tostring(title) .. "] " .. tostring(text))
-+end
-+hubNotify("Master Chief", "Master Chief by Helkern, converted by MelonScripter", "info", 5)
-+
 +local MC = (function()
 +	local genv = (typeof(getgenv) == "function" and getgenv()) or _G
 +	local Players = game:GetService("Players")
@@ -328,10 +298,15 @@
 +				return r
 +			elseif i == 1 then
 +				why = ok and "nothing came back" or firstLine(r)
-+			end
-+		end
+ 			end
+ 		end
 +		return nil, why
-+	end
+ 	end
+-
+-	local function CameraSubject()
+-		CurrentCamera.CameraSubject = RigHumanoid
+-		Wait(PreRender)
+-		CurrentCamera.CFrame = CameraCFrame
 +	M.getObjects = getObjects
 +	local function lookup(g)
 +		if not g.hat or g.done then
@@ -345,148 +320,13 @@
 +				if hd and not g.mesh then
 +					if hd:IsA("MeshPart") then
 +						g.mesh = idOf(hd.MeshId)
- 					else
--						local SpecialMesh = FindFirstChildOfClass(Handle, "SpecialMesh")
--
--						if SpecialMesh then
--							MeshId = SpecialMesh.MeshId
--							TextureId = SpecialMesh.TextureId
--						end
--					end
--
--					for Index, Table in pairs(OptionsAccessories) do
--						if stringfind(MeshId, Table.MeshId or "") and stringfind(TextureId, Table.TextureId or "") then
--							local Instance = FindFirstChildOfClassAndName(Rig, "BasePart", Table.Name)
--
--							local AlternativeName = Table.AlternativeName
--							local AlternativeInstance = false
--
--							if not Instance and AlternativeName then
--								Instance = FindFirstChildOfClassAndName(Rig, "BasePart", AlternativeName)
--								AlternativeInstance = true
--							end
--
--							if Instance and not tablefind(Blacklist, Instance) then
--								if Table.Blacklist then
--									tableinsert(Blacklist, Instance)
--								end
--								BreakJoints(Handle)
--								tableinsert(Tables, { Part0 = Handle, Part1 = Instance, CFrame = AlternativeInstance and Table.AllowAlternativeCFrame and Table.AlternativeCFrame or Table.CoordinateFrame, LastPosition = Instance.Position })
--								return
--							end
--						end
--					end
--					for Index, Table in pairs(RigAccessories) do
--						local TableHandle = Table.Handle
--
--						if typeof(TableHandle) == "Instance" and Table.MeshId == MeshId and Table.TextureId == TextureId then
--							BreakJoints(Handle)
--							tableinsert(Tables, { Part0 = Handle, Part1 = TableHandle, LastPosition = TableHandle.Position })
--							return
--						end
--					end
--
--					local Accessory = Handle.Parent
--
--					if IsA(Accessory, "Accessory") then
--						local AccessoryClone = Instancenew("Accessory")
--						AccessoryClone.Name = Accessory.Name
--
--						local HandleClone = Clone(Handle)
--						Invisible(HandleClone)
--						BreakJoints(HandleClone)
--						HandleClone.Parent = AccessoryClone
--
--						local Weld = Instancenew("Weld")
--						Weld.Name = "AccessoryWeld"
--						Weld.C0 = Instance.CFrame
--						Weld.C1 = AttachmentsAttachment.CFrame
--						Weld.Part0 = HandleClone
--						Weld.Part1 = AttachmentsAttachment.Parent
--						Weld.Parent = HandleClone
--
--						tableinsert(RigAccessories, { Handle = HandleClone, MeshId = MeshId, TextureId = TextureId })
--						tableinsert(Tables, { Part0 = Handle, Part1 = HandleClone, LastPosition = HandleClone.Position })
--
--						AccessoryClone.Parent = Rig
--					end
--				end
--			end
--		elseif IsA(Instance, "BasePart") then
--			Instance.CanQuery = false
--			tableinsert(BaseParts, Instance)
--		end
--	end
--
--	local function ApplyDescriptionRig()
--		local Description = GetAppliedDescription(Humanoid)
--		Description.HatAccessory = ""
--		Description.BackAccessory = ""
--		Description.FaceAccessory = ""
--		Description.HairAccessory = ""
--		Description.NeckAccessory = ""
--		Description.FrontAccessory = ""
--		Description.WaistAccessory = ""
--		Description.ShouldersAccessory = ""
--		ApplyDescription(RigHumanoid, Description)
--
--		for Index, Instance in pairs(GetDescendants(Rig)) do
--			Invisible(Instance)
--		end
--	end
--
--	local function SetCharacter()
--		taskwait()
--		LocalPlayer.Character = Rig
--	end
--	local Tools = { }
--	local function CharacterAdded()
--		local Character = LocalPlayer.Character
--
--		if Character and Character ~= Rig then
--			if OptionsFlingToolFling then
--				for Index, Backpack in pairs(GetChildren(LocalPlayer)) do
--					if IsA(Backpack, "Backpack") then
--						for Index, Instance in pairs(GetChildren(Backpack)) do
--							if IsA(Instance, "Tool") then
--								Tools[Instance] = FindFirstChildOfClassAndName(Instance, "BasePart", "Handle")	
--								Instance.Parent = Character
--							end
++					else
 +						local sm = hd:FindFirstChildOfClass("SpecialMesh")
 +						if sm then
 +							g.mesh = idOf(sm.MeshId)
- 						end
- 					end
- 				end
--			end
--
--			if OptionsRigSetCharacter then
--				taskspawn(SetCharacter)
--			end
--
--			tableclear(BaseParts)
--			tableclear(Blacklist)
--			tableclear(Tables)
--
--			if CurrentCamera then
--				CameraCFrame = CurrentCamera.CFrame
--			end
--
--			for Index, Instance in pairs(GetDescendants(Character)) do
--				DescendantAdded(Instance)
--			end
--
--			tableinsert(RBXScriptConnections, Connect(Character.DescendantAdded, DescendantAdded))
--
--			Humanoid = WaitForChildOfClassAndName(Character, "Humanoid", "Humanoid")
--			local HumanoidRootPart = WaitForChildOfClassAndName(Character, "BasePart", "HumanoidRootPart")
--
--			if Boolean then
--				Camera()
--
--				if HumanoidRootPart then
--					RigHumanoidRootPart.CFrame = HumanoidRootPart.CFrame
--					Boolean = false
++						end
++					end
++				end
 +			end)
 +			pcall(function()
 +				item:Destroy()
@@ -496,7 +336,11 @@
 +			g.mesh = nil
 +		end
 +		g.done = true
-+	end
+ 	end
+-
+-	local function CameraType()
+-		if CurrentCamera.CameraType ~= Track then
+-			CurrentCamera.CameraType = Track
 +	M.lookup = lookup
 +	local FDL = rawget(_G, "GenesisFDless")
 +	if type(FDL) ~= "table" then
@@ -513,10 +357,7 @@
 +					if body or genv.AtsukoHubLocal then
 +						return body
 +					end
- 				end
--
--				if OptionsRigSetHumanoidDescription and RigHumanoid and Humanoid then
--					pcall(ApplyDescriptionRig)
++				end
 +				return game:HttpGet(base .. "Hub/Reanimate.lua")
 +			end)
 +			local fn = ok and type(src) == "string" and loadstring(src, "=Reanimate")
@@ -524,12 +365,8 @@
 +				local ok2, r = pcall(fn)
 +				if ok2 and type(r) == "table" then
 +					R = r
- 				end
- 			end
--
--			if HumanoidRootPart then
--				for Index, Table in pairs(Targets) do
--					if not HumanoidRootPart then
++				end
++			end
 +		end
 +		if type(R) ~= "table" or type(R.rig) ~= "function" then
 +			error("couldn't load a reanimate for Master Chief", 0)
@@ -659,8 +496,21 @@
 +				d.CanQuery = false
 +				d.CanTouch = false
 +			end)
-+		end
-+	end
+ 		end
+ 	end
+-
+-	local function Camera()
+-		local Camera = Workspace.CurrentCamera
+-
+-		if Camera then
+-			CameraCFrame = Camera.CFrame
+-			CurrentCamera = Camera
+-
+-			CameraSubject()
+-			CameraType()
+-
+-			tableinsert(RBXScriptConnections, Connect(GetPropertyChangedSignal(Camera, "CameraSubject"), CameraSubject))
+-			tableinsert(RBXScriptConnections, Connect(GetPropertyChangedSignal(Camera, "CameraType"), CameraType))
 +	for _, d in ipairs(doll:GetDescendants()) do
 +		watch(d)
 +	end
@@ -675,13 +525,18 @@
 +		local w = wcOff[j]
 +		if w then
 +			return w, CFI
-+		end
+ 		end
 +		local c0, c1 = j.C0, j.C1
 +		if j:IsA("Motor6D") then
 +			c0 = c0 * j.Transform
 +		end
 +		return c0, c1
-+	end
+ 	end
+-
+-	local function FindFirstChildOfClassAndName(Parent, ClassName, Name)
+-		for Index, Instance in pairs(GetChildren(Parent)) do
+-			if IsA(Instance, ClassName) and Instance.Name == Name then
+-				return Instance
 +	local function rel(x, parent, fallback)
 +		local best, bestN = nil, -1
 +		for j, n in pairs(js) do
@@ -690,8 +545,8 @@
 +				if (a == x and b == parent) or (a == parent and b == x) then
 +					best, bestN = j, n
 +				end
-+			end
-+		end
+ 			end
+ 		end
 +		if not best then
 +			return fallback
 +		end
@@ -700,7 +555,14 @@
 +			return c1 * c0:Inverse()
 +		end
 +		return c0 * c1:Inverse()
-+	end
+ 	end
+-
+-	local function WaitForChildOfClassAndName(Parent, ...)
+-		local Instance = FindFirstChildOfClassAndName(Parent, ...)
+-
+-		while not Instance and typeof(Parent) == "Instance" do
+-			Instance = FindFirstChildOfClassAndName(Parent, ...)
+-			Wait(Parent.ChildAdded)
 +	M.rel = rel
 +	local function v(p)
 +		local x = vp[p]
@@ -708,9 +570,19 @@
 +			x = {Name = p.Name}
 +			vp[p] = x
 +			fd.cframes[x] = p.CFrame
-+		end
+ 		end
+-
+-		return Instance
 +		return x
-+	end
+ 	end
+-
+-	local function Invisible(Instance)
+-		if IsA(Instance, "BasePart") or IsA(Instance, "Decal") then
+-			Instance.Transparency = OptionsRigTransparency
+-		elseif IsA(Instance, "ForceField") or IsA(Instance, "Explosion") then
+-			Instance.Visible = false
+-		elseif IsA(Instance, "ParticleEmitter") or IsA(Instance, "Fire") or IsA(Instance, "Sparkles") then
+-			Instance.Enabled = false
 +	local mirror = {}
 +	local fj = {}
 +	for _, r in ipairs(R6) do
@@ -727,7 +599,87 @@
 +	local function loadAlign()
 +		if not (isfile and readfile) then
 +			return false, "your executor can't read files"
-+		end
+ 		end
+-	end
+-
+-	local function DescendantAdded(Instance)
+-		if IsA(Instance, "Attachment") then
+-			local Handle = Instance.Parent
+-
+-			if IsA(Handle, "BasePart") then
+-				local AttachmentsAttachment = Attachments[Instance.Name]
+-
+-				if AttachmentsAttachment then
+-					local MeshId = ""
+-					local TextureId = ""
+-
+-					if IsA(Handle, "MeshPart") then
+-						MeshId = Handle.MeshId
+-						TextureId = Handle.TextureID
+-					else
+-						local SpecialMesh = FindFirstChildOfClass(Handle, "SpecialMesh")
+-
+-						if SpecialMesh then
+-							MeshId = SpecialMesh.MeshId
+-							TextureId = SpecialMesh.TextureId
+-						end
+-					end
+-
+-					for Index, Table in pairs(OptionsAccessories) do
+-						if stringfind(MeshId, Table.MeshId or "") and stringfind(TextureId, Table.TextureId or "") then
+-							local Instance = FindFirstChildOfClassAndName(Rig, "BasePart", Table.Name)
+-
+-							local AlternativeName = Table.AlternativeName
+-							local AlternativeInstance = false
+-
+-							if not Instance and AlternativeName then
+-								Instance = FindFirstChildOfClassAndName(Rig, "BasePart", AlternativeName)
+-								AlternativeInstance = true
+-							end
+-
+-							if Instance and not tablefind(Blacklist, Instance) then
+-								if Table.Blacklist then
+-									tableinsert(Blacklist, Instance)
+-								end
+-								BreakJoints(Handle)
+-								tableinsert(Tables, { Part0 = Handle, Part1 = Instance, CFrame = AlternativeInstance and Table.AllowAlternativeCFrame and Table.AlternativeCFrame or Table.CoordinateFrame, LastPosition = Instance.Position })
+-								return
+-							end
+-						end
+-					end
+-					for Index, Table in pairs(RigAccessories) do
+-						local TableHandle = Table.Handle
+-
+-						if typeof(TableHandle) == "Instance" and Table.MeshId == MeshId and Table.TextureId == TextureId then
+-							BreakJoints(Handle)
+-							tableinsert(Tables, { Part0 = Handle, Part1 = TableHandle, LastPosition = TableHandle.Position })
+-							return
+-						end
+-					end
+-
+-					local Accessory = Handle.Parent
+-
+-					if IsA(Accessory, "Accessory") then
+-						local AccessoryClone = Instancenew("Accessory")
+-						AccessoryClone.Name = Accessory.Name
+-
+-						local HandleClone = Clone(Handle)
+-						Invisible(HandleClone)
+-						BreakJoints(HandleClone)
+-						HandleClone.Parent = AccessoryClone
+-
+-						local Weld = Instancenew("Weld")
+-						Weld.Name = "AccessoryWeld"
+-						Weld.C0 = Instance.CFrame
+-						Weld.C1 = AttachmentsAttachment.CFrame
+-						Weld.Part0 = HandleClone
+-						Weld.Part1 = AttachmentsAttachment.Parent
+-						Weld.Parent = HandleClone
+-
+-						tableinsert(RigAccessories, { Handle = HandleClone, MeshId = MeshId, TextureId = TextureId })
+-						tableinsert(Tables, { Part0 = Handle, Part1 = HandleClone, LastPosition = HandleClone.Position })
+-
+-						AccessoryClone.Parent = Rig
 +		local ok, has = pcall(isfile, FILE)
 +		if not ok or not has then
 +			return false, "no saved alignment yet"
@@ -745,23 +697,45 @@
 +					local x = tonumber(t[n])
 +					if x and x == x and math.abs(x) < 1e5 then
 +						VAL[i][n] = x
-+					end
-+				end
-+			end
+ 					end
+ 				end
+ 			end
+-		elseif IsA(Instance, "BasePart") then
+-			Instance.CanQuery = false
+-			tableinsert(BaseParts, Instance)
 +			rebuild(i)
-+		end
+ 		end
 +		return true
-+	end
+ 	end
+-
+-	local function ApplyDescriptionRig()
+-		local Description = GetAppliedDescription(Humanoid)
+-		Description.HatAccessory = ""
+-		Description.BackAccessory = ""
+-		Description.FaceAccessory = ""
+-		Description.HairAccessory = ""
+-		Description.NeckAccessory = ""
+-		Description.FrontAccessory = ""
+-		Description.WaistAccessory = ""
+-		Description.ShouldersAccessory = ""
+-		ApplyDescription(RigHumanoid, Description)
+-
+-		for Index, Instance in pairs(GetDescendants(Rig)) do
+-			Invisible(Instance)
 +	local function saveAlign()
 +		if not writefile then
 +			return false, "your executor can't save files"
-+		end
+ 		end
 +		local ok, e = pcall(writefile, FILE, HS:JSONEncode({rifle = VAL[1], shotgun = VAL[2]}))
 +		if not ok then
 +			return false, tostring(e)
 +		end
 +		return true
-+	end
+ 	end
+-
+-	local function SetCharacter()
+-		taskwait()
+-		LocalPlayer.Character = Rig
 +	loadAlign()
 +	local function rootCF()
 +		local rp = fd.getPart("HumanoidRootPart")
@@ -770,7 +744,20 @@
 +			return c
 +		end
 +		return dp.HumanoidRootPart.CFrame
-+	end
+ 	end
+-	local Tools = { }
+-	local function CharacterAdded()
+-		local Character = LocalPlayer.Character
+-
+-		if Character and Character ~= Rig then
+-			if OptionsFlingToolFling then
+-				for Index, Backpack in pairs(GetChildren(LocalPlayer)) do
+-					if IsA(Backpack, "Backpack") then
+-						for Index, Instance in pairs(GetChildren(Backpack)) do
+-							if IsA(Instance, "Tool") then
+-								Tools[Instance] = FindFirstChildOfClassAndName(Instance, "BasePart", "Handle")	
+-								Instance.Parent = Character
+-							end
 +	local function accName(e)
 +		local ok, n = pcall(function()
 +			return rawget(e, "p").Parent.Name
@@ -893,10 +880,38 @@
 +					for _, g in ipairs(GUNS[slot] or {}) do
 +						if g.hat and not g.done then
 +							pending = true
-+						end
-+					end
-+				end
-+			end
+ 						end
+ 					end
+ 				end
+ 			end
+-
+-			if OptionsRigSetCharacter then
+-				taskspawn(SetCharacter)
+-			end
+-
+-			tableclear(BaseParts)
+-			tableclear(Blacklist)
+-			tableclear(Tables)
+-
+-			if CurrentCamera then
+-				CameraCFrame = CurrentCamera.CFrame
+-			end
+-
+-			for Index, Instance in pairs(GetDescendants(Character)) do
+-				DescendantAdded(Instance)
+-			end
+-
+-			tableinsert(RBXScriptConnections, Connect(Character.DescendantAdded, DescendantAdded))
+-
+-			Humanoid = WaitForChildOfClassAndName(Character, "Humanoid", "Humanoid")
+-			local HumanoidRootPart = WaitForChildOfClassAndName(Character, "BasePart", "HumanoidRootPart")
+-
+-			if Boolean then
+-				Camera()
+-
+-				if HumanoidRootPart then
+-					RigHumanoidRootPart.CFrame = HumanoidRootPart.CFrame
+-					Boolean = false
 +		end
 +		waiting = pending
 +	end
@@ -922,7 +937,10 @@
 +				local hole = info.model and info.model:FindFirstChild("Hole", true)
 +				if hole and hole:IsA("BasePart") then
 +					info.tip = pcf:PointToObjectSpace(hole.Position)
-+				end
+ 				end
+-
+-				if OptionsRigSetHumanoidDescription and RigHumanoid and Humanoid then
+-					pcall(ApplyDescriptionRig)
 +				info.up = pcf:VectorToObjectSpace(VT(0, 1, 0))
 +			end)
 +			M.parts[slot] = info
@@ -942,8 +960,13 @@
 +						lookup(g)
 +						M.scan()
 +					end
-+				end
-+			end
+ 				end
+ 			end
+-
+-			if HumanoidRootPart then
+-				for Index, Table in pairs(Targets) do
+-					if not HumanoidRootPart then
+-						break
 +			waiting = false
 +			report()
 +		end)
@@ -983,9 +1006,63 @@
 +						local c0, c1 = ends(j)
 +						at[b] = at[a] * c0 * c1:Inverse()
 +						grew = true
-+					end
-+				end
-+			end
+ 					end
+-
+-					if Humanoid then
+-						ChangeState(Humanoid, Physics)
+-					end
+-
+-					local Target = Table.Target
+-
+-					local Timeout = Time + OptionsFlingTimeout
+-					local LastPosition = Target.Position
+-
+-					while Target and HumanoidRootPart do
+-						if Time > Timeout then
+-							break
+-						end
+-
+-						local Position = Target.Position
+-						local LinearVelocity = ( Position - LastPosition ) / DeltaTime
+-
+-						if LinearVelocity.Magnitude > 50 then
+-							break
+-						end
+-
+-						LastPosition = Position
+-
+-						HumanoidRootPart.AssemblyAngularVelocity = OptionsFlingVelocity
+-						HumanoidRootPart.AssemblyLinearVelocity = OptionsFlingVelocity
+-
+-						HumanoidRootPart.CFrame = Target.CFrame * CFramenew(0, 0, 4 * mathsin(Time * 30)) * CFrameAngles(mathrandom(- 360, 360), mathrandom(- 360, 360), mathrandom(- 360, 360)) + ( LinearVelocity * 0.5) 
+-						taskwait()
+-					end
+-
+-					local Highlight = Table.Highlight
+-
+-					if Highlight then
+-						Destroy(Highlight)
+-					end
+-
+-					Targets[Index] = nil
+-				end
+-
+-				if Humanoid then
+-					ChangeState(Humanoid, Running)
+-				end
+-
+-				if RigHumanoidRootPart then
+-					HumanoidRootPart.AssemblyAngularVelocity = Vector3zero
+-					HumanoidRootPart.AssemblyLinearVelocity = Vector3zero
+-
+-					HumanoidRootPart.CFrame = RigHumanoidRootPart.CFrame + Vector3new(mathrandom(- OptionsTeleportXandZoffset, OptionsTeleportXandZoffset), OptionsTeleportYoffset, mathrandom(- OptionsTeleportXandZoffset, OptionsTeleportXandZoffset))
+ 				end
+ 			end
+-
+-			taskwait(0.26 + Wait(PreSimulation))
+-
+-			if Character then
+-				BreakJoints(Character)
 +			if not grew then
 +				break
 +			end
@@ -1039,9 +1116,34 @@
 +			if M.retry >= 1 then
 +				M.retry = 0
 +				M.scan()
-+			end
-+		end
-+	end
+ 			end
+ 		end
+ 	end
+-
+-	local function PostSimulationConnect()
+-		sethiddenproperty(LocalPlayer, "SimulationRadius", 2147483647)
+-
+-		Time = osclock()
+-		DeltaTime = Time - LastTime
+-		LastTime = Time
+-
+-		local Integer = 29 + mathsin(Time)
+-		local Vector3 = Vector3new(0, 0, 0.002 * mathsin(Time * 25))
+-
+-		for Index, Table in pairs(Tables) do
+-			local Part0 = Table.Part0
+-			local Part1 = Table.Part1
+-
+-			if Part0 and # GetJoints(Part0) == 0 and Part0.ReceiveAge == 0 and Part1 then
+-				Part0.AssemblyAngularVelocity = Vector3zero
+-
+-				local Position = Part1.Position
+-				local LinearVelocity = ( ( Table.LastPosition - Position ) / DeltaTime ) * Integer
+-				Table.LastPosition = Position
+-
+-				Part0.AssemblyLinearVelocity = Vector3new(LinearVelocity.X, Integer, LinearVelocity.Z)
+-
+-				Part0.CFrame = Part1.CFrame * ( Table.CFrame or CFrameidentity ) + Vector3
 +	M.frame = frame
 +	fd.addmode("default", {idle = frame, walk = frame, jump = frame, fall = frame})
 +	local rayP = RaycastParams.new()
@@ -1054,8 +1156,24 @@
 +		for _, plr in ipairs(Players:GetPlayers()) do
 +			if plr.Character then
 +				list[#list + 1] = plr.Character
-+			end
-+		end
+ 			end
+ 		end
+-
+-		local Hit = Mouse.Hit
+-		local Holding = IsMouseButtonPressed(UserInputService, MouseButton1)
+-
+-		for Tool, BasePart in pairs(Tools) do
+-			if BasePart.ReceiveAge == 0 and # GetJoints(BasePart) == 0 then
+-				BasePart.CanCollide = false
+-				BasePart.AssemblyAngularVelocity = OptionsFlingVelocity
+-				BasePart.AssemblyLinearVelocity = OptionsFlingVelocity
+-
+-				if Holding then
+-					BasePart.CFrame = Hit
+-				elseif RigHumanoidRootPart then
+-					BasePart.CFrame = RigHumanoidRootPart.CFrame * CFramenew(0, OptionsTeleportYoffset, 0) * CFrameAngles(mathrandom(- 360, 360), mathrandom(- 360, 360), mathrandom(- 360, 360))
+-				else
+-					BasePart.CFrame = CFrameidentity
 +		if live and live.rig then
 +			list[#list + 1] = live.rig
 +		end
@@ -1063,9 +1181,13 @@
 +			for _, c in pairs(fd.characters) do
 +				if typeof(c) == "Instance" then
 +					list[#list + 1] = c
-+				end
-+			end
-+		end
+ 				end
+ 			end
+ 		end
+-
+-		if RigHumanoid and Humanoid then
+-			RigHumanoid.Jump = Humanoid.Jump
+-			Move(RigHumanoid, Humanoid.MoveDirection)
 +		rayP.FilterDescendantsInstances = list
 +	end
 +	function M.vel()
@@ -1074,7 +1196,12 @@
 +			if ok and typeof(v3) == "Vector3" then
 +				return v3
 +			end
-+		end
+ 		end
+-
+-		if not Success then
+-			Success = pcall(SetCore, StarterGui, "ResetButtonCallback", BindableEvent)
+-		else
+-			SetCore(StarterGui, "ResetButtonCallback", BindableEvent)
 +		return Vector3.zero
 +	end
 +	function M.moveDir()
@@ -1122,51 +1249,10 @@
 +				if step.Magnitude > 1e-3 then
 +					local hit = workspace:Raycast(cf.Position, step + step.Unit * 1.5, rayP)
 +					if hit then
- 						break
- 					end
--
--					if Humanoid then
--						ChangeState(Humanoid, Physics)
--					end
--
--					local Target = Table.Target
--
--					local Timeout = Time + OptionsFlingTimeout
--					local LastPosition = Target.Position
--
--					while Target and HumanoidRootPart do
--						if Time > Timeout then
--							break
--						end
--
--						local Position = Target.Position
--						local LinearVelocity = ( Position - LastPosition ) / DeltaTime
--
--						if LinearVelocity.Magnitude > 50 then
--							break
--						end
--
--						LastPosition = Position
--
--						HumanoidRootPart.AssemblyAngularVelocity = OptionsFlingVelocity
--						HumanoidRootPart.AssemblyLinearVelocity = OptionsFlingVelocity
--
--						HumanoidRootPart.CFrame = Target.CFrame * CFramenew(0, 0, 4 * mathsin(Time * 30)) * CFrameAngles(mathrandom(- 360, 360), mathrandom(- 360, 360), mathrandom(- 360, 360)) + ( LinearVelocity * 0.5) 
--						taskwait()
--					end
--
--					local Highlight = Table.Highlight
--
--					if Highlight then
--						Destroy(Highlight)
--					end
--
--					Targets[Index] = nil
++						break
++					end
 +					pcall(fd.setCfr, cf + step)
- 				end
--
--				if Humanoid then
--					ChangeState(Humanoid, Running)
++				end
 +				speed = speed * math.exp(-dt * 12)
 +			end
 +		end)
@@ -1261,80 +1347,11 @@
 +				s = {}
 +				s.Connect = function(_, f)
 +					return keep(real:Connect(f))
- 				end
--
--				if RigHumanoidRootPart then
--					HumanoidRootPart.AssemblyAngularVelocity = Vector3zero
--					HumanoidRootPart.AssemblyLinearVelocity = Vector3zero
--
--					HumanoidRootPart.CFrame = RigHumanoidRootPart.CFrame + Vector3new(mathrandom(- OptionsTeleportXandZoffset, OptionsTeleportXandZoffset), OptionsTeleportYoffset, mathrandom(- OptionsTeleportXandZoffset, OptionsTeleportXandZoffset))
++				end
 +				s.connect = s.Connect
 +				s.Wait = function()
 +					return real:Wait()
- 				end
--			end
--
--			taskwait(0.26 + Wait(PreSimulation))
--
--			if Character then
--				BreakJoints(Character)
--			end
--		end
--	end
--
--	local function PostSimulationConnect()
--		sethiddenproperty(LocalPlayer, "SimulationRadius", 2147483647)
--
--		Time = osclock()
--		DeltaTime = Time - LastTime
--		LastTime = Time
--
--		local Integer = 29 + mathsin(Time)
--		local Vector3 = Vector3new(0, 0, 0.002 * mathsin(Time * 25))
--
--		for Index, Table in pairs(Tables) do
--			local Part0 = Table.Part0
--			local Part1 = Table.Part1
--
--			if Part0 and # GetJoints(Part0) == 0 and Part0.ReceiveAge == 0 and Part1 then
--				Part0.AssemblyAngularVelocity = Vector3zero
--
--				local Position = Part1.Position
--				local LinearVelocity = ( ( Table.LastPosition - Position ) / DeltaTime ) * Integer
--				Table.LastPosition = Position
--
--				Part0.AssemblyLinearVelocity = Vector3new(LinearVelocity.X, Integer, LinearVelocity.Z)
--
--				Part0.CFrame = Part1.CFrame * ( Table.CFrame or CFrameidentity ) + Vector3
--			end
--		end
--
--		local Hit = Mouse.Hit
--		local Holding = IsMouseButtonPressed(UserInputService, MouseButton1)
--
--		for Tool, BasePart in pairs(Tools) do
--			if BasePart.ReceiveAge == 0 and # GetJoints(BasePart) == 0 then
--				BasePart.CanCollide = false
--				BasePart.AssemblyAngularVelocity = OptionsFlingVelocity
--				BasePart.AssemblyLinearVelocity = OptionsFlingVelocity
--
--				if Holding then
--					BasePart.CFrame = Hit
--				elseif RigHumanoidRootPart then
--					BasePart.CFrame = RigHumanoidRootPart.CFrame * CFramenew(0, OptionsTeleportYoffset, 0) * CFrameAngles(mathrandom(- 360, 360), mathrandom(- 360, 360), mathrandom(- 360, 360))
--				else
--					BasePart.CFrame = CFrameidentity
--				end
--			end
--		end
--
--		if RigHumanoid and Humanoid then
--			RigHumanoid.Jump = Humanoid.Jump
--			Move(RigHumanoid, Humanoid.MoveDirection)
--		end
--
--		if not Success then
--			Success = pcall(SetCore, StarterGui, "ResetButtonCallback", BindableEvent)
++				end
 +				signals[k] = s
 +			end
 +			return s
@@ -1393,8 +1410,12 @@
 +					d:Destroy()
 +				end)
 +			end)
-+		end
-+	end
+ 		end
+ 	end
+-
+-	local function PreSimulationConnect()
+-		for Index, BasePart in pairs(BaseParts) do
+-			BasePart.CanCollide = false
 +	M.stop = finish
 +	keep(RunService.Heartbeat:Connect(function()
 +		if M.dead then
@@ -1408,8 +1429,13 @@
 +	local function fire(what)
 +		for _, f in ipairs(table.clone(watchers)) do
 +			pcall(f, what)
-+		end
-+	end
+ 		end
+ 	end
+-
+-	local function Fling(Target)
+-		if typeof(Target) == "Instance" then
+-			if IsA(Target, "Humanoid") then
+-				Target = Target.Parent
 +	local AL = {version = 1, title = NAME, tabs = {"Rifle", "Shotgun"}, file = FILE, dirty = false, open = false, marker = false, hint = "Rifle moves the rifle hat and Shotgun the shotgun hat. A gun the script doesn't know is fitted by its size, so if one points the wrong way turn it 180 here. Tap Alignment on the Main Scripts bar to open it again."}
 +	M.AL = AL
 +	function AL.alive()
@@ -1424,34 +1450,7 @@
 +		task.delay(1.5, function()
 +			if my == AL.tok and AL.dirty and doll and AL.save() then
 +				fire("saved")
-+			end
-+		end)
-+	end
-+	function AL.set(i, k, n)
-+		local x = VAL[i]
-+		n = tonumber(n)
-+		if not x or not n or n ~= n or math.abs(n) >= 1e5 then
-+			return nil
-+		end
-+		if k > 3 then
-+			n = ((n + 180) % 360) - 180
-+			n = math.floor(n * 10 + 0.5) / 10
- 		else
--			SetCore(StarterGui, "ResetButtonCallback", BindableEvent)
--		end
--	end
--
--	local function PreSimulationConnect()
--		for Index, BasePart in pairs(BaseParts) do
--			BasePart.CanCollide = false
--		end
--	end
--
--	local function Fling(Target)
--		if typeof(Target) == "Instance" then
--			if IsA(Target, "Humanoid") then
--				Target = Target.Parent
--			end
+ 			end
 -			if IsA(Target.Parent, "Accessory") then
 -				Target = FindFirstAncestorOfClass(Target, "Model")
 -			end
@@ -1477,9 +1476,65 @@
 -				end
 -
 -				tableinsert(Targets, {Highlight = Highlight, Target = Target})
--			end
--		end
--	end
++		end)
++	end
++	function AL.set(i, k, n)
++		local x = VAL[i]
++		n = tonumber(n)
++		if not x or not n or n ~= n or math.abs(n) >= 1e5 then
++			return nil
++		end
++		if k > 3 then
++			n = ((n + 180) % 360) - 180
++			n = math.floor(n * 10 + 0.5) / 10
++		else
++			n = math.floor(n * 1000 + 0.5) / 1000
++		end
++		x[k] = n
++		rebuild(i)
++		AL.dirty = true
++		AL.later()
++		return n
++	end
++	function AL.put(i, vals)
++		if not VAL[i] or type(vals) ~= "table" then
++			return
++		end
++		for k = 1, 6 do
++			VAL[i][k] = tonumber(vals[k]) or 0
++		end
++		rebuild(i)
++		AL.dirty = true
++		AL.later()
++	end
++	function AL.reset(i)
++		AL.put(i, {0, 0, 0, 0, 0, 0})
++	end
++	function AL.save()
++		AL.tok = (AL.tok or 0) + 1
++		local ok, e = saveAlign()
++		if ok then
++			AL.dirty = false
++		end
++		return ok, e
++	end
++	function AL.load()
++		local ok, e = loadAlign()
++		if ok then
++			AL.dirty = false
++		end
++		fire("load")
++		return ok, e
++	end
++	function AL.watch(f)
++		watchers[#watchers + 1] = f
++		return function()
++			local i = table.find(watchers, f)
++			if i then
++				table.remove(watchers, i)
+ 			end
+ 		end
+ 	end
 -
 -	local function InputBegan(InputObject)
 -		local UserInputType = InputObject.UserInputType
@@ -1500,8 +1555,42 @@
 -					Fling(Target)
 -				end
 -			end
--		end
--	end
++	function AL.found()
++		local r, s = M.slots.rifle, M.slots.shotgun
++		return "Rifle: " .. (r and r.name or "none") .. "   |   Shotgun: " .. (s and s.name or "none")
++	end
++	function AL.hat(i)
++		local r = M.slots[i == 1 and "rifle" or i == 2 and "shotgun" or ""]
++		local e = r and r.e
++		if type(e) ~= "table" then
++			return nil
++		end
++		local m, t = rawget(e, "m"), rawget(e, "t")
++		local id = (type(m) == "string" and string.match(m, "(%d+)%D*$")) or (type(t) == "string" and string.match(t, "(%d+)%D*$")) or nil
++		if not id then
++			return nil
++		end
++		local name = nil
++		pcall(function()
++			name = rawget(e, "p").Parent.Name
++		end)
++		return id, id, type(name) == "string" and name or r.name
++	end
++	alignStop = function()
++		if AL.dirty then
++			pcall(saveAlign)
++			AL.dirty = false
++		end
++		AL.open = false
++		if genv.AtsukoAlign == AL then
++			genv.AtsukoAlign = nil
++		end
++		fire("stop")
++		local h = genv.AtsukoHub
++		if type(h) == "table" and type(h.AlignReady) == "function" then
++			pcall(h.AlignReady)
+ 		end
+ 	end
 -
 -	local function gameDescendantAdded(Instance)
 -		if ( OptionsDisableScreenGUIs and IsA(Instance, "ScreenGui") ) or ( OptionsDisableScripts and Instance ~= script and ( IsA(Instance, "LocalScript") or IsA(Instance, "Script") ) ) then
@@ -1512,9 +1601,25 @@
 -				Enableds[Instance] = Instance.Enabled
 -				Instance.Enabled = false
 -			end))
--		end
--	end
--
++	function M.toggleAlign()
++		local h = genv.AtsukoHub
++		if type(h) == "table" and type(h.Align) == "function" then
++			pcall(h.Align)
++		else
++			hubNotify(NAME, "Open Atsuko Hub to line the guns up, the alignment lives there", "info", 5)
+ 		end
+ 	end
++	genv.AtsukoAlign = AL
++	do
++		local h = genv.AtsukoHub
++		if type(h) == "table" and type(h.AlignReady) == "function" then
++			pcall(h.AlignReady)
++		end
++	end
++	genv.AtsukoMasterChief = M
++	return M
++end)()
+ 
 -	local function Stop()
 -		for Index, RBXScriptConnection in pairs(RBXScriptConnections) do
 -			Disconnect(RBXScriptConnection)
@@ -1678,113 +1783,11 @@
 -Reanimate()
 -
 -local script = game:GetObjects("rbxassetid://10170990440")[1]
-+			n = math.floor(n * 1000 + 0.5) / 1000
-+		end
-+		x[k] = n
-+		rebuild(i)
-+		AL.dirty = true
-+		AL.later()
-+		return n
-+	end
-+	function AL.put(i, vals)
-+		if not VAL[i] or type(vals) ~= "table" then
-+			return
-+		end
-+		for k = 1, 6 do
-+			VAL[i][k] = tonumber(vals[k]) or 0
-+		end
-+		rebuild(i)
-+		AL.dirty = true
-+		AL.later()
-+	end
-+	function AL.reset(i)
-+		AL.put(i, {0, 0, 0, 0, 0, 0})
-+	end
-+	function AL.save()
-+		AL.tok = (AL.tok or 0) + 1
-+		local ok, e = saveAlign()
-+		if ok then
-+			AL.dirty = false
-+		end
-+		return ok, e
-+	end
-+	function AL.load()
-+		local ok, e = loadAlign()
-+		if ok then
-+			AL.dirty = false
-+		end
-+		fire("load")
-+		return ok, e
-+	end
-+	function AL.watch(f)
-+		watchers[#watchers + 1] = f
-+		return function()
-+			local i = table.find(watchers, f)
-+			if i then
-+				table.remove(watchers, i)
-+			end
-+		end
-+	end
-+	function AL.found()
-+		local r, s = M.slots.rifle, M.slots.shotgun
-+		return "Rifle: " .. (r and r.name or "none") .. "   |   Shotgun: " .. (s and s.name or "none")
-+	end
-+	function AL.hat(i)
-+		local r = M.slots[i == 1 and "rifle" or i == 2 and "shotgun" or ""]
-+		local e = r and r.e
-+		if type(e) ~= "table" then
-+			return nil
-+		end
-+		local m, t = rawget(e, "m"), rawget(e, "t")
-+		local id = (type(m) == "string" and string.match(m, "(%d+)%D*$")) or (type(t) == "string" and string.match(t, "(%d+)%D*$")) or nil
-+		if not id then
-+			return nil
-+		end
-+		local name = nil
-+		pcall(function()
-+			name = rawget(e, "p").Parent.Name
-+		end)
-+		return id, id, type(name) == "string" and name or r.name
-+	end
-+	alignStop = function()
-+		if AL.dirty then
-+			pcall(saveAlign)
-+			AL.dirty = false
-+		end
-+		AL.open = false
-+		if genv.AtsukoAlign == AL then
-+			genv.AtsukoAlign = nil
-+		end
-+		fire("stop")
-+		local h = genv.AtsukoHub
-+		if type(h) == "table" and type(h.AlignReady) == "function" then
-+			pcall(h.AlignReady)
-+		end
-+	end
-+	function M.toggleAlign()
-+		local h = genv.AtsukoHub
-+		if type(h) == "table" and type(h.Align) == "function" then
-+			pcall(h.Align)
-+		else
-+			hubNotify(NAME, "Open Atsuko Hub to line the guns up, the alignment lives there", "info", 5)
-+		end
-+	end
-+	genv.AtsukoAlign = AL
-+	do
-+		local h = genv.AtsukoHub
-+		if type(h) == "table" and type(h.AlignReady) == "function" then
-+			pcall(h.AlignReady)
-+		end
-+	end
-+	genv.AtsukoMasterChief = M
-+	return M
-+end)()
-+
 +local script = MC.objects("rbxassetid://10170990440")
  	local AHB = Instance.new("BindableEvent")
  	
  	local FPS = 30
-@@ -781,7 +1119,7 @@
+@@ -781,7 +1071,7 @@
  	local LastFrame = tick()
  	local Frame = 1/FPS
  	
@@ -1793,7 +1796,7 @@
  		TimeFrame = TimeFrame + s
  		if(TimeFrame >= Frame)then
  			for i = 1,math.floor(TimeFrame/Frame) do
-@@ -790,7 +1128,7 @@
+@@ -790,7 +1080,7 @@
  			LastFrame=tick()
  			TimeFrame=TimeFrame-Frame*math.floor(TimeFrame/Frame)
  		end
@@ -1802,7 +1805,7 @@
  
  
  	function swait(dur)
-@@ -805,8 +1143,8 @@
+@@ -805,8 +1095,8 @@
  
  wait(1/60)	
  player = game:GetService("Players").LocalPlayer
@@ -1813,7 +1816,7 @@
  playergui = player.PlayerGui
  humanoid = character.Humanoid
  rootpart = character.HumanoidRootPart
-@@ -847,6 +1185,7 @@
+@@ -847,6 +1137,7 @@
  change = 1
  effects = Instance.new("Folder",character)
  effects.Name = "effects lol"
@@ -1821,7 +1824,7 @@
  if humanoid.Animator then humanoid.Animator:Destroy() end
  anim = "idle"
  
-@@ -859,7 +1198,7 @@
+@@ -859,7 +1150,7 @@
  tossremainder = false
  lastframe = tick()
  script.ArtificialHB:Fire()
@@ -1830,7 +1833,7 @@
  	tf = tf + s
  	if tf >= frame then
  		if allowframeloss then
-@@ -877,7 +1216,7 @@
+@@ -877,7 +1168,7 @@
  			tf = tf - frame * math.floor(tf / frame)
  		end
  	end
@@ -1839,7 +1842,15 @@
  
  
  function Swait(n)
-@@ -1189,18 +1528,19 @@
+@@ -1114,7 +1405,6 @@
+ end
+ 
+ 
+-
+ songid = 0
+ speed = 16
+ riflequipped = true
+@@ -1189,22 +1479,22 @@
  shotgunweldz.Parent = character
  
  local PLAYER = game.Players.LocalPlayer
@@ -1862,7 +1873,11 @@
  
  local SHOOTING = false
  
-@@ -1217,16 +1557,16 @@
+--- direct .position looks bad on server
+ 
+ function makeafuckingtween(fuckingposition)
+     local fuckingtween = game:GetService("TweenService"):Create(Bullet, TweenInfo.new(0.001, Enum.EasingStyle.Cubic, Enum.EasingDirection.In), {Position = fuckingposition})
+@@ -1217,16 +1507,16 @@
      task.wait()
      makeafuckingtween(MOUSE.Hit.Position)
      task.wait(0.225)
@@ -1883,7 +1898,16 @@
  end)
  
  seqw = weld(shg,shg.eqp,rightarm,d,d)
-@@ -1310,7 +1650,7 @@
+@@ -1288,8 +1578,6 @@
+ end
+ 
+ 
+-
+-
+ function cs()
+ 	if songid == 0 then
+ 		songid = 1
+@@ -1310,7 +1598,7 @@
    Tween(riflejoint,{C0 = cf(-0.3,0,0.1)*angles(rad(-7.6),rad(-46.2),rad(-10.4))},Easing,Direction,Time)
    swait(Time)
  	repeat
@@ -1892,7 +1916,7 @@
  		swait(.02)
  		sound(1044434118,rifle.Hole,3,random(8,12)/10)
  		  	local Time,Easing,Direction = .075,'Linear','Out'
-@@ -1347,7 +1687,7 @@
+@@ -1347,7 +1635,7 @@
    Tween(riflejoint,{C0 = cf(-0.3,0,0.1)*angles(rad(-7.6),rad(-46.2),rad(-10.4))},Easing,Direction,Time)
    swait(Time)
  	until mousehold == false
@@ -1901,7 +1925,7 @@
  	attack = false
  end
  
-@@ -1362,7 +1702,7 @@
+@@ -1362,7 +1650,7 @@
    Tween(neck,{C0 = neckc0*cf(0,0,0)*angles(rad(0),rad(0),rad(-20.4))},Easing,Direction,Time)
    Tween(shotgunjoint,{C0 = cf(-0.3,0,0.1)*angles(rad(-7.6),rad(-46.2),rad(-10.4))},Easing,Direction,Time)
    swait(Time)
@@ -1910,7 +1934,7 @@
  		sound(2001619675,shg.Hole,3,random(8,12)/10)
  		  	local Time,Easing,Direction = .2,'Back','Out'
    Tween(rootjoint,{C0 = cf(-0.1,-0.4,0)*angles(rad(5.9),rad(20.4),rad(0))*rootc0},Easing,Direction,Time)
-@@ -1420,7 +1760,7 @@
+@@ -1420,7 +1708,7 @@
    Tween(neck,{C0 = neckc0*cf(0.1,0,0)*angles(rad(0.4),rad(0),rad(11.4))},Easing,Direction,Time)
    Tween(shotgunjoint,{C0 = cf(0.3,-0.1,0)*angles(rad(23),rad(42),rad(-18.1))},Easing,Direction,Time)
    swait(Time)
@@ -1919,7 +1943,7 @@
  	attack = false
  end
  
-@@ -1491,7 +1831,7 @@
+@@ -1491,7 +1779,7 @@
    Tween(la,{C0 = cf(-1.5,0.5,0.1)*angles(rad(7.5),rad(17.6),rad(-21.2))},Easing,Direction,Time)
    Tween(ra,{C0 = cf(0.9,0.5,-0.9)*angles(rad(93.5),rad(7.9),rad(-58.5))},Easing,Direction,Time)
    Tween(neck,{C0 = neckc0*cf(0,0,0)*angles(rad(0),rad(0),rad(-73.3))},Easing,Direction,Time)
@@ -1928,7 +1952,7 @@
  	aoe(rightleg.Position,3,10,17,0,false,true)
    swait(Time)
  aoe(rightleg.Position,7,10,17,0,false,true)
-@@ -1545,16 +1885,16 @@
+@@ -1545,16 +1833,16 @@
  	keyhold = false
  end)
  

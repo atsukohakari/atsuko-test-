@@ -1,15 +1,7 @@
---[[
-	atsuko hub v1.6.1
-	by atsukohakari
-
-	icons from lucide.dev (ISC), license in Hub/LUCIDE_LICENSE.txt
-]]
-
 local SELF_CHUNK = (type(debug) == "table" and type(debug.info) == "function") and debug.info(1, "f") or nil
 if not game:IsLoaded() then game.Loaded:Wait() end
 local Core = {}
 Core.SELF = SELF_CHUNK
--- the owner's nickname: their chat tag, and the AI's name until someone changes it
 Core.OWNER_TAG = "Atsuko Hakari"
 Core.VTAG = "v"
 
@@ -79,7 +71,6 @@ local X = {
 	setfpscap = F(setfpscap),
 	queueteleport = F(queue_on_teleport) or F(queueteleport) or F(queueonteleport) or libf(syn, "queue_on_teleport") or libf(fluxus, "queue_on_teleport"),
 }
--- websockets have a different home on every executor
 do
 	local ok, ws = pcall(function()
 		return libf(WebSocket, "connect") or libf(Websocket, "connect") or (type(syn) == "table" and libf(syn.websocket, "connect")) or nil
@@ -523,7 +514,6 @@ function Net.request(method, url, headers, body)
 	if type(res) ~= "table" then return 0, "no response", {} end
 	local code = tonumber(res.StatusCode) or 0
 	local resBody = type(res.Body) == "string" and res.Body or ""
-	-- some executors say why a request failed in StatusMessage instead of throwing
 	if code == 0 and resBody == "" then resBody = tostring(res.StatusMessage or res.Error or "no response") end
 	return code, resBody, type(res.Headers) == "table" and res.Headers or {}
 end
@@ -675,7 +665,6 @@ local FONT_SETS = {
 }
 local S = {}
 
--- your own themes: up to 20, each with a name and #rrggbb colors (cards, text and accent can be empty, that means auto)
 function Core.normalizeThemes()
 	local function hex(x)
 		return type(x) == "string" and string.match(x, "^#%x%x%x%x%x%x$") and string.lower(x) or ""
@@ -924,7 +913,6 @@ function Core.loadSettings()
 		local was = tostring(data.lastVersion or "")
 		local old = was == "" or was == "1.0.0" or string.match(was, "^1%.0%.") ~= nil
 		if old then
-			-- 1.1.0 changed a few defaults, move people over once
 			if data.toggleKey == nil or data.toggleKey == "RightControl" then S.toggleKey = "Alt" end
 			if data.uiScale == nil or tonumber(data.uiScale) == 1 then S.uiScale = 0.75 end
 			S.openOnLoad = true
@@ -934,13 +922,8 @@ function Core.loadSettings()
 end
 
 Core.saveQueued = false
--- keys stay on this device: never in Copy my settings
 Core.SECRET_SETTINGS = { ytKey = true, ytSearchKey = true }
 
--- free converters the hub falls back on so YouTube music works without any setup.
--- they turn a song into an mp3, which plays through a Sound (works on far more
--- executors than the webm way). shared and best-effort: paste your own in
--- Music > More for the best speed, or host one. api: "v7" or "v10" cobalt.
 Core.YT_CONVERTERS = {
 	{ base = "https://cobalt-7.kwiatekmiki.com", api = "v7" },
 	{ base = "https://downloadapi.stuff.solutions", api = "v7" },
@@ -1026,14 +1009,12 @@ local function notify(title, text, kind, dur)
 	Bus.fire("notify", title, text, kind, dur)
 end
 
--- every error the hub catches lands here, -reload reads it back
 Core.errors = {}
 Core.errorCount = 0
 function Core.onError(where, e)
 	Core.errorCount += 1
 	local line = tostring(where) .. ": " .. Util.firstLine(tostring(e))
 	if #Core.errors < 40 then Core.errors[#Core.errors + 1] = line end
-	-- a broken log listener would land right back here, so only one level deep
 	if Core.inError then return end
 	Core.inError = true
 	pcall(Log.add, "error", "Hub", tostring(where) .. ": " .. tostring(e))
@@ -1062,7 +1043,6 @@ local Spot = {
 }
 
 function Spot.read()
-	-- the file is the main copy, the session copy covers executors that can't write files (some phones)
 	local data = jsonDecode(FS.read(Core.SPOT_FILE))
 	local mem = GENV.__AtsukoSpotify
 	if type(mem) == "table" and (type(data) ~= "table" or (tonumber(mem.saved) or 0) > (tonumber(data.saved) or 0)) then data = mem end
@@ -1101,8 +1081,6 @@ function Spot.connected()
 	return Spot.cfg.refresh ~= ""
 end
 
--- free accounts: Discord shows what you're playing on Spotify (free works too) and Lanyard hands that out.
--- it can only show the song, Spotify only lets Premium apps press play or skip
 Core.LANYARD = "https://api.lanyard.rest/v1/users/"
 Core.LANYARD_INVITE = "https://discord.gg/UrXF2cfJ7F"
 Spot.skew = 0
@@ -1119,7 +1097,6 @@ function Core.nowMs()
 end
 
 Core.MONTHS = { jan = 1, feb = 2, mar = 3, apr = 4, may = 5, jun = 6, jul = 7, aug = 8, sep = 9, oct = 10, nov = 11, dec = 12 }
--- "Sun, 18 Oct 2026 13:05:00 GMT" -> seconds
 function Util.httpDate(str)
 	local d, mon, y, h, mi, se = string.match(tostring(str or ""), "(%d+)%s+(%a+)%s+(%d+)%s+(%d+):(%d+):(%d+)")
 	local m = mon and Core.MONTHS[string.lower(string.sub(mon, 1, 3))]
@@ -1138,7 +1115,6 @@ function Spot.pollFree()
 	Spot.polling = false
 	Spot.lastPoll = os.clock()
 	if not HUB.alive or Spot.cfg.discord ~= id or Spot.connected() then return end
-	-- the phone's clock can be off, the server's clock keeps the song's time right
 	local server = Util.httpDate(Net.header(headers, "date"))
 	if server then
 		local sk = server * 1000 - Core.nowMs()
@@ -1257,7 +1233,6 @@ function Spot.ensure(force)
 	local code, data = Spot.tokenCall({ { "grant_type", "refresh_token" }, { "refresh_token", used } })
 	local e = type(data) == "table" and data.error
 	if e == "invalid_grant" then
-		-- another copy of the hub (or a rejoin) may have swapped the token already, try the newest one once
 		local disk = Spot.read()
 		local fresh = type(disk) == "table" and type(disk.refresh) == "string" and disk.refresh or ""
 		if fresh ~= "" and fresh ~= used then
@@ -1310,7 +1285,6 @@ function Spot.call(method, path, body)
 	local code, raw, headers = send(body)
 	if code == 401 and Spot.ensure(true) then code, raw, headers = send(body) end
 	if code == 0 and method == "GET" then
-		-- phones drop requests now and then, one quiet retry before giving up
 		task.wait(0.4)
 		if not HUB.alive then return 0, nil end
 		code, raw, headers = send(body)
@@ -3286,7 +3260,6 @@ do
 		return nil
 	end
 
-	-- works out what kind of link this is and turns share links into direct file links
 	function Player.linkInfo(url)
 		url = Util.trim(tostring(url or ""))
 		if not string.find(url, "^https?://") then return nil, "Paste a full link that starts with https://" end
@@ -3350,8 +3323,6 @@ do
 		return nil
 	end
 
-	-- one converter attempt. a link with {id}/{url} is fetched directly, otherwise
-	-- it's posted to as a cobalt server (apiType "v10" for cobalt 10, "v7" for cobalt 7)
 	function Player.convertAt(base, apiType, mode, info)
 		base = Util.trim(tostring(base or ""))
 		if base == "" then return nil, "no converter" end
@@ -3414,7 +3385,6 @@ do
 		return data
 	end
 
-	-- the converters to try, in order: your own if you set one, else the built-in free ones
 	function Player.converters()
 		local out = {}
 		local api = Util.trim(tostring(S.ytApi or ""))
@@ -3445,7 +3415,6 @@ do
 		return nil, lastErr or "no converter worked"
 	end
 
-	-- mp3 through a converter first (plays on every executor via a Sound), webm as the backup
 	function Player.ytAudio(info)
 		local data = Player.ytConvert(info, "audio")
 		if data then return data end
@@ -3937,7 +3906,6 @@ do
 		end
 	end
 
-	-- phones pause sounds when the app goes in the background, and some games clear out sounds: pick the song back up
 	Player.stuck = 0
 	function Player.watch()
 		if Player.state ~= "playing" or not Player.cur then
@@ -3959,7 +3927,6 @@ do
 		Player.stuck += 1
 		local len = s.TimeLength
 		if len > 0 and s.TimePosition >= len - 0.6 then
-			-- it finished but never said so
 			if Player.stuck >= 4 then
 				Player.stuck = 0
 				Player.onEnded()
@@ -5568,7 +5535,6 @@ function Runner.run(entry)
 	if not entry or Runner.pending[entry.path] then return end
 	local rec = SHARED.running[entry.path]
 	if rec and Runner.isActive(rec) then
-		-- running it again doesn't start a second copy, it just says so
 		notify(entry.name, "Already running", "info", 2)
 		return
 	end
@@ -5705,7 +5671,6 @@ local T = {
 	head = Color3.fromRGB(8, 8, 10),
 	pillBg = Color3.fromRGB(9, 11, 15),
 }
--- the untinted palette, the background tint is worked out from these
 Core.BASE = {}
 Core.TINTED = { "side", "panel", "card", "card2", "tabBg", "tabSel", "stroke", "line", "head", "pillBg" }
 for _, k in ipairs(Core.TINTED) do
@@ -6348,14 +6313,10 @@ pcall(function() Gui.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets end)
 local Root = UI.new("Frame", { Name = "Root", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1) }, Gui)
 Core.RootScale = UI.new("UIScale", {}, Root)
 HUB.gui = Gui
--- everything that makes up the hub itself sits on one stage, so dragging the title moves it all together
 Core.Stage = UI.new("Frame", { Name = "Stage", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromScale(1, 1), ZIndex = 100 }, Root)
 Core.stageScale = UI.new("UIScale", {}, Core.Stage)
 Core.stageX, Core.stageY = 0, 0
 
--- themes: a theme sets the background, the cards, the text and the accent. the background tint then mixes a bit
--- of the accent into every surface. every color a surface or a text has had is remembered, so a new theme
--- can find everything on screen and recolor it
 local Theme = { list = nil, scanAt = -100, histS = {}, histT = {}, size = 0, fixed = setmetatable({}, { __mode = "k" }) }
 Core.TEXT_KEYS = { "text", "sub", "dim", "ink" }
 Core.BASE_TEXT = {}
@@ -6367,7 +6328,6 @@ for _, k in ipairs(Core.TEXT_KEYS) do
 	Core.MIDNIGHT[k] = T[k]
 	Core.BASE_TEXT[k] = T[k]
 end
--- built-in themes. light ones get a deeper accent so it still stands out on white
 Core.THEMES = {
 	{ id = "midnight", name = "Midnight", bg = "#101115", card = "#1c1d23", text = "#f4f5f8", accent = "#c8a8ff", tint = 0.4 },
 	{ id = "black", name = "Pure Black", bg = "#000000", card = "#121214", text = "#f5f5f7", accent = "#c8a8ff", tint = 0 },
@@ -6404,7 +6364,6 @@ function Theme.find(id)
 	end
 	return nil
 end
--- everything a theme needs, worked out from its background, cards and text (cards and text can be left on auto)
 function Theme.colors(def)
 	if def.id == "midnight" then return table.clone(Core.MIDNIGHT) end
 	local B = Core.hexColor(def.bg) or Core.MIDNIGHT.panel
@@ -6428,7 +6387,6 @@ function Theme.colors(def)
 		dim = X:Lerp(C, 0.65),
 		ink = light and Color3.fromRGB(250, 250, 252) or Color3.fromRGB(14, 15, 19),
 	}
-	-- no two parts may share the exact same color, or recoloring couldn't tell them apart
 	local seen = {}
 	for _, k in ipairs({ "panel", "side", "head", "pillBg", "card", "card2", "tabBg", "tabSel", "line", "text", "sub", "dim", "ink" }) do
 		local c = Theme.round(out[k])
@@ -6489,7 +6447,6 @@ function Theme.scan()
 	local function text(o, prop)
 		if ht[Theme.key(o[prop])] then list[#list + 1] = { o, prop, ht } end
 	end
-	-- theme pictures (Theme.fixed) keep their own colors
 	local fixed = Theme.fixed
 	for _, o in ipairs(Gui:GetDescendants()) do
 		if not fixed[o] then
@@ -6694,7 +6651,6 @@ function Toast.show(title, text, kind)
 	title, text = tostring(title or ""), tostring(text or "")
 	local dur = Toast.time()
 	local plain = string.gsub(text, "</?b>", "")
-	-- the same message twice in a row just refreshes the one that's showing
 	local key = title .. "\0" .. text
 	for _, x in ipairs(Toast.list) do
 		if x.key == key and not x.gone then
@@ -7411,8 +7367,6 @@ P.right.btn.Activated:Connect(function()
 	if P.right.fn then P.right.fn() end
 end)
 
--- moving the hub: drag the title around. it isn't saved, so running it again (or -reload) puts it back,
--- and the reset button in the corner does it right away
 Core.resetBtn = Core.headerButton("ResetSpot", 9)
 UI.setIcon(Core.resetBtn.icon, "rotate-ccw")
 function Core.clampStage(x, y)
@@ -7465,7 +7419,6 @@ do
 			Head.dragging = false
 			Head.glow(true, 0.9)
 			if far >= 4 then return end
-			-- a double tap on the title puts the hub back too
 			local now = os.clock()
 			if now - lastTap < 0.4 and (Core.stageX ~= 0 or Core.stageY ~= 0) then
 				lastTap = 0
@@ -7495,7 +7448,6 @@ UI.stroke(Aside.bg, T.stroke, 1, 0.3)
 Core.surface(Aside.bg, "aside")
 Aside.content = UI.new("Frame", { Name = "Content", BackgroundTransparency = 1, ClipsDescendants = true, Position = UDim2.fromOffset(0, 8), Size = UDim2.new(1, 0, 1, -8) }, Aside.card)
 
--- Home's right column lives in its own holder so it can come in from the right side
 local HomeSide = { shown = false, token = 0 }
 HomeSide.holder = UI.new("Frame", { Name = "HomeRight", BackgroundTransparency = 1, ClipsDescendants = false, Visible = false, Size = UDim2.fromOffset(308, 308), ZIndex = 100 }, Core.Stage)
 HomeSide.card = UI.new("Frame", { Name = "Card", BackgroundTransparency = 1, Size = UDim2.fromOffset(300, 300), Position = UDim2.fromOffset(312, 4) }, HomeSide.holder)
@@ -7881,7 +7833,6 @@ do
 		end
 	end
 
-	-- after a window changes its own size limits: resize it smoothly and keep it on screen
 	function Win.fit(w, instant)
 		if not (w and w.alive) then return end
 		applySize(w, instant)
@@ -8012,7 +7963,6 @@ do
 				notify("Update failed", Util.firstLine(err or "?"), "error")
 				return
 			end
-			-- tell the new copy to take over instead of saying it's already running
 			GENV.__AtsukoHubReplace = true
 			GENV.__AtsukoHubReload = nil
 			task.spawn(f)
@@ -8475,7 +8425,6 @@ function Shell.applyPage(pg, instant)
 	P.geoToken += 1
 	local gk = P.geoToken
 	P.holder.Position = UDim2.fromOffset(st.x - 4, st.y - 4)
-	-- grow the clip box right away, shrink it after the card has finished shrinking
 	local curW = P.holder.Size.X.Offset
 	P.holder.Size = UDim2.fromOffset(math.max(curW, w + 8), st.h + 8)
 	if t > 0 and curW > w + 8 and S.animations then
@@ -8681,7 +8630,6 @@ function Panel.buildTabs(pg, force)
 		ws[i] = textWidth(name, size, FONT_M) + 14
 		total += ws[i]
 	end
-	-- wider names get a bit more room, the rest is shared evenly
 	pg.tabX, pg.tabW = {}, {}
 	local x = 3
 	for i = 1, n do
@@ -8741,7 +8689,6 @@ function Panel.setTab(pg, i)
 	pg.viewTk[old] = (pg.viewTk[old] or 0) + 1
 	local tk = pg.viewTk[old]
 	if nv then
-		-- a view that's still sliding keeps going from where it is instead of jumping
 		if not nv.Visible or not animate then nv.Position = UDim2.new(animate and dir or 0, 0, 0, y) end
 		nv.Visible = true
 		UI.tween(nv, animate and 0.4 or 0, { Position = UDim2.new(0, 0, 0, y) })
@@ -8989,7 +8936,6 @@ function Panel.toggleAll()
 	end
 end
 
--- open a page without closing it when it's already the one showing
 function Panel.go(id)
 	if HUB.hidden then Panel.unhide() end
 	if Panel.mode ~= "bar" then Panel.openBar() end
@@ -9032,7 +8978,6 @@ local function newPage(def)
 		views = {},
 		viewY = def.viewY or 0,
 	}
-	-- root slides between pages, it holds the page's own tab bar so nothing jumps when tabs come and go
 	page.root = UI.new("Frame", { Name = def.id, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Visible = false }, P.content)
 	if def.tabs then
 		page.tabBar = UI.new("Frame", { Name = "Tabs", BackgroundColor3 = T.tabBg, Position = UDim2.fromOffset(2, 0), Size = UDim2.new(1, -4, 0, 30) }, page.root)
@@ -10591,7 +10536,6 @@ do
 	end
 end
 
--- pictures from the web are kept in their own folder so they still show next time
 Core.IMG_DIR = LOCAL_DIR .. "/images"
 Core.webImages = {}
 function Core.imageSource(src, cb)
@@ -10639,7 +10583,6 @@ function Core.imageSource(src, cb)
 	return nil
 end
 
--- your own picture (Settings > General): a Roblox image ID or a link, or your Roblox avatar when it's empty
 Core.myPicState = { src = nil, id = nil, busy = false, err = nil }
 function Core.myPic()
 	local head = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(LP.UserId) .. "&w=150&h=150"
@@ -10746,7 +10689,6 @@ function Core.loadLib(name, key, need)
 	if err then Log.add("error", "Hub", name .. ": " .. err) end
 	return out, err
 end
-
 
 
 Core.Reanim = { path = nil, busy = nil }
@@ -13027,7 +12969,6 @@ do
 	EP.paintBar()
 end
 
--- your own scripts, saved as files in AtsukoHub/myscripts
 local Mine = { dir = LOCAL_DIR .. "/myscripts", list = {}, byFile = {} }
 
 function Mine.safe(name)
@@ -13058,7 +12999,6 @@ function Mine.entry(file)
 	return e
 end
 
--- the index keeps the list working on executors that can't look inside folders
 function Mine.scan()
 	FS.folder(Mine.dir)
 	local files, seen = {}, {}
@@ -13870,7 +13810,6 @@ Bus.on("running", function()
 	if Explore.refreshRun then Explore.refreshRun() end
 end)
 
--- editor: write scripts, run them, save them to My scripts -----------------------------------------
 Ed.page = newPage({ id = "editor", title = "Editor", icon = "code-xml", wide = true })
 Ed.DRAFT = LOCAL_DIR .. "/editor_draft.lua"
 Ed.KW = {}
@@ -13895,7 +13834,6 @@ function Ed.esc(s)
 	return s
 end
 
--- colors the code with rich text, it sits right on top of the text box
 function Ed.highlight(src)
 	local out, n = {}, 0
 	local i, len = 1, #src
@@ -14163,7 +14101,6 @@ do
 		if enter then Ed.find(1) end
 	end)
 
-	-- overlays: the file list and the menu
 	Ed.shade = UI.button(view, { Name = "Shade", BackgroundColor3 = Color3.new(0, 0, 0), BackgroundTransparency = 0.55, Size = UDim2.fromScale(1, 1), Visible = false, ZIndex = 10 })
 	UI.corner(Ed.shade, 12)
 	Ed.shade.Activated:Connect(function() Ed.toggleOverlay(nil) end)
@@ -14175,7 +14112,6 @@ do
 	local pad = Ed.overlayList:FindFirstChildOfClass("UIPadding")
 	pad.PaddingLeft, pad.PaddingRight, pad.PaddingTop = UDim.new(0, 8), UDim.new(0, 8), UDim.new(0, 8)
 
-	-- shown on the page while the editor is in its own window
 	Ed.placeholder = UI.new("Frame", { Name = "Away", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Visible = false }, pf)
 	local away = Ed.placeholder
 	local circ = UI.new("Frame", { BackgroundColor3 = T.card, AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, -54), Size = UDim2.fromOffset(54, 54) }, away)
@@ -14493,14 +14429,12 @@ function Ed.load(name, code, file, dirty)
 	Panel.refreshHead()
 end
 
--- opens code in the editor, unsaved work goes to Recover in the menu
 function Ed.open(opts)
 	opts = opts or {}
 	local kept = false
 	if Ed.dirty and Util.trim(Ed.box.Text) ~= "" then
 		Ed.backup = { name = Ed.nameBox.Text, code = Ed.box.Text, file = Ed.file }
 		kept = true
-		-- callers with their own message fold this into it, so only one notification shows
 		if not opts.quiet then notify("Editor", "Your unsaved script is kept, open the menu and tap Recover to get it back", "info", 4) end
 	end
 	Ed.load(opts.name or "", opts.code or "", opts.file, opts.file == nil and (opts.code or "") ~= "")
@@ -14769,7 +14703,6 @@ hubConn(UserInputService.InputBegan:Connect(function(input)
 end))
 
 do
-	-- bring back what you were writing last time
 	local info = jsonDecode(S.editorFile)
 	local draft = FS.read(Ed.DRAFT)
 	if draft and draft ~= "" then
@@ -14779,12 +14712,9 @@ do
 	end
 end
 
--- AI tab: the chat itself lives in its own file (Hub/AtsukoAI.lua) so this one doesn't get bigger.
--- it loads the first time you open the tab, and a saved copy covers you when GitHub can't be reached
 Core.AI_CACHE = LOCAL_DIR .. "/ai_module.lua"
 Core.AI_URL = HOME_REPO .. HUB_DIR .. "/AtsukoAI.lua"
 Core.AI_FILE = LOCAL_DIR .. "/ai.json"
--- the AI file says which version of the hub's hooks it was made for, an older copy never runs on a newer hub
 Core.AI_LEVEL = 2
 function Core.aiLevel(src)
 	if type(src) ~= "string" or #src < 500 or not string.find(src, "^%s*return function%(ctx%)") then return 0 end
@@ -15357,7 +15287,6 @@ do
 			if not quiet then notify(def.name, why, "error", 2.5) end
 			return false
 		end
-		-- some commands can't run together (two kinds of fly, orbit and follow...), the new one wins
 		for _, other in ipairs(def.excl or {}) do
 			if other ~= id and Cmd.on[other] then Cmd.set(other, false, nil, true) end
 		end
@@ -16948,7 +16877,6 @@ do
 	end)()
 
 	;(function()
-		-- these came over from Infinite Yield and friends. They only ever touch your own character and camera.
 		local AF = {}
 		Cmd.add({
 			id = "antifling", name = "Anti fling", icon = "shield", cat = "Movement", kind = "toggle",
@@ -17356,8 +17284,6 @@ do
 		})
 	end)()
 	;(function()
-		-- these came from the 07Hub admin panel (used with permission). Everything only changes what you see
-		-- or your own character.
 		local KD = function(k) return UserInputService:IsKeyDown(k) end
 		local function preSim()
 			local ok, sig = pcall(function() return RunService.PreSimulation end)
@@ -17369,7 +17295,6 @@ do
 			purple = Color3.fromRGB(170, 120, 255), pink = Color3.fromRGB(255, 140, 200), white = Color3.fromRGB(255, 255, 255),
 			black = Color3.fromRGB(30, 30, 34), lavender = Color3.fromRGB(200, 168, 255), gold = Color3.fromRGB(255, 200, 90),
 		}
-		-- "pink", "#ff8fc8" or "255 140 200" all work, "rainbow" is handled by the commands that can do it
 		function Cmd.color(arg)
 			arg = string.lower(Util.trim(tostring(arg or "")))
 			if arg == "" then return nil end
@@ -17412,7 +17337,6 @@ do
 			return cam and cam.CFrame.Position or Vector3.zero
 		end
 
-		-- smooth fly: speeds up and slows down gently, leans into turns and looks where the camera looks
 		local SF = {}
 		Cmd.add({
 			id = "smoothfly", name = "Smooth fly", icon = "plane", cat = "Movement", kind = "toggle", char = true,
@@ -17584,7 +17508,6 @@ do
 			end,
 		})
 
-		-- orbit and headsit both glue you to someone, so only one of them (or follow) runs at a time
 		local OB = {}
 		Cmd.add({
 			id = "orbit", name = "Orbit", icon = "orbit", cat = "Movement", kind = "toggle", char = true, needsPlayer = true,
@@ -17693,7 +17616,6 @@ do
 			end,
 		})
 
-		-- named waypoints, saved per game
 		local function wpList()
 			local all = Cmd.val("waypoint", "all", nil)
 			if type(all) ~= "table" then all = {} end
@@ -17785,7 +17707,6 @@ do
 			end,
 		})
 
-		-- emotes: Roblox's own R15 animations, walking stops them like /e emotes
 		local EMOTES = { wave = 507770239, point = 507770453, cheer = 507770677, laugh = 507770818, dance = 507771019, dance2 = 507776043, dance3 = 507777268 }
 		local EM = {}
 		Cmd.add({
@@ -17908,7 +17829,6 @@ function Cmd.openWin(id)
 	})
 end
 
--- command bar: a search box in the middle of the screen, type and press Enter ----------------------
 Cmd.pal = { open = false, sel = 1, items = {}, token = 0, rows = {} }
 
 function Cmd.pal.build()
@@ -19091,18 +19011,15 @@ function Panel.panic()
 	end
 end
 
--- Alt, Ctrl and Shift count on both sides of the keyboard
 Core.PAIRS = { LeftAlt = "Alt", RightAlt = "Alt", LeftControl = "Ctrl", RightControl = "Ctrl", LeftShift = "Shift", RightShift = "Shift" }
 Core.KEY_NAMES = { Semicolon = ";", Quote = "'", Comma = ",", Period = ".", Slash = "/", BackSlash = "\\", Minus = "-", Equals = "=", LeftBracket = "[", RightBracket = "]", Backquote = "`", Return = "Enter", Insert = "Ins", Delete = "Del",
 	One = "1", Two = "2", Three = "3", Four = "4", Five = "5", Six = "6", Seven = "7", Eight = "8", Nine = "9", Zero = "0" }
--- what these keys type with Shift held, so Shift + ; can be bound as ":" (and ! ? @ # and the rest)
 Core.SHIFTED = { Semicolon = ":", Quote = "\"", Comma = "<", Period = ">", Slash = "?", BackSlash = "|", Minus = "_", Equals = "+", LeftBracket = "{", RightBracket = "}", Backquote = "~",
 	One = "!", Two = "@", Three = "#", Four = "$", Five = "%", Six = "^", Seven = "&", Eight = "*", Nine = "(", Zero = ")" }
 Core.MOD_ORDER = { "Ctrl", "Alt", "Shift" }
 function Core.keyBind(name)
 	return Core.PAIRS[name] or name
 end
--- "Shift+Semicolon" -> { Shift = true }, "Semicolon"
 function Core.splitBind(bind)
 	local mods = {}
 	local key = bind
@@ -19121,7 +19038,6 @@ function Core.heldMods()
 	end
 	return { Ctrl = down("LeftControl", "RightControl"), Alt = down("LeftAlt", "RightAlt"), Shift = down("LeftShift", "RightShift") }
 end
--- the key you just pressed plus whatever Ctrl / Alt / Shift you're holding
 function Core.comboOf(name)
 	local held = Core.heldMods()
 	local out = {}
@@ -19135,12 +19051,10 @@ function Core.keyMatch(bind, name)
 	if bind == nil or bind == "" then return false end
 	local mods, key = Core.splitBind(bind)
 	if not (key == name or Core.PAIRS[name] == key) then return false end
-	-- Alt, Ctrl or Shift on their own
 	if Core.PAIRS[name] then return next(mods) == nil end
 	local held = Core.heldMods()
 	if (mods.Ctrl or false) ~= held.Ctrl or (mods.Alt or false) ~= held.Alt then return false end
 	if mods.Shift then return held.Shift end
-	-- ";" and ":" are different keys to you, so Shift turns ";" into something else. letters don't care
 	if held.Shift and Core.SHIFTED[key] then return false end
 	return true
 end
@@ -19162,7 +19076,6 @@ function Core.keyLabel(bind)
 	if mods.Shift and not mods.Ctrl and not mods.Alt and Core.SHIFTED[key] then return Core.SHIFTED[key] .. "  (Shift + " .. (Core.KEY_NAMES[key] or key) .. ")" end
 	return Core.keyShort(bind)
 end
--- the character a key types into a text box, so it can be taken back out when it opened the command bar
 function Core.keyChar(bind)
 	if bind == nil or bind == "" then return nil end
 	local mods, key = Core.splitBind(bind)
@@ -19230,7 +19143,6 @@ local function keyRow(parent, order, title, key)
 				drawKey()
 			end
 		end)
-		-- a key on its own, a key with Ctrl / Alt / Shift held (Shift + ; is ":"), or Alt / Ctrl / Shift on their own
 		local pendingMod = nil
 		local function finish(value)
 			waitingKey = nil
@@ -19351,7 +19263,6 @@ do
 		end)
 	end
 	do
-		-- the last swatch is whatever you picked yourself
 		local b = UI.button(sw, { Name = "Swatch_Custom", BackgroundColor3 = Color3.new(1, 1, 1), Size = UDim2.fromOffset(22, 22), Position = UDim2.fromOffset(12 + #Core.ACCENTS * 28, 38) })
 		UI.corner(b, 11)
 		local seq = {}
@@ -19374,7 +19285,6 @@ do
 	drawRings()
 	reg({ render = drawRings })
 
-	-- any color you want: drag in the square for shade, the bar for the color itself
 	local pc = card(v, 214, 2)
 	pc.Name = "ColorPicker"
 	UI.label(pc, { Text = "Pick any color", TextSize = 12, Position = UDim2.fromOffset(12, 8), Size = UDim2.new(1, -24, 0, 18) })
@@ -19702,9 +19612,6 @@ do
 
 end
 
--- Themes ---------------------------------------------------------------------------------------------
--- switching the whole hub to a theme. a built-in theme brings its own accent and tint, your own themes
--- keep the exact colors you picked (no tint), and keep your accent unless you gave the theme one
 function Core.setAccentColor(c)
 	for _, a in ipairs(Core.ACCENTS) do
 		if Theme.key(a[2]) == Theme.key(c) then
@@ -19796,7 +19703,6 @@ function Core.allThemes()
 	end
 	return out
 end
--- a theme as text you can share, and back
 function Core.themeCode(def)
 	return jsonEncode({ atsukoTheme = 1, name = def.name, bg = def.bg, card = def.card or "", text = def.text or "", accent = def.accent or "" })
 end
@@ -19810,7 +19716,6 @@ function Core.addThemeFromCode(code)
 	return S.themes[#S.themes]
 end
 
--- a color picker you can put anywhere: drag in the square for the shade, the bar for the color, or type a hex code
 function Core.colorPicker(parent, order, getColor, onPick)
 	local P = {}
 	local pc = card(parent, 196, order)
@@ -19922,7 +19827,6 @@ function Core.colorPicker(parent, order, getColor, onPick)
 	return P
 end
 
--- a little picture of a theme: its background, a card with text on it and the accent
 function Theme.tile(parent, def, pos, size, selected)
 	local cols = Theme.colors(def)
 	local acc = Core.hexColor(def.accent) or Core.baseAccent()
@@ -19958,7 +19862,6 @@ function Theme.tile(parent, def, pos, size, selected)
 	return b
 end
 
--- the theme maker: pick colors and the whole hub changes as you go. closing it without saving puts things back
 Core.QUICK_COLORS = {
 	bg = { "#000000", "#101115", "#0a111c", "#140e1e", "#191016", "#0c1410", "#eaecf2", "#faebf0" },
 	card = { "#121214", "#1c1d23", "#132030", "#221932", "#2a1b25", "#16241c", "#fafbfd", "#fff8fa" },
@@ -19978,7 +19881,6 @@ function Core.themeMaker(editId)
 	end
 	local base = custom or Theme.find(S.theme) or Core.THEMES[1]
 	local editing = custom ~= nil
-	-- a new theme starts from the background you have now, with cards and text on auto and your accent
 	local draft = { id = "__draft", name = "My theme", bg = base.bg, card = "", text = "", accent = "" }
 	if editing then
 		draft = { id = "__draft", name = custom.name, bg = custom.bg, card = custom.card or "", text = custom.text or "", accent = custom.accent or "" }
@@ -20282,8 +20184,6 @@ Cmd.add({
 	end,
 })
 
--- Settings > AI: personal preferences and the AI's name and picture. they live in ai.json with the rest of the AI settings,
--- so they work the same whether the AI tab has been opened yet or not
 function Core.aiGet(field)
 	local api = AIPage.api
 	if api and api.cfg then return api.cfg[field] end
@@ -20665,8 +20565,6 @@ do
 	})
 end
 
--- music: your own songs and Spotify in one place --------------------------------------------------
--- NP is the "now playing" model every music view reads from (page, mini player, island, home, top bar)
 local NP = { views = {}, src = S.musicSource, q = { at = -100, busy = false, data = nil, err = nil }, lastLocal = "stopped", lastSpot = false }
 
 function NP.localLive()
@@ -20693,7 +20591,6 @@ function NP.isLive(src)
 	return NP.localLive()
 end
 
--- what the little players show: the side you picked, unless only the other side has a song
 function NP.liveSource()
 	local a = NP.src
 	local b = a == "local" and "spotify" or "local"
@@ -20716,7 +20613,6 @@ function NP.setSource(src)
 	Bus.fire("np")
 end
 
--- when one side starts playing, follow it
 function NP.follow()
 	local ls = Player.state
 	local sp = Spot.live() and Spot.state ~= nil and Spot.state.playing == true
@@ -20854,10 +20750,8 @@ function NP.srcOf(v)
 	return NP.liveSource()
 end
 
--- lyrics -------------------------------------------------------------------------------------------
 local LY = {}
 
--- turns a song into what LRCLIB wants, "Artist - Title (Official Video)" style names get cleaned up
 function LY.query(i)
 	if not i.has then return nil end
 	if i.src == "video" then return nil end
@@ -20884,7 +20778,6 @@ function LY.get(i)
 	return Spot.lyrics(q)
 end
 
--- index of the line being sung, plus the line itself and the next one
 function LY.at(res, pos)
 	if not res or res.status ~= "synced" or #res.lines == 0 then return 0 end
 	local p = pos + 0.25
@@ -20907,7 +20800,6 @@ function LY.lineText(res, idx)
 	return l.text ~= "" and l.text or "..."
 end
 
--- shared widgets -----------------------------------------------------------------------------------
 function NP.button(parent, icon, size, iconSize, pos, filled)
 	local b = UI.button(parent, {
 		Name = icon,
@@ -20929,7 +20821,6 @@ function NP.button(parent, icon, size, iconSize, pos, filled)
 	return b, ic
 end
 
--- album art for Spotify, a glowing tile with bouncing bars for your own songs
 function NP.art(parent, size, radius, pos, iconSize, nbars)
 	local a = UI.new("Frame", { Name = "Art", BackgroundColor3 = T.card2, Size = UDim2.fromOffset(size, size), Position = pos, ClipsDescendants = true }, parent)
 	UI.corner(a, radius)
@@ -20960,7 +20851,6 @@ function NP.art(parent, size, radius, pos, iconSize, nbars)
 	end
 	local img = UI.new("ImageLabel", { Name = "Img", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), ScaleType = Enum.ScaleType.Crop, Image = "", Visible = false, ZIndex = 2 }, a)
 	UI.corner(img, radius)
-	-- a soft dark fade at the bottom of album art so the bars stay easy to see on top of it
 	local shade = UI.new("Frame", { Name = "Shade", BackgroundColor3 = Color3.new(0, 0, 0), BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), Visible = false, ZIndex = 3 }, a)
 	UI.corner(shade, radius)
 	UI.new("UIGradient", { Rotation = 90, Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.45, 1), NumberSequenceKeypoint.new(1, 0.35) }) }, shade)
@@ -20971,7 +20861,6 @@ function NP.setArt(art, i)
 	local id = i.has and i.art or nil
 	art.img.Image = id or ""
 	art.img.Visible = id ~= nil
-	-- Spotify gets bars too, on top of its album art
 	local spotBars = i.has and i.src == "spotify" and i.playing == true and Player.cfg.viz
 	local showBars = (id == nil and i.has and i.src == "local" and Player.cfg.viz and not i.stopped) or spotBars
 	if art.shade then art.shade.Visible = spotBars and id ~= nil end
@@ -20982,7 +20871,6 @@ function NP.setArt(art, i)
 	end
 end
 
--- progress bar, drag it to seek
 function NP.bar(parent, v, props, seekable)
 	local track = UI.new("Frame", { Name = "Track", BackgroundColor3 = T.card2, BorderSizePixel = 0 }, parent)
 	for k, val in pairs(props) do
@@ -21045,7 +20933,6 @@ function NP.tick(v, instant)
 	end
 end
 
--- the two lines of words under a player: the one being sung and the next one
 function NP.lines(v, i)
 	if not v.lyCur then return end
 	local res = (i.has and v.lyOn ~= false) and LY.get(i) or nil
@@ -21127,7 +21014,6 @@ function NP.render(v)
 end
 
 function NP.spotLoud(now)
-	-- Spotify never hands over the sound itself, so its bars follow a steady beat with a bit of swing
 	local st = Spot.state
 	if not (st and st.playing) then return 0 end
 	local beat = (now * 2.05) % 1
@@ -21164,7 +21050,6 @@ function NP.viz(dt)
 	end
 end
 
--- the song for the top bar
 function NP.barText()
 	if not S.musicBar or not NP.active() then return nil, false end
 	local i = NP.info()
@@ -21216,7 +21101,6 @@ function MP.shown(tab)
 	return Panel.open and Panel.page == "player" and (tab == nil or MP.tab == tab)
 end
 
--- a two-way switch with a sliding pill
 function MP.switcher(parent, order, options, get, set)
 	local bar = UI.new("Frame", { Name = "Switch", BackgroundColor3 = T.tabBg, Size = UDim2.new(1, 0, 0, 34), LayoutOrder = order }, parent)
 	UI.corner(bar, 12)
@@ -21310,7 +21194,6 @@ do
 			hb.Position = UDim2.new(1, -12, 0, 40 + a - 36)
 			hero.Size = UDim2.new(1, 0, 0, 52 + a)
 		end
-		-- bars were sized for the first art size, keep them in proportion
 		local size = v.art.frame.Size.X.Offset
 		local n = #v.art.bars
 		local gap = math.max(2, math.floor(size / 24))
@@ -21323,7 +21206,6 @@ do
 		end
 	end
 
-	-- lyric preview, tap it for the full lyrics
 	local ly = UI.button(nv, { Name = "LyricLine", BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, 58), LayoutOrder = 2, Visible = false, ClipsDescendants = true })
 	UI.corner(ly, 12)
 	local lyBar = UI.new("Frame", { Name = "Bar", BorderSizePixel = 0, Size = UDim2.new(0, 3, 1, -20), Position = UDim2.fromOffset(10, 10) }, ly)
@@ -21356,7 +21238,6 @@ do
 	nxt.Activated:Connect(function() NP.next(NP.src) end)
 	rp.Activated:Connect(function() NP.cycleRepeat(NP.src) end)
 
-	-- volume works for both, Spotify needs a device that allows it
 	local vc = card(nv, 44, 5)
 	vc.Name = "Volume"
 	local mute = UI.button(vc, { Name = "Mute", BackgroundTransparency = 1, Size = UDim2.fromOffset(40, 44) })
@@ -21435,7 +21316,6 @@ do
 	end
 	MP.status = UI.label(nv, { Name = "Status", TextSize = 10, TextColor3 = T.yellow, TextXAlignment = Enum.TextXAlignment.Center, TextWrapped = true, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 7, Visible = false })
 
-	-- sound presets only make sense for your own songs
 	MP.soundBox = UI.new("Frame", { Name = "Sound", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 8 }, nv)
 	UI.list(MP.soundBox, 6)
 	local sb = MP.soundBox
@@ -21710,7 +21590,6 @@ function MP.drawUpNext(force)
 	end
 end
 
--- lyrics tab ---------------------------------------------------------------------------------------
 MP.ly = { key = nil, status = nil, labels = {}, times = {}, cur = 0, userUntil = 0, autoUntil = 0 }
 
 function MP.renderLyrics()
@@ -21734,7 +21613,6 @@ function MP.renderLyrics()
 	local res = LY.get(i)
 	local status = res and res.status or "none"
 	ly.status = status
-	-- song header
 	local hc = card(sv, 56, 1)
 	hc.Name = "Song"
 	local art = NP.art(hc, 40, 8, UDim2.fromOffset(8, 8), 16, 4)
@@ -21782,7 +21660,6 @@ function MP.renderLyrics()
 	end
 	local synced = status == "synced"
 	if synced then
-		-- the line being sung, big, with the next one under it
 		local focus = UI.new("Frame", { Name = "Focus", BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, 86), LayoutOrder = 2, ClipsDescendants = true }, sv)
 		UI.corner(focus, 14)
 		local glow = UI.new("Frame", { Name = "Glow", BorderSizePixel = 0, Size = UDim2.fromScale(1, 1) }, focus)
@@ -21891,7 +21768,6 @@ function MP.showLyrics(force)
 	if force or MP.ly.key ~= key or MP.ly.status == "loading" or MP.ly.status == nil then MP.renderLyrics() end
 end
 
--- library tab: your songs and your Spotify --------------------------------------------------------
 MP.lib = { side = "local" }
 do
 	local lv = MP.views[3]
@@ -21904,7 +21780,6 @@ do
 	MP.spotLib.Name = "Spotify"
 end
 
--- your own songs
 do
 	local lv = MP.localLib
 	local query, favOnly = "", false
@@ -22126,7 +22001,6 @@ function MP.trackWin(t)
 	})
 end
 
--- Spotify library
 function MP.thumb(parent, size, radius, pos, url, icon)
 	local th = UI.new("Frame", { Name = "Thumb", BackgroundColor3 = T.card2, Size = UDim2.fromOffset(size, size), Position = pos, ClipsDescendants = true }, parent)
 	UI.corner(th, radius)
@@ -22627,7 +22501,6 @@ function MP.openDevices()
 	load()
 end
 
--- add tab ------------------------------------------------------------------------------------------
 do
 	local av = MP.views[4]
 	local typed = { id = "", idName = "", url = "", urlName = "", many = "" }
@@ -22723,7 +22596,6 @@ do
 		str = string.gsub(str, "&amp;", "&")
 		return str
 	end
-	-- "PT3M45S" -> 225
 	function YT.seconds(iso)
 		iso = tostring(iso or "")
 		local h = tonumber(string.match(iso, "(%d+)H")) or 0
@@ -22765,7 +22637,6 @@ do
 			for _, it in ipairs(type(d.items) == "table" and d.items or {}) do
 				local sn = type(it) == "table" and it.snippet
 				local vid = type(it) == "table" and type(it.id) == "table" and it.id.videoId
-				-- live streams can't be turned into a song
 				if type(vid) == "string" and type(sn) == "table" and (sn.liveBroadcastContent == nil or sn.liveBroadcastContent == "none") then
 					local th = type(sn.thumbnails) == "table" and (sn.thumbnails.medium or sn.thumbnails.default) or nil
 					local by = YT.unescape(sn.channelTitle)
@@ -22774,7 +22645,6 @@ do
 					ids[#ids + 1] = vid
 				end
 			end
-			-- how long each one is: one more cheap call for all of them
 			if #ids > 0 then
 				local c2, raw2 = Net.request("GET", "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=" .. table.concat(ids, ",") .. "&key=" .. Util.urlEncode(key), { Accept = "application/json" })
 				local d2 = c2 == 200 and jsonDecode(raw2) or nil
@@ -22886,7 +22756,6 @@ do
 	YT.setup = UI.new("Frame", { Name = "YouTubeSetup", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = -29 }, av)
 	UI.list(YT.setup, 6)
 	Ctl.note(YT.setup, 1, "Find any song on YouTube right here. No key and no converter, tap play and it plays straight from YouTube.")
-	-- searching
 	YT.box = Ctl.input(av, -28, "Find a song", "song or artist", function() return YT.typed or YT.q end, function(x, enter)
 		YT.typed = x
 		if enter and Util.trim(x) ~= "" then YT.run(x) end
@@ -22917,14 +22786,12 @@ do
 	YT.draw()
 end
 
--- more tab: Spotify, YouTube, options ----------------------------------------------------------------
 MP.pending = ""
 do
 	local ov = MP.views[5]
 	section(ov, "Spotify", 1)
 	MP.spotState = UI.new("Frame", { Name = "SpotifyAccount", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 2 }, ov)
 	UI.list(MP.spotState, 6)
-	-- connected
 	MP.spotOn = UI.new("Frame", { Name = "Connected", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 1 }, MP.spotState)
 	UI.list(MP.spotOn, 6)
 	do
@@ -22938,7 +22805,6 @@ do
 		Ctl.action(MP.spotOn, 4, "Disconnect Spotify", "log-out", true, function() Spot.logout("Disconnected") end, true)
 		Ctl.note(MP.spotOn, 5, "Song info updates every few seconds. Play, skip, seek and volume need Spotify Premium. Your login is saved on this device so it stays connected.")
 	end
-	-- free account, through Discord
 	MP.spotFreeOn = UI.new("Frame", { Name = "FreeConnected", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 2, Visible = false }, MP.spotState)
 	UI.list(MP.spotFreeOn, 6)
 	do
@@ -22956,7 +22822,6 @@ do
 		end, true)
 		Ctl.note(MP.spotFreeOn, 4, "Shows the song, the time, lyrics and the visualizer. Spotify only lets Premium apps press play or skip in the app, so tap Play here on the Now tab to hear it in the game, or play your playlists from Library > Spotify.")
 	end
-	-- free account setup
 	MP.spotFreeSetup = UI.new("Frame", { Name = "FreeSetup", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 3 }, MP.spotState)
 	UI.list(MP.spotFreeSetup, 6)
 	do
@@ -22995,7 +22860,6 @@ do
 			useIt(text)
 		end } })
 	end
-	-- setup steps for your own app
 	MP.spotSetup = UI.new("Frame", { Name = "Setup", BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 4 }, MP.spotState)
 	UI.list(MP.spotSetup, 6)
 	do
@@ -23364,7 +23228,6 @@ MP.onShow = function()
 	MP.onTab(MP.tab)
 end
 
--- mini player --------------------------------------------------------------------------------------
 function NP.openMini()
 	local function heightFor(on) return on and 214 or 162 end
 	local h = heightFor(S.miniLyrics)
@@ -23406,7 +23269,6 @@ function NP.openMini()
 			NP.bar(prog, v, { Position = UDim2.fromOffset(4, 2), Size = UDim2.new(1, -8, 0, 4) }, true)
 			v.tcur = UI.label(prog, { TextSize = 9, TextColor3 = T.sub, Text = "0:00", Position = UDim2.fromOffset(4, 9), Size = UDim2.new(0.5, -4, 0, 12) })
 			v.ttotal = UI.label(prog, { TextSize = 9, TextColor3 = T.sub, Text = "-:--", TextXAlignment = Enum.TextXAlignment.Right, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -4, 0, 9), Size = UDim2.new(0.5, -4, 0, 12) })
-			-- the words strip: the lyrics button slides it open and shut, tapping the strip opens all the lyrics
 			local box = UI.button(body, { Name = "Words", BackgroundColor3 = T.card, Position = UDim2.fromOffset(0, 110), Size = UDim2.new(1, 0, 0, 50), Visible = on })
 			UI.corner(box, 12)
 			local bar = UI.new("Frame", { BorderSizePixel = 0, Size = UDim2.new(0, 3, 1, -18), Position = UDim2.fromOffset(9, 9) }, box)
@@ -23457,7 +23319,6 @@ function NP.openMini()
 	})
 end
 
--- dynamic island: tap the top bar while a song is on and it drops down with the song --------------
 local Island = { open = false, token = 0, available = false }
 Core.island = Island
 Core.provide({
@@ -23484,10 +23345,8 @@ end
 Core.provide({ NP = NP, Player = Player, Cmd = Cmd })
 Home.late()
 
--- wiring -------------------------------------------------------------------------------------------
 NP.queued = false
 function NP.refresh()
-	-- lots of things fire at once when a song changes, redraw once per frame
 	if NP.queued then return end
 	NP.queued = true
 	task.defer(function()
@@ -23582,7 +23441,6 @@ Bus.on("accent", function()
 end)
 Home.syncMusic()
 
--- called by the main loop
 function NP.fastTick()
 	NP.each(function(v)
 		if v.lyCur then NP.lines(v, NP.info(NP.srcOf(v))) end
@@ -23679,7 +23537,6 @@ Settings.onShow = function()
 end
 
 Edge.Activated:Connect(function()
-	-- the side arrow on phones opens everything again, right where you left off
 	Panel.toggleAll()
 end)
 for _, def in ipairs(Core.NAV) do
@@ -23691,7 +23548,6 @@ Dock.close.Activated:Connect(function()
 	Panel.closeAll()
 end)
 Pill.frame.Activated:Connect(function()
-	-- a song is on: show it. nothing playing: open the hub on Home
 	if Island.tap then
 		local act = Island.tap()
 		if act ~= "home" then return end
@@ -23841,7 +23697,6 @@ function Core.frame(dt)
 	end
 end
 do
-	-- one bad frame shouldn't kill the loop, and the same error only gets counted once every few seconds
 	local lastErr, lastAt = nil, 0
 	hubConn(RunService.Heartbeat:Connect(function(dt)
 		local ok, e = pcall(Core.frame, dt)
@@ -23861,10 +23716,6 @@ hubConn(Core.LogService.MessageOut:Connect(function(msg, kind)
 	if name then Log.add("error", name, msg) end
 end))
 
--- signatures for the chat tag ----------------------------------------------------------------------
--- the owner signs messages with a private key only they have, everyone checks them with the public key
--- below, so nobody else can wear the Atsuko tag. sha-256 + rsa (1024 bit), plain luau.
--- built inside a function so its tables don't crowd the main chunk's registers
 local Sec = (function()
 	local Sec = {}
 	local band, bxor, bnot, rrot, rsh = bit32.band, bit32.bxor, bit32.bnot, bit32.rrotate, bit32.rshift
@@ -23922,7 +23773,6 @@ local Sec = (function()
 		return table.concat(out)
 	end
 
-	-- big numbers: 24-bit limbs, lowest first, so every product stays exact in a double
 	local BASE = 16777216
 	function Sec.fromHex(hex, k)
 		hex = string.lower(string.gsub(tostring(hex), "[^%x]", ""))
@@ -23952,7 +23802,6 @@ local Sec = (function()
 		return false
 	end
 	Sec.less = less
-	-- a * b / R mod n (montgomery)
 	function Sec.mont(a, b, M)
 		local n, k, ninv = M.n, M.k, M.ninv
 		local t = {}
@@ -24001,7 +23850,6 @@ local Sec = (function()
 		t[k + 1], t[k + 2] = nil, nil
 		return t
 	end
-	-- base ^ exp mod n. slow = yield now and then so a long one doesn't freeze the game
 	function Sec.powmod(base, expHex, M, slow)
 		local k = M.k
 		local one = { 1 }
@@ -24026,7 +23874,6 @@ local Sec = (function()
 	function Sec.key(nHex, ninv, r2Hex, k)
 		return { n = Sec.fromHex(nHex, k), k = k, ninv = ninv, r2 = Sec.fromHex(r2Hex, k) }
 	end
-	-- 00 01 ff..ff 00 hash, as big as the key
 	function Sec.encode(text, M)
 		local hex = "0001" .. string.rep("ff", 128 - 3 - 32) .. "00" .. Sec.sha256(text)
 		return Sec.fromHex(hex, M.k)
@@ -24047,9 +23894,6 @@ local Sec = (function()
 	end
 	return Sec
 end)()
--- hub chat: server chat for hub users in this server, global chat for everyone using the hub ----------
--- it goes through ntfy.sh, a free public relay: no account and no server of our own. the relay limits
--- each player to a couple hundred posts a day, so the hub only says hi when it joins and polls slowly.
 Core.OWNER_KEY = Sec.key("c5ff08836c68110de3950cf3a096bcff76c54a120555dd0b54ba42cd753c8727c73f9bde92e3cae8b84ef1cc487657350351fc178c9fdf38c390d6db760c2b54ce6638ea898902be6fc48b84ea45f2bd3398eb3928bb90c3340dca2886843463fc13284ce66e1a5d699b35ffeee7b9840f406e7de5a4e8c4bf6727f0f4f9b52f", 20017, "46b47750b097d54ea90d60907a84179bdde5902c2f5a674a1548ddb13aa7b385a52afcba0ddb9d91085fe148961724f3987f6994749c6c22450ed5c4766ef8a3c2221c1d944fa8b273f098d7328ceaf0c253fe35c5bc940fd6262eec6d693d543799178863a2969e4d75b4d1c04db949dde1c37eedfe5b2ae9b96d7dcc3dacf6", 43)
 Core.OWNER_FILE = LOCAL_DIR .. "/owner.key"
 local Chat = {
@@ -24090,7 +23934,6 @@ function Chat.topics()
 	Chat.sTopic = job ~= "" and ("atsukohub-s-" .. string.sub(Sec.sha256(salt .. "|" .. job), 1, 18)) or nil
 end
 
--- cut to a length without splitting an emoji in half (the relay turns broken text into a file)
 function Chat.cut(text, n)
 	if #text <= n then return text end
 	local at = n + 1
@@ -24171,7 +24014,6 @@ function Chat.publish(p)
 	return false, "The chat relay said " .. code
 end
 
--- incoming --------------------------------------------------------------------------------------------
 function Chat.mark(id)
 	Chat.seen[id] = true
 	Chat.seenList[#Chat.seenList + 1] = id
@@ -24277,7 +24119,6 @@ function Chat.add(m)
 	Chat.byKey = Chat.byKey or {}
 	Chat.byKey[m.key] = m
 	local list = Chat.msgs[m.ch]
-	-- history can arrive a little out of order, keep it sorted by time
 	local at = #list + 1
 	while at > 1 and (list[at - 1].ts or 0) > (m.ts or 0) do
 		at -= 1
@@ -24315,7 +24156,6 @@ function Chat.sendBadge()
 end
 Core.sendBadge = Chat.sendBadge
 
--- hello: tells the other hub users in this server you're here (and lets them show your tag)
 function Chat.sayHi()
 	if not Chat.sTopic or not Chat.running then return end
 	if os.clock() - Chat.lastHi < 60 then return end
@@ -24347,7 +24187,6 @@ function Chat.onlineList()
 	return out
 end
 
--- connection: a websocket when the executor has one, otherwise a slow poll -----------------------------
 function Chat.wsConnect()
 	local fn = X.wsConnect
 	if not fn then return nil end
@@ -24404,7 +24243,6 @@ function Chat.start()
 		while HUB.alive and Chat.running and Chat.gen == gen do
 			local ws = (fails < 3) and Chat.wsConnect() or nil
 			if ws then
-				-- live: the relay pushes messages the moment they're sent
 				Chat.ws = ws
 				Chat.state, Chat.err = "live", nil
 				Bus.fire("chatStatus")
@@ -24433,7 +24271,6 @@ function Chat.start()
 					task.wait(math.min(30, 3 * (fails + 1)))
 				end
 			else
-				-- no websocket here: ask every few seconds instead
 				local ok = Chat.pollOnce()
 				if Chat.gen ~= gen then break end
 				Chat.state = ok and "polling" or "error"
@@ -24462,7 +24299,6 @@ function Chat.stop()
 	Bus.fire("chatStatus")
 end
 
--- ask right away (after sending, or when the window opens)
 function Chat.poke()
 	Chat.pokeAt = os.clock()
 end
@@ -24488,7 +24324,6 @@ function Chat.send(text)
 			Chat.poke()
 			task.delay(12, function()
 				if Chat.pending[key] == m then
-					-- the relay took it, the echo just never came back (polling can lag), call it sent
 					Chat.pending[key] = nil
 					m.state = "sent"
 					Chat.updateRow(m)
@@ -24505,12 +24340,10 @@ function Chat.send(text)
 	return true
 end
 
--- the owner's colors ----------------------------------------------------------------------------------
 Chat.PURPLE, Chat.PINK = Color3.fromRGB(205, 170, 255), Color3.fromRGB(255, 182, 222)
 function Chat.ownerGradient(parent, animate)
 	local g = UI.new("UIGradient", { Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Chat.PURPLE), ColorSequenceKeypoint.new(1, Chat.PINK) }) }, parent)
 	if animate and S.animations then
-		-- the purple slowly drifts into the pink and back
 		pcall(function()
 			g.Offset = Vector2.new(-0.25, 0)
 			TweenService:Create(g, TweenInfo.new(2.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Offset = Vector2.new(0.25, 0) }):Play()
@@ -24519,7 +24352,6 @@ function Chat.ownerGradient(parent, animate)
 	return g
 end
 
--- the window ---------------------------------------------------------------------------------------
 function Chat.fmtTime(ts)
 	local ok, t = pcall(os.date, "*t", ts)
 	if not ok or type(t) ~= "table" then return "" end
@@ -24609,7 +24441,6 @@ function Chat.appendRow(m)
 			UI.label(head, { Name = "User", Text = "@" .. m.n, TextSize = 10, TextColor3 = T.dim, Size = UDim2.fromOffset(0, 16), AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 4 })
 		end
 		UI.label(head, { Name = "Time", Text = Chat.fmtTime(m.ts), TextSize = 9, TextColor3 = T.dim, Size = UDim2.fromOffset(0, 16), AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 5 })
-		-- tap a face: block or copy their name
 		av.Activated:Connect(function()
 			if rec.menu then
 				rec.menu:Destroy()
@@ -24653,13 +24484,11 @@ function Chat.appendRow(m)
 	UI.list(stack, 2)
 	rec.stack = stack
 	UI.pad(row, 0, 0, 0, grouped and 0 or 2)
-	-- plain text only, nothing anyone types can turn into formatting
 	rec.body = UI.label(stack, { Name = "Text", Text = m.t, RichText = false, TextSize = 12, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 1 })
 	if m.mine then
 		rec.status = UI.button(stack, { Name = "Status", BackgroundTransparency = 1, Text = "", Font = FONT_M, TextSize = 9, TextXAlignment = Enum.TextXAlignment.Left, Size = UDim2.new(1, 0, 0, 12), LayoutOrder = 2, Visible = false })
 		rec.status.Activated:Connect(function()
 			if m.state ~= "failed" then return end
-			-- try again: take it out and send it fresh
 			for i, mm in ipairs(Chat.msgs[m.ch]) do
 				if mm == m then
 					table.remove(Chat.msgs[m.ch], i)
@@ -24908,7 +24737,6 @@ function Chat.open()
 			box.FocusLost:Connect(function(enter)
 				if enter then
 					go()
-					-- keep typing after you hit enter
 					task.defer(function()
 						if box.Parent and UserInputService.KeyboardEnabled then box:CaptureFocus() end
 					end)
@@ -24944,7 +24772,6 @@ function Chat.open()
 	})
 end
 
--- the chat button sits with the other round buttons at the top right
 Chat.btn = Core.headerButton("Chat", 8)
 UI.setIcon(Chat.btn.icon, "message-circle")
 Chat.btn.btn.Visible = true
@@ -24981,10 +24808,6 @@ Cmd.add({
 	end,
 })
 
--- video player (for testing) ------------------------------------------------------------------------
--- YouTube straight from YouTube (the picture and the sound put together into one WebM), direct video links, files in your videos folder and
--- Roblox video IDs. Roblox only plays some video files from an executor (WebM works best), so when
--- one won't load it says so instead of sitting on a black box.
 local Video = { dir = LOCAL_DIR .. "/videos", busy = {}, token = 0, frame = nil, cur = nil }
 Core.Video = Video
 Video.EXT = { webm = true, mp4 = true, mov = true }
@@ -25026,7 +24849,6 @@ function Video.ytVideo(info)
 	return nil, why
 end
 
--- asks the converter for the video itself (WebM when it can, that's what Roblox likes)
 function Video.ytConvert(info)
 	local api = S.ytApi
 	if api == "" then return nil, "YouTube needs a converter first. Add one in Music > More > YouTube" end
@@ -25106,7 +24928,6 @@ function Video.say(text, color)
 	end
 end
 
--- play a saved file, a Roblox video ID or a link
 function Video.load(src)
 	src = Util.trim(tostring(src or ""))
 	if src == "" then return end
@@ -25145,7 +24966,6 @@ function Video.play(path, my)
 	Video.start(id, string.match(path, "([^/]+)$") or path, my)
 end
 
--- every video gets a fresh player, so nothing from the last one (loaded, size, time) sticks around
 function Video.makeFrame()
 	local old = Video.frame
 	if old then
@@ -25274,7 +25094,6 @@ function Video.fillPicker()
 		local db = UI.button(row, { Name = "Delete", BackgroundColor3 = T.card2, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -4, 0.5, 0), Size = UDim2.fromOffset(28, 28) })
 		UI.corner(db, 14)
 		local dIc = UI.icon("trash-2", 12, T.red, db, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5) })
-		-- first tap turns it yellow, second tap deletes
 		db.Activated:Connect(Core.confirmTap(function(_, armed) UI.tint(dIc, armed and T.yellow or T.red, 0.15) end, "", function()
 			if Video.cur and Video.cur.name == string.match(v.path, "([^/]+)$") then
 				pcall(function() Video.frame:Pause() end)
@@ -25313,7 +25132,6 @@ function Video.open(src)
 			Video.status = UI.label(screen, { Name = "Status", Text = "Pick a video to play", TextSize = 11, TextColor3 = T.sub, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Center, AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.new(1, -40, 0, 60), ZIndex = 3 })
 			local tap = UI.button(screen, { Name = "Tap", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), ZIndex = 2 })
 			tap.Activated:Connect(function() Video.toggle() end)
-			-- controls
 			local bar = UI.new("Frame", { Name = "Controls", BackgroundTransparency = 1, AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.new(1, 0, 0, 38) }, body)
 			local playB = UI.button(bar, { Name = "PlayPause", Position = UDim2.fromOffset(0, 3), Size = UDim2.fromOffset(32, 32) })
 			UI.corner(playB, 16)
@@ -25374,7 +25192,6 @@ function Video.open(src)
 					Video.draw()
 				end)
 			end)
-			-- the picker slides over the screen: links, IDs and saved videos
 			local picker = UI.new("Frame", { Name = "Picker", BackgroundColor3 = T.panel, Size = UDim2.new(1, 0, 1, -44), Visible = false, ZIndex = 6 }, body)
 			UI.corner(picker, 12)
 			Video.picker = picker
@@ -25424,7 +25241,6 @@ Cmd.add({
 	end,
 })
 
--- Alt, Ctrl and Shift fire when you let go, and only if nothing else was pressed with them, so Alt+Tab never opens the hub
 Core.MODS = { LeftAlt = true, RightAlt = true, LeftControl = true, RightControl = true, LeftShift = true, RightShift = true }
 Core.held = nil
 function Core.hotkey(name)
@@ -25464,7 +25280,6 @@ hubConn(UserInputService.InputBegan:Connect(function(input, gpe)
 		Core.held = { name = name, at = os.clock(), clean = true }
 		return
 	end
-	-- some games grab keys for themselves, the hub's keys still work unless you're typing or in the Roblox menu
 	if gpe then
 		local ok, menu = pcall(function() return game:GetService("GuiService").MenuIsOpen end)
 		if ok and menu then return end
@@ -25582,14 +25397,12 @@ Bus.on("repo", function()
 	if Repo.state == "ready" or Repo.state == "cached" then Core.autorun() end
 end)
 
--- running the hub again while it's open just brings it back up
 function HUB.AlreadyRunning()
 	if not HUB.alive then return end
 	if HUB.hidden or not Panel.open then Panel.toggleAll() end
 	notify("Already running", "Atsuko Hub is open already  ·  say -reload to restart it", "info", 4)
 end
 
--- quick look at the things that usually break on an executor
 function Core.selfCheck()
 	local probs, notes = {}, {}
 	if not Gui.Parent then probs[#probs + 1] = "the hub isn't on screen" end
@@ -25613,7 +25426,6 @@ function Core.selfCheck()
 	return probs, notes
 end
 
--- the old copy is gone by the time this shows, so it's plain instances only
 function Core.reloadFailed(err, fn)
 	local inst = GENV.__AtsukoHubInstance
 	if type(inst) == "table" and inst ~= HUB then
@@ -25708,7 +25520,6 @@ function Core.reloadFailed(err, fn)
 	if not placed then pcall(function() sg.Parent = LP:WaitForChild("PlayerGui") end) end
 end
 
--- -reload: close this copy, run the same script again, and the new copy says if anything broke
 Core.reloading = false
 function Core.reload()
 	if Core.reloading or not HUB.alive then return end
@@ -25742,7 +25553,6 @@ function Core.reload()
 		GENV.__AtsukoHubReplace = nil
 		if ok then return end
 		if HUB.alive then
-			-- it broke before it took over, so this copy keeps going
 			Core.reloading = false
 			GENV.__AtsukoHubReload = nil
 			Log.add("error", "Reload", err)
@@ -25790,7 +25600,6 @@ if Repo.loadCache() then Scripts.invalidate() end
 Panel.openBar()
 Core.Boot.mark("bar")
 do
-	-- run it and it opens on Home; a reload comes back on the page you were on
 	local rl = Core.reloadInfo or Core.resumeInfo
 	local first = rl and Pages[rl.page] and rl.page or "home"
 	Core.startPage = first
@@ -25830,7 +25639,6 @@ task.spawn(function()
 	end
 end)
 Core.bootReanim()
--- chat connects a moment after loading so it doesn't slow the start down
 task.spawn(Chat.loadKey)
 Core.chatStyleWatch()
 task.delay(2.5, function()
@@ -25853,7 +25661,6 @@ task.spawn(function()
 	while HUB.alive do
 		task.wait(0.25)
 		local want = (Spot.live() and not Spot.polling) and NP.interval() or nil
-		-- Lanyard gets asked a bit less often
 		if want and Spot.free() then want = math.max(want, 4) end
 		if want and HUB.alive then
 			local due = Spot.lastPoll + want

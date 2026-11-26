@@ -267,7 +267,8 @@
       "credit": [
         "MLG Super Killer",
         "Epic"
-      ]
+      ],
+      "desc": "Snake Banisher V3 with LC Gun 1 and LC Gun 2"
     },
     "Scripts/Hat/StudioDummyV4-Test.lua": {
       "name": "Studio Dummy V4",
@@ -279,7 +280,8 @@
       "credit": [
         "Vulnerali / padero",
         "andrfix"
-      ]
+      ],
+      "desc": "Studio Dummy V4, rig version: modes, guns, fly, the screen and emotes"
     },
     "Scripts/_unlisted/TheSniper.lua": {
       "name": "The Sniper",

@@ -1,41 +1,3 @@
---[[
-HATS - FREE
-https://www.roblox.com/catalog/3409612660/International-Fedora-USA
-https://www.roblox.com/catalog/3398308134/International-Fedora-Canada
-https://www.roblox.com/catalog/4324158403/International-Fedora-Japan
-https://www.roblox.com/catalog/3443038622/International-Fedora-Peru
-https://www.roblox.com/catalog/4819740796/Robox
-
-HATS - PAID
-https://www.roblox.com/catalog/11159410305/Rectangle-Head-For-Headless
-https://www.roblox.com/catalog/11263254795/Dummy-Head-For-Headless
-https://www.roblox.com/catalog/14255556501/Extra-Left-White-Arm
-https://www.roblox.com/catalog/14255554762/Extra-Right-White-Arm
-https://www.roblox.com/catalog/12344545199/Extra-Left-hand-moving-Blocky-white
-https://www.roblox.com/catalog/12344591101/Extra-Right-hand-moving-Blocky-white
-https://www.roblox.com/catalog/13839976999/Held-Dagger
-https://www.roblox.com/catalog/13831200263/Casual-Stud-Soda
-
-https://www.roblox.com/catalog/17374846953/Extra-Right-Black-Arm
-https://www.roblox.com/catalog/17374851733/Extra-Left-Black-Arm
-https://www.roblox.com/catalog/14768693948/White-Extended-Right-Arm
-https://www.roblox.com/catalog/14768701869/White-Extended-Left-Arm
-https://www.roblox.com/catalog/11159483910/Rectangle-Head-For-Headless
-https://www.roblox.com/catalog/12652786974/Building-Brick
-
-https://www.roblox.com/catalog/14255528083/Torso-Extension
-https://www.roblox.com/catalog/13421786478/Extra-Torso-Blocky
-https://www.roblox.com/catalog/14768678294/Torso-Extension
-https://www.roblox.com/catalog/14532301415/1x1x1x1s-Torso
-https://www.roblox.com/catalog/13423624885/Super-Track-Star-Torso
-https://www.roblox.com/catalog/11502853991/Glitched-Body
-https://www.roblox.com/catalog/14053485259/BLACK-ROCKSTAR-SPIDER-PUFFER-VEST
-https://www.roblox.com/catalog/13779879140/Black-Fluffy-Fur-Body
-https://www.roblox.com/catalog/14443132226/Sponge
-https://www.roblox.com/catalog/17163407577/Glitching-Red-Torso
-https://www.roblox.com/catalog/16297156693/Transparent-Inverted-Black-Torso
-]]
-
 local reanimation = (function()
 	local genv = (typeof(getgenv) == "function" and getgenv()) or _G
 	local Players = game:GetService("Players")
@@ -892,9 +854,7 @@ local song = script.Song
 song.Parent = char
 function newTheme(ID,timepos,pitch,vol)
 local kanz = kan
---kanz:Stop()
 kanz.Volume = vol
---kanz.TimePosition = timepos
 kanz.PlaybackSpeed = pitch
 kanz.Pitch = pitch
 kanz.SoundId = "rbxassetid://" ..ID
@@ -904,10 +864,6 @@ kanz.Looped = true
 currentThemePlaying = kanz.SoundId
 currentVol = kanz.Volume
 currentPitch = kanz.Pitch
---kanz:Play()
---coroutine.resume(coroutine.create(function()
---wait(0.05)
---end))
 end
 
 
@@ -1333,7 +1289,6 @@ CFuncs = {
 }
 
 
-
 New = function(Object, Parent, Name, Data)
 	local Object = Instance.new(Object)
 	for Index, Value in pairs(Data or {}) do
@@ -1427,7 +1382,6 @@ local modecol = realitycolor
 local coval = script.Color
 coval.Parent = char
 coval.Value = modecol
---------------
 local ModClone = script.Orb:Clone()
 ModClone.Anchored = false
 ModClone.Parent = m
@@ -1457,12 +1411,10 @@ function ChangeCol(cl)
 	ord2.Color = ColorSequence.new(cl)
 	modecol = cl
 end
-----
 local sorb = CreateParta(m,1,1,"SmoothPlastic",BrickColor.random())
 CreateWelde(ModClone,sorb,ModClone,0,0,0,math.rad(0),math.rad(0),math.rad(0),0,0,0,math.rad(0),math.rad(0),math.rad(0))
 local sordweld = CreateWelde(sorb,root,sorb,0,1,0,math.rad(0),math.rad(0),math.rad(0),0,0,0,math.rad(0),math.rad(0),math.rad(0))
 FDless.orbAt(sorb)
-------
 
 
 function RemoveOutlines(part)
@@ -1718,11 +1670,8 @@ end))
 end
 end
 end
---- GUI Section
 
---save shoulders 
 RSH, LSH=nil, nil 
---welds 
 RW, LW=Instance.new("Weld"), Instance.new("Weld") 
 RW.Name="Right Shoulder" LW.Name="Left Shoulder"
 LH=Torso["Left Hip"]
@@ -1734,20 +1683,17 @@ end
 ch=Character
 RSH=ch.Torso["Right Shoulder"] 
 LSH=ch.Torso["Left Shoulder"] 
--- 
 RSH.Parent=nil 
 LSH.Parent=nil 
--- 
 RW.Name="Right Shoulder"
 RW.Part0=ch.Torso 
-RW.C0=cf(1.5, 0.5, 0) --* CFrame.fromEulerAnglesXYZ(1.3, 0, -0.5) 
+RW.C0=cf(1.5, 0.5, 0)
 RW.C1=cf(0, 0.5, 0) 
 RW.Part1=ch["Right Arm"] 
 RW.Parent=ch.Torso 
--- 
 LW.Name="Left Shoulder"
 LW.Part0=ch.Torso 
-LW.C0=cf(-1.5, 0.5, 0) --* CFrame.fromEulerAnglesXYZ(1.7, 0, 0.8) 
+LW.C0=cf(-1.5, 0.5, 0)
 LW.C1=cf(0, 0.5, 0) 
 LW.Part1=ch["Left Arm"] 
 LW.Parent=ch.Torso 
@@ -1821,7 +1767,6 @@ local Color1=Torso.BrickColor
 local bodvel=Instance.new("BodyVelocity")
 local bg=Instance.new("BodyGyro")
 
---------- SazEreno's Artificial HB --------------
 ArtificialHB = Instance.new("BindableEvent", script)
 ArtificialHB.Name = "ArtificialHB"
 
@@ -1854,7 +1799,6 @@ game:GetService("RunService").Heartbeat:connect(function(s, p)
 	end
 end)
 
-------------------
 function swait(num)
 if num == 0 or num == nil then
 		ArtificialHB.Event:wait()
@@ -1864,7 +1808,6 @@ if num == 0 or num == nil then
 		end
 	end
 end
--------- RAINBOW LEAVE IT TO ME
 local r = 255
 local g = 0
 local b = 0
@@ -2148,7 +2091,7 @@ function MagniDamageWithEffect(Part, magni, mindam, maxdam, knock, Type)
   end
 end
 
-function rayCast(Pos, Dir, Max, Ignore)  -- Origin Position , Direction, MaxDistance , IgnoreDescendants
+function rayCast(Pos, Dir, Max, Ignore)
 return game:service("Workspace"):FindPartOnRay(Ray.new(Pos, Dir.unit * (Max or 999.999)), Ignore) 
 end 
 
@@ -2157,7 +2100,6 @@ local prt=part(3,workspace,0,0,brickcolor,"Effect",vt(0.5,0.5,0.5))
 prt.Anchored=true
 prt.CFrame=cframe
 local msh=mesh("SpecialMesh",prt,"FileMesh","http://www.roblox.com/asset/?id=4770583",vt(0,0,0),vt(x1,y1,z1))
---http://www.roblox.com/asset/?id=4770560
 game:GetService("Debris"):AddItem(prt,2)
 CF=prt.CFrame
 coroutine.resume(coroutine.create(function(Part,Mesh,TehCF) 
@@ -2167,7 +2109,6 @@ Part.CFrame=CF*cf(0,0,-0.4)
 end
 for i=0,1,delay do
 wait()
---Part.CFrame=CF*cf((math.random(-1,0)+math.random())/5,(math.random(-1,0)+math.random())/5,(math.random(-1,0)+math.random())/5)
 Mesh.Scale=Mesh.Scale
 end
 for i=0,1,0.1 do
@@ -2389,7 +2330,6 @@ coroutine.resume(coroutine.create(function(Part,Mesh,Weld)
 for i=0,1,delay do
 wait()
 Weld.C0=euler(math.random(-50,50),math.random(-50,50),math.random(-50,50))*cframe
---Part.CFrame=Part.CFrame*euler(math.random(-50,50),math.random(-50,50),math.random(-50,50))
 Part.Transparency=i
 Mesh.Scale=Mesh.Scale+vt(x3,y3,z3)
 end
@@ -2408,7 +2348,6 @@ coroutine.resume(coroutine.create(function(Part,Mesh,Weld)
 for i=0,1,delay do
 wait()
 Weld.C0=euler(i*20,0,0)
---Part.CFrame=Part.CFrame*euler(math.random(-50,50),math.random(-50,50),math.random(-50,50))
 Part.Transparency=i
 Mesh.Scale=Mesh.Scale+vt(x3,y3,z3)
 end
@@ -2480,7 +2419,6 @@ rand1=math.random()/10
 for i=0,1,rand1 do
 wait()
 CF=CF*cf(0,math.random()/2,0)
---Part.CFrame=Part.CFrame*euler(0.5,0,0)*cf(0,1,0)
 Part.CFrame=CF*euler(Numbb,0,0)
 Part.Transparency=i
 Numbb=Numbb+randnumb
@@ -2543,8 +2481,6 @@ Part.Parent=nil
 Mesh.Parent=nil
 end),prt,msh,x,y,z)
 end
-
-
 
 
 function Cloak()
@@ -2624,9 +2560,6 @@ cloaked=false
 end
 
 local origcolor = BrickColor.new("Pastel light blue")
----- This section of explosions.
-
-----
 
 
 function ring(type,pos,scale,value)
@@ -3214,7 +3147,6 @@ rng.BrickColor = BrickColor.random()
 end
 speeder = speeder - 0.01*FastSpeed*bonuspeed/10
 rng.CFrame = rng.CFrame + rng.CFrame.lookVector*speeder*bonuspeed
---rng.Transparency = rng.Transparency + 0.01*bonuspeed
 rngm.Scale = rngm.Scale - Vector3.new(scaler2*bonuspeed, scaler2*bonuspeed, scaler2*bonuspeed)
 end
 rng:Destroy()
@@ -3316,7 +3248,6 @@ rng.BrickColor = BrickColor.random()
 end
 speeder = speeder + 0.01*FastSpeed*bonuspeed/10
 rng.CFrame = rng.CFrame + rng.CFrame.lookVector*speeder*bonuspeed
---rng.Transparency = rng.Transparency + 0.01*bonuspeed
 rngm.Scale = rngm.Scale - Vector3.new(scaler2*bonuspeed, scaler2*bonuspeed, scaler2*bonuspeed)
 end
 rng:Destroy()
@@ -3483,7 +3414,6 @@ end))
 end
 
 
-
 function FindNearestHead(Position, Distance, SinglePlayer)
 	if SinglePlayer then
 		return (SinglePlayer.Torso.CFrame.p - Position).magnitude < Distance
@@ -3519,7 +3449,6 @@ function FaceMouse2()
   }
 end
 
--- Functions are ready.
 local storehumanoidWS = 16
 
 function createBGCircle(size,parent,color)
@@ -3529,7 +3458,7 @@ local imgc = Instance.new("ImageLabel",bgui)
 imgc.BackgroundTransparency = 1
 imgc.ImageTransparency = 0
 imgc.Size = UDim2.new(1,0,1,0)
-imgc.Image = "rbxassetid://997291547" --997291547,521073910
+imgc.Image = "rbxassetid://997291547"
 imgc.ImageColor3 = color
 return bgui,imgc
 end
@@ -3560,7 +3489,7 @@ end
 
 function burstswitch(col1,col2)
 local effx = Instance.new("ParticleEmitter",root)
-effx.Texture = "rbxassetid://144580273" -- 144580273 74564879
+effx.Texture = "rbxassetid://144580273"
 effx.LightEmission = 1
 effx.Color = ColorSequence.new(col1)
 effx.Rate = 500000
@@ -3576,7 +3505,6 @@ local effx2 = effx:Clone()
 effx2.Parent = root
 effx2.Color = ColorSequence.new(col2)
 effx2.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,150,0)})
---CFuncs["Sound"].Create("rbxassetid://2095993595", root, 10, 1)
 for i = 0, 1 do
 CFuncs["Sound"].Create("rbxassetid://1042716828", root, 5, 1)
 CFuncs["Sound"].Create("rbxassetid://1042693018", root, 5, 0.8)
@@ -3645,7 +3573,6 @@ end
 end
 end
 
---- abiliti
 
 function dash()
 	attack = true
@@ -3707,8 +3634,8 @@ a.Material = "Neon"
 a.Transparency = 1
 	a.CanCollide = false
 	local ray = Ray.new(
-	    orb.CFrame.p,                           -- origin
-	    (mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+	    orb.CFrame.p,
+	    (mouse.Hit.p - orb.CFrame.p).unit * 500
 	) 
 	local ignore = orb
 	local hit, position, normal = workspace:FindPartOnRay(ray, ignore)
@@ -3828,8 +3755,8 @@ a.Material = "Neon"
 a.Transparency = 1
 	a.CanCollide = false
 	local ray = Ray.new(
-	    orb.CFrame.p,                           -- origin
-	    (mouse.Hit.p - orb.CFrame.p).unit * 500 -- direction
+	    orb.CFrame.p,
+	    (mouse.Hit.p - orb.CFrame.p).unit * 500
 	) 
 	local ignore = orb
 	local hit, position, normal = workspace:FindPartOnRay(ray, ignore)
@@ -3912,27 +3839,20 @@ LW.C0=clerp(LW.C0,cf(0.75,0.5,-0.5)*angles(math.rad(110),math.rad(20),math.rad(8
 	hum.WalkSpeed = 16
 	attack = false
 end
---- Basic Attacks
 
--------------------------------------
 
 Humanoid.Animator.Parent = nil
 
--------------------------------------
 local attacktype = 1
 mouse.Button1Down:connect(function()
   if attack == false and attacktype == 1 then
     attacktype = 2
-    --attackone()
   elseif attack == false and attacktype == 2 then
     attacktype = 3
-    --attacktwo()
   elseif attack == false and attacktype == 3 then
     attacktype = 1
-    --attackthree()
   elseif attack == false and attacktype == 4 then
     attacktype = 1
-    --attackfour()
   end
 end)
 local OVMID = kan.SoundId
@@ -4236,7 +4156,6 @@ LW.C0=clerp(LW.C0,cf(-1.5,0.5,0)*angles(math.rad(-40),math.rad(2),math.rad(-35))
 	attack = false
 end
 mouse.KeyDown:connect(function(k)
-------- Down: Keys
 if k == "q" and attack == false and ModeSel ~= "REALITY" then
 	newTheme(0,0,1.01,4)
 	exchng(realitycolor,"REALITY",20)
@@ -4280,7 +4199,6 @@ mutedtog = false
 kan.Volume = 1.25
 end
 if k == "z" and attack == false then
---divbeam()
 end
 if k == "b" and enableddam == false then
 enableddam = true
@@ -4305,7 +4223,6 @@ end)
 Humanoid.MaxHealth = 1100
 Humanoid.Health = 1100
 
---Anti removal of music
 coroutine.resume(coroutine.create(function()
 while true do
 		swait()
@@ -4336,14 +4253,6 @@ end
 end))
 
 
---[[local bguis = Instance.new("BillboardGui",tors)
-bguis.Size = UDim2.new(25, 0, 25, 0)
-local imgca = Instance.new("ImageLabel",bguis)
-imgca.BackgroundTransparency = 1
-imgca.ImageTransparency = 1
-imgca.Size = UDim2.new(1,0,1,0)
-imgca.Image = "rbxassetid://2344830904" --997291547,521073910,2312119891,2344830904
-imgca.ImageColor3 = Color3.new(0,0,0)]]--
 local rval = 0 
 idleanim=.4
 while true do
@@ -4378,7 +4287,6 @@ idle=0
 end
 if idle>=500 then
 if attack==false then
---Sheath()
 end
 end
 if RootPart.Velocity.y > 1 and hitfloor==nil then 

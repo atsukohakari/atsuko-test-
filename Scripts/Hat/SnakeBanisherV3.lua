@@ -1,5 +1,3 @@
--- @desc Snake Banisher V3 with LC Gun 1 and LC Gun 2
-
 local ALIGNS = (function()
 	local angles, cf = CFrame.Angles, CFrame.new
 	local function cfMul(a, b)
@@ -81,15 +79,6 @@ local ALIGNS = (function()
 		{PartName="Left Arm",AccessoryName="Accessory (autorig_LeftArm)"},
 		{PartName="Right Arm",AccessoryName="Accessory (autorig_RightArm)"},
 
-		--[[{PartName="Left Arm",meshid="4324138105",textureid="4324138210",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(-0.125,0.3,0)},
-		{PartName="Left Arm",meshid="4154474745",textureid="4154474807",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(-0.125,-0.3,0)},
-		{PartName="Right Arm",meshid="3030546036",textureid="3650191503",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(0.125,-0.3,0)},
-		{PartName="Right Arm",meshid="3030546036",textureid="3443321249",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(0.125,0.3,0)},
-		{PartName="Left Leg",meshid="3030546036",textureid="3360974849",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(-0.125,-0.35,0)},
-		{PartName="Left Leg",meshid="3030546036",textureid="3360978739",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(-0.125,0.3,0)},
-		{PartName="Right Leg",meshid="3030546036",textureid="3033898741",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(0.125,-0.35,0)},
-		{PartName="Right Leg",meshid="3030546036",textureid="3409604993",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(0.125,0.3,0)},
-		{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)}]]
 		{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)},
 		{PartName="Left Leg",meshid="4094864753",textureid="4094881938",C0=angles(0,0,-1.5707963267948966)},
 		{PartName="Right Leg",meshid="4154474745",textureid="4154474807",C0=angles(0,0,1.5707963267948966)},
@@ -140,11 +129,6 @@ local FD = (function()
 	}
 end)()
 
---==============================================================--
---  LC CORE  -  shared engine
---  (60 Hz attack clock, frame-rate independent lerps, pooled
---   effects, LC Gun 1/2 hand alignment + saveable align panel)
---==============================================================--
 local function LCCore(FD, CFG)
 	local C = {}
 	local Players = game:GetService("Players")
@@ -160,9 +144,6 @@ local function LCCore(FD, CFG)
 	local MB1 = Enum.UserInputType.MouseButton1
 	local TOUCH = Enum.UserInputType.Touch
 
-	------------------------------------------------------------------
-	-- one copy at a time: stop an older copy, then start the reanimate fresh
-	------------------------------------------------------------------
 	if type(_G.LCFD_Stop) == "function" then
 		pcall(_G.LCFD_Stop)
 	end
@@ -213,9 +194,6 @@ local function LCCore(FD, CFG)
 		return cframes[part] or IDENT
 	end
 
-	------------------------------------------------------------------
-	-- connections / cleanup
-	------------------------------------------------------------------
 	local cons, cleanups = {}, {}
 	function C.connect(sig, fn)
 		local c = sig:Connect(fn)
@@ -263,9 +241,6 @@ local function LCCore(FD, CFG)
 		pcall(warn, "[" .. tostring(title) .. "] " .. (string.gsub(tostring(text), "</?b>", "")))
 	end
 
-	------------------------------------------------------------------
-	-- 60 Hz clock for attacks (swait = wait n ticks of 1/60 s)
-	------------------------------------------------------------------
 	local waiters = {}
 	function C.swait(n)
 		if not C.alive then
@@ -282,7 +257,6 @@ local function LCCore(FD, CFG)
 		end
 	end
 
-	-- frame-rate independent lerp: alpha is "per 1/60 s"
 	function C.clerp(a, b, t)
 		if t >= 1 then
 			return b
@@ -296,9 +270,6 @@ local function LCCore(FD, CFG)
 		return a:Lerp(b, t)
 	end
 
-	------------------------------------------------------------------
-	-- helpers
-	------------------------------------------------------------------
 	function C.newPart(props)
 		local p = Instance.new("Part")
 		p.Anchored = true
@@ -353,7 +324,6 @@ local function LCCore(FD, CFG)
 		return e
 	end
 
-	-- mouse hit (ignores your own body, hats and effects)
 	local mrp = RaycastParams.new()
 	mrp.FilterType = Enum.RaycastFilterType.Exclude
 	mrp.RespectCanCollide = true
@@ -380,7 +350,6 @@ local function LCCore(FD, CFG)
 		return hitCF
 	end
 
-	-- FindPartOnRay replacement: returns hit, position, normal
 	local rrp = RaycastParams.new()
 	rrp.FilterType = Enum.RaycastFilterType.Exclude
 	rrp.RespectCanCollide = true
@@ -401,7 +370,6 @@ local function LCCore(FD, CFG)
 		return nil, origin + d * (range or 999), V3(0, 1, 0)
 	end
 
-	-- root movement (the reanimate "character")
 	function C.rootCF()
 		return cframes[C.Root] or IDENT
 	end
@@ -426,9 +394,6 @@ local function LCCore(FD, CFG)
 		return ok and v or V3()
 	end
 
-	------------------------------------------------------------------
-	-- sounds + music
-	------------------------------------------------------------------
 	local liveSounds = 0
 	function C.sound(id, vol, pitch, looped)
 		if not C.alive or id == nil then
@@ -489,7 +454,6 @@ local function LCCore(FD, CFG)
 		end
 		return nil
 	end
-	-- file: mp3 name (or nil = keep current song)
 	function C.setMusic(file, vol, pos, speed)
 		if vol then
 			music.Volume = min(vol, 10)
@@ -514,7 +478,6 @@ local function LCCore(FD, CFG)
 			end
 		end
 	end
-	-- downloads mp3s in the background; plays a waiting song when ready
 	function C.download(list)
 		task.spawn(function()
 			if not (writefile and isfile) then
@@ -543,9 +506,6 @@ local function LCCore(FD, CFG)
 		end)
 	end
 
-	------------------------------------------------------------------
-	-- pooled effects (one update loop, no coroutine per effect)
-	------------------------------------------------------------------
 	local MESH = {
 		Wave = "20329976", Ring = "559831844", Slash = "662586858", ["Round Slash"] = "662585058",
 		Swirl = "168892432", Skull = "4770583", Crystal = "9756362", Star = "2760116123",
@@ -599,9 +559,6 @@ local function LCCore(FD, CFG)
 		return #fx
 	end
 
-	--[[ Effect{ EffectType, Size, Size2, Transparency, Transparency2, CFrame, MoveToPos,
-	     RotationX/Y/Z (deg per tick), Material, Color, Time (ticks), SoundID/SoundPitch/SoundVolume,
-	     UseBoomerangMath, Boomerang, SizeBoomerang, MeshId, RawScale, RandomSpin, Rainbow, RandomColor } ]]
 	function C.Effect(T)
 		if not C.alive or #fx >= MAXFX then
 			return nil
@@ -677,7 +634,6 @@ local function LCCore(FD, CFG)
 		return p
 	end
 
-	-- straight cylinder that fades: from a to b
 	function C.beam(a, b, width, T, color, tr0, tr1, widthZ, rcol)
 		local dist = (a - b).Magnitude
 		if not C.alive or dist < 0.05 or #fx >= MAXFX then
@@ -770,7 +726,6 @@ local function LCCore(FD, CFG)
 		end
 	end
 
-	-- lightning bolt made of fading boxes (segments capped for speed)
 	function C.lightning(from, to, segs, offset, color, timer, sSize, eSize, trans, boomer, sBoomer, trans2, rainbow)
 		local magz = (from - to).Magnitude
 		if magz < 0.1 or not C.alive then
@@ -802,7 +757,6 @@ local function LCCore(FD, CFG)
 		end
 	end
 
-	-- moves a part along an arc toward a position (yields; call from a thread)
 	function C.fireArc(part, to, ticks, height, destroyAtEnd)
 		local dir = CFrame.lookAt(part.Position, to)
 		local dist = (part.Position - to).Magnitude
@@ -819,13 +773,9 @@ local function LCCore(FD, CFG)
 		end
 	end
 
-	------------------------------------------------------------------
-	-- talking billboard over your head
-	------------------------------------------------------------------
 	local anchor = C.newPart({Name = "HeadAnchor", Transparency = 1, Size = V3(1, 1, 1)})
 	C.anchor = anchor
 	local FONTS = {"Antique", "Arcade", "Arial", "ArialBold", "Bodoni", "Cartoon", "Code", "Fantasy", "Garamond", "Highway", "SciFi", "SourceSans", "SourceSansBold", "SourceSansItalic", "SourceSansLight", "SourceSansSemibold"}
-	-- opts: glitchy, font, colA(fn), colB(fn), stroke, offset
 	function C.chat(text, opts)
 		opts = opts or {}
 		task.spawn(function()
@@ -896,10 +846,6 @@ local function LCCore(FD, CFG)
 		end)
 	end
 
-	------------------------------------------------------------------
-	-- LC Gun 1 / LC Gun 2 (held in the right hand) + alignment
-	------------------------------------------------------------------
-	-- grip = where the gun sits on the right arm; scripts animate GunJoint.C0
 	C.GunJoint = {C0 = CFn(0.05, -1, -0.15) * ANG(rad(-90), 0, 0)}
 	local GUN_IDS = CFG.gunIds or {}
 	local DEFAULT = {{0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, -4, 0, 0, 0}}
@@ -974,7 +920,6 @@ local function LCCore(FD, CFG)
 		local ok, h = pcall(A.hold, {mesh = rawget(e, "m"), tex = rawget(e, "t")})
 		return ok and type(h) == "table" and h or nil
 	end
-	-- pass 1: mesh + texture, pass 2: mesh only (in case the texture string differs)
 	local function findGun(slot)
 		local other = gunEntry[3 - slot]
 		for pass = 1, 2 do
@@ -1055,13 +1000,9 @@ local function LCCore(FD, CFG)
 		return C.gripCF() * MUZ * OFF[3]
 	end
 
-	------------------------------------------------------------------
-	-- per-frame (called by the reanimate) and per-tick (60 Hz) pumps
-	------------------------------------------------------------------
 	local lastT = 0
 	local lastLerp = osclock()
 	local function frame(state)
-		-- game-time step (C.time advances in Stepped, once per frame)
 		local dt = C.time - lastT
 		lastT = C.time
 		lastLerp = osclock()
@@ -1113,7 +1054,6 @@ local function LCCore(FD, CFG)
 			return
 		end
 		if osclock() - lastLerp > 2 then
-			-- the reanimate was stopped or taken over by another script
 			C.stop(false)
 			return
 		end
@@ -1158,9 +1098,6 @@ local function LCCore(FD, CFG)
 		end
 	end)
 
-	------------------------------------------------------------------
-	-- keyboard / mouse
-	------------------------------------------------------------------
 	C.keysDown = {}
 	C.connect(UIS.InputBegan, function(io, gp)
 		if io.UserInputType == KEYBOARD then
@@ -1199,9 +1136,6 @@ local function LCCore(FD, CFG)
 		end
 	end)
 
-	------------------------------------------------------------------
-	-- stop
-	------------------------------------------------------------------
 	function C.stop(stopReanimate)
 		if not C.alive then
 			return
@@ -1379,13 +1313,8 @@ local function LCCore(FD, CFG)
 	return C
 end
 
---==============================================================--
---  FE SNAKE BANISHER V3
---==============================================================--
 local GUN_IDS = {
-	-- slot 1: LC Gun 1 (new) , old VoidAlligatorJaw copy
 	{{"97638566524944", "128238174721913"}, {"77229698901212", "128016353776496"}},
-	-- slot 2: LC Gun 2 (new) , old VoidRPG copy
 	{{"118424096643898", "128238174721913"}, {"76443789550926", "128016353776496"}},
 }
 local function hubRows(script, slot)
@@ -1425,15 +1354,13 @@ local MUSIC = {
 	{SONG.stronger, DL .. "1vr17y5wxI4DfDHPHBiWXYO8R2IdKJrBy"}, {SONG.karma, DL .. "1Iwh4OcU_kdjiVY3L6eRfHOeCI7dcidM9"},
 	{SONG.stressed, DL .. "1j2YSqIkZUWN3eiEA1fow2l9s9bHJOCKj"},
 }
--- on-screen song captions. Left blank on purpose: paste your own lines
--- back in from your old file (empty ones are simply skipped).
 local CAPTIONS = {
-	karma = {"", "", "", "", ""}, -- E: the 5 lines before KARMA
-	rage = "", --                  E: the line during the rage pose
-	meme = {"", "", "", ""}, --    P: 4 lines (the last one is the big one)
-	hell = {"", "", "", "", "", "", "", "", "", "", "", "", ""}, -- M: 13 lines (4th and 13th are big)
+	karma = {"", "", "", "", ""},
+	rage = "",
+	meme = {"", "", "", ""},
+	hell = {"", "", "", "", "", "", "", "", "", "", "", "", ""},
 }
-local SHOW_HORNS = true -- local-only neon horns
+local SHOW_HORNS = true
 
 if not game:IsLoaded() then
 	game.Loaded:Wait()
@@ -1457,14 +1384,12 @@ local Head, Torso, RightArm, LeftArm = C.Head, C.Torso, C.RightArm, C.LeftArm
 local RootJoint, Neck, RightShoulder, LeftShoulder, RightHip, LeftHip = C.RootJoint, C.Neck, C.RightShoulder, C.LeftShoulder, C.RightHip, C.LeftHip
 local Sound = C.music
 
--- SBv3: swait(n) waited n ticks, Swait() always one
 local function swait(n)
 	C.swait(n)
 end
 local function Swait()
 	C.swait(1)
 end
--- jolts ignore frame scaling so they snap the same at any FPS
 local function ClerpRaw(a, b, t)
 	if t >= 1 then
 		return b
@@ -1522,9 +1447,6 @@ local function LOOK(a, b)
 	return CF(a, b)
 end
 
---------------------------------------------------------------------
--- effect helpers (all go through the pooled engine)
---------------------------------------------------------------------
 local function WACKYEFFECT(T)
 	if T.EffectType == "Swirl" then
 		T.MeshId = "1051557"
@@ -1602,9 +1524,6 @@ local function CreateSound(id, _, vol, pitch)
 	return C.sound(id, vol, pitch)
 end
 
---------------------------------------------------------------------
--- screen texts (local only)
---------------------------------------------------------------------
 local hudGuis = {}
 local function newHud(name)
 	local old = hudGuis[name]
@@ -1687,7 +1606,6 @@ local function bosschatfunc(text, color, holdTime)
 	end)
 end
 
--- big centred line (typewriter), karma = glitchy fonts/colours
 local function bigText(whom, karmaStyle)
 	if whom == "" then
 		return
@@ -1748,7 +1666,6 @@ local function warnedkarma(whom)
 	bigText(whom, true)
 end
 
--- bottom caption bar
 local function warnedpeople(text)
 	if text == "" then
 		return
@@ -1799,9 +1716,6 @@ local function warnedpeople(text)
 	end)
 end
 
---------------------------------------------------------------------
--- shared poses
---------------------------------------------------------------------
 local function transformPose1()
 	RightHip.C0 = Clerp(RightHip.C0, CF(1, -0.15, -0.5) * ANGLES(RAD(0), RAD(90), RAD(0)) * ANGLES(RAD(-3), RAD(-15), RAD(-20)), .1)
 	LeftHip.C0 = Clerp(LeftHip.C0, CF(-1, -1, 0) * ANGLES(RAD(0), RAD(-90), RAD(0)) * ANGLES(RAD(-3), RAD(1), RAD(20)), .1)
@@ -1826,7 +1740,6 @@ local function sixWaves()
 		WACKYEFFECT({Time = 50, EffectType = "Wave", Size = V3(0, 0, 0), Size2 = V3(s, red and 5 or 10, s), Transparency = 0.5, Transparency2 = 1, CFrame = base, RotationX = 0, RotationY = k, RotationZ = 0, Material = "Neon", Color = red and C3(1, 0, 0) or C3(0, 0, 0)})
 	end
 end
--- generic "transform" used by Spooky / test / NIGHTMARE / katana
 local function transform(sound, newMode, song, vol, pos, speed)
 	ATTACK = true
 	Rooted = true
@@ -1868,9 +1781,6 @@ local function pointPose()
 	LeftShoulder.C0 = Clerp(LeftShoulder.C0, CF(-1.5, 0.5, 0) * ANGLES(RAD(0), RAD(0), RAD(-12)) * LEFTSHOULDERC0, 0.15 / Animation_Speed)
 end
 
---------------------------------------------------------------------
--- modes
---------------------------------------------------------------------
 local function SnakeGod()
 	ATTACK = true
 	Rooted = true
@@ -2102,9 +2012,6 @@ local function fuck_it()
 	Rooted = false
 end
 
---------------------------------------------------------------------
--- attacks
---------------------------------------------------------------------
 local function Penumbric_DeathRay2()
 	ATTACK = true
 	repeat
@@ -2518,7 +2425,6 @@ local function spawnwave(POS)
 	end
 end
 
--- a big ball that charges above you, then flies at the mouse
 local function chargeBall(color, chargeColor, growStep, chargeRange, chargeTicks, chargeSize, trailColor, impactSound, shrinkTicks, rounds, burstColor, burstSize, chargeEvery)
 	local ABSOLUTE = Ball(color, V3(0.05, 0.05, 0.05), 1)
 	CreateSound("416200578", nil, 10, 1)
@@ -2744,9 +2650,6 @@ local function Rush()
 	Rooted = false
 end
 
---------------------------------------------------------------------
--- keys
---------------------------------------------------------------------
 C.keyDown = function(Key)
 	if Key == "z" and ATTACK then
 		KEYHOLD = false
@@ -2822,9 +2725,6 @@ C.keyUp = function()
 	KEYHOLD = false
 end
 
---------------------------------------------------------------------
--- horns (local only, cheap: one bulk move per frame)
---------------------------------------------------------------------
 local horns, hornRel, hornCF = {}, {}, {}
 if SHOW_HORNS then
 	for side = -1, 1, 2 do
@@ -2840,9 +2740,6 @@ if SHOW_HORNS then
 	end
 end
 
---------------------------------------------------------------------
--- 60 Hz: ambient mode effects + horn colours
---------------------------------------------------------------------
 local function loud()
 	return Sound.PlaybackLoudness
 end
@@ -2881,7 +2778,6 @@ end
 
 C.tick = function()
 	local t = C.ticks
-	-- horn colours (every 3 ticks)
 	if SHOW_HORNS and t % 3 == 0 then
 		local col
 		if MODE == "Snake God" or MODE == "HELL" or MODE == "meme" or MODE == "Katana" then
@@ -2899,7 +2795,6 @@ C.tick = function()
 			end
 		end
 	end
-	-- ambient effects at 30 Hz
 	if t % 2 ~= 0 then
 		return
 	end
@@ -2934,9 +2829,6 @@ C.tick = function()
 	end
 end
 
---------------------------------------------------------------------
--- per-frame animation
---------------------------------------------------------------------
 local lastTick = -1
 C.animate = function(state, dt)
 	sine = C.time * 60
@@ -2948,7 +2840,6 @@ C.animate = function(state, dt)
 	local Torsovelocity = V3(v.X, 0, v.Z).Magnitude
 	local WALKSPEEDVALUE = 6 / math.max(walkSpeed / 16, 0.05)
 
-	-- C1 walk sway
 	if Anim == "Walk" and Torsovelocity > 1 then
 		RootJoint.C1 = Clerp(RootJoint.C1, rc0 * CF(0, 0, 0.1 + 0.05 * COS(sine / 6)), 2 / 3)
 		Neck.C1 = Clerp(Neck.C1, CF(0, -0.5, 0) * ANGLES(RAD(-90), RAD(0), RAD(180)), 0.2 / 3)

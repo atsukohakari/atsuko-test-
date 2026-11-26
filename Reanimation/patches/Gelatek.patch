@@ -1,6 +1,12 @@
 --- a/Reanimation.lua.txt
 +++ b/Reanimation/Limb/Gelatek.lua
-@@ -25,12 +25,30 @@
+@@ -1,5 +1,3 @@
+-
+-
+ if not getgenv().Settings.AllowNetBypass then getgenv().Settings.AllowNetBypass = true end
+ spawn(function()
+ 	while getgenv().Settings.AllowNetBypass == true do
+@@ -25,12 +23,30 @@
   Thanks to poncho for small help!
  ]])
  
@@ -35,18 +41,38 @@
  end
  
  local function Align(P0,P1,Position,Rotate)
-@@ -38,6 +56,10 @@
+@@ -38,15 +54,16 @@
      local AlignOrientation = Instance.new("AlignOrientation", P0)
      local Attachment1 = Instance.new("Attachment", P0)
      local Attachment2 = Instance.new("Attachment", P1)
+-    -- Main Attach Thingy:
+-    AlignPosition.Attachment0,AlignPosition.Attachment1 = Attachment1,Attachment2 -- Shortcut
+-    AlignOrientation.Attachment0,AlignOrientation.Attachment1 = Attachment1,Attachment2 -- Shortcut
+-    -- Properties:
 +    Track(AlignPosition)
 +    Track(AlignOrientation)
 +    Track(Attachment1)
 +    Track(Attachment2)
-     -- Main Attach Thingy:
-     AlignPosition.Attachment0,AlignPosition.Attachment1 = Attachment1,Attachment2 -- Shortcut
-     AlignOrientation.Attachment0,AlignOrientation.Attachment1 = Attachment1,Attachment2 -- Shortcut
-@@ -82,14 +104,14 @@
++    AlignPosition.Attachment0,AlignPosition.Attachment1 = Attachment1,Attachment2
++    AlignOrientation.Attachment0,AlignOrientation.Attachment1 = Attachment1,Attachment2
+     AlignPosition.RigidityEnabled = true
+     AlignOrientation.MaxTorque = 1600000000
+     AlignPosition.Responsiveness = 200
+     AlignOrientation.Responsiveness = 200
+-    -- Rotate/Position
+     Attachment1.Position = Position or Vector3.new(0,0,0)
+     Attachment1.Rotation = Rotate or Vector3.new(0,0,0)
+ end
+@@ -66,7 +83,7 @@
+     
+ if Human.RigType == Enum.HumanoidRigType.R6 then
+     
+-    if getgenv().Settings.Reanimation == "Simple" then -- R6 Simple
++    if getgenv().Settings.Reanimation == "Simple" then
+         
+         
+         
+@@ -82,16 +99,16 @@
          end
          Character.Animate.Disabled = true
          Humanoid.Animator:Destroy()
@@ -61,9 +87,12 @@
 -    local Reanim = Character:Clone()
 +    local Reanim = Track(Character:Clone())
      Reanim.Parent = getgenv().Settings.CloneParent or Character
-     Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
      
-@@ -101,7 +123,7 @@
+     for i,v in pairs(Reanim:GetChildren()) do 
+         if v:IsA("BasePart") then v.Transparency = 1
+@@ -101,7 +118,7 @@
      Reanim.Head.face.Transparency = 1	
      
  
@@ -72,7 +101,7 @@
          if getgenv().Reanimated == true then
          for i,v in pairs(Character:GetDescendants()) do
              if v:IsA("BasePart") then
-@@ -122,7 +144,7 @@
+@@ -122,7 +139,7 @@
      end)
  
      
@@ -81,7 +110,7 @@
          pcall(function()
          Reanim.Humanoid.Jump = true
          Reanim.Humanoid.Sit = false
-@@ -145,14 +167,14 @@
+@@ -145,14 +162,14 @@
      InstantAttach("Left Leg")
      InstantAttach("Torso")
      
@@ -98,7 +127,23 @@
          workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
          wait()
          getgenv().Reanimated = false
-@@ -182,14 +204,14 @@
+@@ -164,14 +181,13 @@
+     
+     
+     
+-    elseif getgenv().Settings.Reanimation == "Fling" then -- R6 Fling
++    elseif getgenv().Settings.Reanimation == "Fling" then
+     
+     
+     
+     
+     
+     
+-    -- Main (R6)
+     local Character = workspace[game.Players.LocalPlayer.Name]
+     local Humanoid = Character:FindFirstChild("Humanoid")
+     Character.Archivable = true
+@@ -182,16 +198,16 @@
          end
          Character.Animate.Disabled = true
          Humanoid.Animator:Destroy()
@@ -113,9 +158,12 @@
 -    local Reanim = Character:Clone()
 +    local Reanim = Track(Character:Clone())
      Reanim.Parent = getgenv().Settings.CloneParent or Character
-     Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++    Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
      
-@@ -200,7 +222,7 @@
+     for i,v in pairs(Reanim:GetChildren()) do 
+         if v:IsA("BasePart") then v.Transparency = 1
+@@ -200,7 +216,7 @@
      end
      Reanim.Head.face.Transparency = 1	
      
@@ -124,7 +172,7 @@
          if getgenv().Reanimated == true then
          for i,v in pairs(Character:GetDescendants()) do
              if v:IsA("BasePart") then
-@@ -221,7 +243,7 @@
+@@ -221,7 +237,7 @@
      end)
  
      
@@ -133,7 +181,7 @@
          pcall(function()
          Reanim.Humanoid.Jump = true
          Reanim.Humanoid.Sit = false
-@@ -245,7 +267,7 @@
+@@ -245,7 +261,7 @@
      InstantAttach("Left Leg")
      InstantAttach("Torso")
      
@@ -142,7 +190,7 @@
          for i,v in pairs(Character:GetChildren()) do
              if v:IsA("BasePart") and v.Name ~= "Torso" then v.Velocity = getgenv().Settings.Velocity
              elseif v:IsA("Accessory") then v.Handle.Velocity = getgenv().Settings.Velocity
-@@ -254,7 +276,7 @@
+@@ -254,7 +270,7 @@
          pcall(function() Character.Torso.Velocity = Vector3.new(2000,1000,2000) end)
      
      end)
@@ -151,8 +199,12 @@
          workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
          wait()
          getgenv().Reanimated = false
-@@ -272,10 +294,7 @@
-     elseif getgenv().Settings.Reanimation == "Bullet" then -- R6 Bullet
+@@ -269,17 +285,13 @@
+     
+     
+     
+-    elseif getgenv().Settings.Reanimation == "Bullet" then -- R6 Bullet
++    elseif getgenv().Settings.Reanimation == "Bullet" then
          
          if not game.Players.LocalPlayer.Character:WaitForChild("Pal Hair") then
 -            game.StarterGui:SetCore("SendNotification", {
@@ -163,7 +215,11 @@
              return
          end
          
-@@ -290,7 +309,7 @@
+-        -- Main (R6)
+         local Character = workspace[game.Players.LocalPlayer.Name]
+         local Humanoid = Character:FindFirstChild("Humanoid")
+         Character.Archivable = true
+@@ -290,7 +302,7 @@
              end
              Character.Animate.Disabled = true
              Humanoid.Animator:Destroy()
@@ -172,16 +228,19 @@
              ae.Name = "Animator"
              ae.Anchored = true
              ae.CanCollide = false
-@@ -298,7 +317,7 @@
+@@ -298,9 +310,9 @@
          end)
          end
  
 -        local Reanim = Character:Clone()
 +        local Reanim = Track(Character:Clone())
          Reanim.Parent = getgenv().Settings.CloneParent or Character  
-         Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
                      
-@@ -309,7 +328,7 @@
+         for i,v in pairs(Reanim:GetChildren()) do 
+             if v:IsA("BasePart") then v.Transparency = 1
+@@ -309,7 +321,7 @@
          end
          Reanim.Head.face.Transparency = 1	
          
@@ -190,7 +249,7 @@
              if getgenv().Reanimated == true then
              for i,v in pairs(Character:GetDescendants()) do
                  if v:IsA("BasePart") then
-@@ -329,7 +348,7 @@
+@@ -329,7 +341,7 @@
              end  
          end)
      
@@ -199,7 +258,7 @@
              pcall(function()
              Reanim.Humanoid.Jump = true
              Reanim.Humanoid.Sit = false
-@@ -356,7 +375,7 @@
+@@ -356,7 +368,7 @@
              InstantAttach("Head")
          end
          Align(Hat,Reanim['Left Arm'],Vector3.new(0,0,0),Vector3.new(90,0,0))
@@ -208,7 +267,7 @@
              for i,v in pairs(Character:GetChildren()) do
                  if v:IsA("BasePart") and v.Name ~= "Bullet" then v.Velocity = getgenv().Settings.Velocity
                  elseif v:IsA("Accessory") then v.Handle.Velocity = getgenv().Settings.Velocity
-@@ -365,7 +384,7 @@
+@@ -365,7 +377,7 @@
              end
          end)
  
@@ -217,7 +276,7 @@
              workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
              wait()
              getgenv().Reanimated = false
-@@ -375,8 +394,8 @@
+@@ -375,8 +387,8 @@
          if getgenv().Settings.SimpleBulletFling == true then
          Character['Left Arm'].Name = "Bullet"
          local Bullet = Character['Bullet']
@@ -228,18 +287,20 @@
          BP.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
          BP.D = 125
          BP.P = 12500
-@@ -384,16 +403,16 @@
+@@ -384,16 +396,16 @@
          BT.Force = Vector3.new(3000,3000,3000)
          local Mouse = game.Players.LocalPlayer:GetMouse()
          local MouseHolding = false
 -        Mouse.Button1Down:Connect(function()
+-            MouseHolding = true --BP.Position = Mouse.Hit.p
 +        Conn(Mouse.Button1Down, function()
-             MouseHolding = true --BP.Position = Mouse.Hit.p
++            MouseHolding = true
          end)
          
 -        Mouse.Button1Up:Connect(function()
+-            MouseHolding = false --BP.Position = Character.Torso.Position
 +        Conn(Mouse.Button1Up, function()
-             MouseHolding = false --BP.Position = Character.Torso.Position
++            MouseHolding = false
          end)
          
          
@@ -248,7 +309,7 @@
          if MouseHolding == true then
              BP.Position = Mouse.Hit.p
          elseif MouseHolding == false then
-@@ -402,7 +421,7 @@
+@@ -402,22 +414,18 @@
          end)
          
          Bullet.Transparency = 1
@@ -257,7 +318,23 @@
          Outline.Adornee = Bullet
  	end
      end
-@@ -430,13 +449,13 @@
+     
+ 
+ 
+------------------------------------------------
+ elseif Human.RigType == Enum.HumanoidRigType.R15 then
+------------------------------------------------   
+ 
+ 
+-
+-    if getgenv().Settings.Reanimation == "Simple" then -- R15 Simple
++    if getgenv().Settings.Reanimation == "Simple" then
+         
+-        -- Main (R15)
+         local Character = workspace[game.Players.LocalPlayer.Name]
+         local Humanoid = Character:FindFirstChild("Humanoid")
+         Character.Archivable = true
+@@ -430,15 +438,15 @@
              end
              Character.Animate.Disabled = true
              Humanoid.Animator:Destroy()
@@ -271,9 +348,12 @@
 -        local Reanim = game:GetObjects('rbxassetid://8440552086')[1]
 +        local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
          Reanim.Parent = getgenv().Settings.CloneParent or Character  
-         Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
          Character.Animate:Destroy()
-@@ -448,7 +467,7 @@
+         Humanoid.Animator:Destroy()
+         for i,v in pairs(Reanim:GetChildren()) do 
+@@ -448,7 +456,7 @@
          end
          Reanim.Head.face.Transparency = 1	
  
@@ -282,7 +362,7 @@
              if getgenv().Reanimated == true then
              for i,v in pairs(Character:GetDescendants()) do
                  if v:IsA("MeshPart") then
-@@ -467,7 +486,7 @@
+@@ -467,7 +475,7 @@
                 pcall(function() Reanim.Humanoid:Move(Humanoid.MoveDirection) end)
              end  
          end)
@@ -291,7 +371,7 @@
              pcall(function()
              Reanim.Humanoid.Jump = true
              Reanim.Humanoid.Sit = false
-@@ -505,14 +524,14 @@
+@@ -505,14 +513,14 @@
          if getgenv().Settings.AttachHead == true then
              Attach(Character["Head"],Reanim["Head"])
          end
@@ -308,7 +388,16 @@
              workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
              wait()
              getgenv().Reanimated = false
-@@ -533,13 +552,13 @@
+@@ -520,7 +528,7 @@
+         end)
+         workspace:FindFirstChildOfClass("Camera").CameraSubject = Reanim.Humanoid
+ 
+-    elseif getgenv().Settings.Reanimation == "Fling" then -- R15 Fling
++    elseif getgenv().Settings.Reanimation == "Fling" then
+         local Character = workspace[game.Players.LocalPlayer.Name]
+         local Humanoid = Character:FindFirstChild("Humanoid")
+         Character.Archivable = true
+@@ -533,15 +541,15 @@
              end
              Character.Animate.Disabled = true
              Humanoid.Animator:Destroy()
@@ -322,9 +411,12 @@
 -        local Reanim = game:GetObjects('rbxassetid://8440552086')[1]
 +        local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
          Reanim.Parent = Character
-         Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
          Character.Animate:Destroy()
-@@ -551,7 +570,7 @@
+         Humanoid.Animator:Destroy()
+         for i,v in pairs(Reanim:GetChildren()) do 
+@@ -551,7 +559,7 @@
          end
          Reanim.Head.face.Transparency = 1	
          
@@ -333,7 +425,7 @@
              if getgenv().Reanimated == true then
              for i,v in pairs(Character:GetDescendants()) do
                  if v:IsA("MeshPart") then
-@@ -570,7 +589,7 @@
+@@ -570,7 +578,7 @@
                 pcall(function() Reanim.Humanoid:Move(Humanoid.MoveDirection) end)
              end  
          end)
@@ -342,7 +434,7 @@
              pcall(function()
              Reanim.Humanoid.Jump = true
              Reanim.Humanoid.Sit = false
-@@ -608,7 +627,7 @@
+@@ -608,7 +616,7 @@
          if getgenv().Settings.AttachHead == true then
              Attach(Character["Head"],Reanim["Head"])
          end
@@ -351,7 +443,7 @@
              for i,v in pairs(Character:GetChildren()) do
                  if v:IsA("MeshPart") and v.Name ~= "UpperTorso" then v.Velocity = getgenv().Settings.Velocity
                  elseif v:IsA("Accessory") then v.Handle.Velocity = getgenv().Settings.Velocity
-@@ -618,7 +637,7 @@
+@@ -618,7 +626,7 @@
              pcall(function() Character.UpperTorso.Velocity = Vector3.new(1300,2000,1300)
                Character.UpperTorso.CFrame = Reanim.Torso.CFrame + Vector3.new(0,0.05,0)  end)
          end)
@@ -360,7 +452,16 @@
              workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
              wait()
              getgenv().Reanimated = false
-@@ -640,14 +659,14 @@
+@@ -626,7 +634,7 @@
+         end)
+         workspace:FindFirstChildOfClass("Camera").CameraSubject = Reanim.Humanoid
+         
+-    elseif getgenv().Settings.Reanimation == "Bullet" then -- R15 Bullet
++    elseif getgenv().Settings.Reanimation == "Bullet" then
+         local Character = workspace[game.Players.LocalPlayer.Name]
+         local Humanoid = Character:FindFirstChild("Humanoid")
+         Character.Archivable = true
+@@ -640,16 +648,16 @@
              end
              Character.Animate.Disabled = true
              Humanoid.Animator:Destroy()
@@ -375,9 +476,12 @@
 -        local Reanim = game:GetObjects('rbxassetid://8440552086')[1]
 +        local Reanim = Track(game:GetObjects('rbxassetid://8440552086')[1])
          Reanim.Parent = Character
-         Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
+-        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass" -- fox*
++        Reanim.Name = getgenv().Settings.CloneName or "TalentlessDumbass"
  
-@@ -657,7 +676,7 @@
+         for i,v in pairs(Reanim:GetChildren()) do 
+             if v:IsA("BasePart") then v.Transparency = 1
+@@ -657,7 +665,7 @@
              end
          end
          Reanim.Head.face.Transparency = 1	
@@ -386,7 +490,7 @@
              if getgenv().Reanimated == true then
              for i,v in pairs(Character:GetDescendants()) do
                  if v:IsA("MeshPart") then
-@@ -677,7 +696,7 @@
+@@ -677,13 +685,12 @@
              end  
          end)
  
@@ -395,7 +499,23 @@
          pcall(function()
          Reanim.Humanoid.Jump = true
          Reanim.Humanoid.Sit = false
-@@ -724,7 +743,7 @@
+         end)
+     end)
+-
+ 
+ 
+         Character.HumanoidRootPart:Destroy()
+@@ -699,9 +706,7 @@
+         end
+ 
+ 
+-
+         Reanim.HumanoidRootPart.CFrame = Character.UpperTorso.CFrame
+-
+ 
+ 
+         
+@@ -724,7 +729,7 @@
          if getgenv().Settings.AttachHead == true then
              Attach(Character["Head"],Reanim["Head"])
          end
@@ -404,7 +524,7 @@
              for i,v in pairs(Character:GetChildren()) do
                  if v:IsA("MeshPart") then v.Velocity = getgenv().Settings.Velocity
                  elseif v:IsA("Accessory") then v.Handle.Velocity = getgenv().Settings.Velocity
-@@ -732,7 +751,7 @@
+@@ -732,7 +737,7 @@
                  end
              end
          end)
@@ -413,7 +533,7 @@
              workspace:FindFirstChildOfClass("Camera").CameraSubject = Character.Humanoid
              wait()
              getgenv().Reanimated = false
-@@ -749,8 +768,8 @@
+@@ -749,8 +754,8 @@
          local Bullet = Character['Bullet']
          Character.RightFoot:BreakJoints()
          Bullet:BreakJoints()
@@ -424,18 +544,20 @@
          BP.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
          BP.D = 125
          BP.P = 12500
-@@ -760,16 +779,16 @@
+@@ -760,16 +765,16 @@
  
          local Mouse = game.Players.LocalPlayer:GetMouse()
          local MouseHolding = false
 -        Mouse.Button1Down:Connect(function()
+-            MouseHolding = true --BP.Position = Mouse.Hit.p
 +        Conn(Mouse.Button1Down, function()
-             MouseHolding = true --BP.Position = Mouse.Hit.p
++            MouseHolding = true
          end)
  
 -        Mouse.Button1Up:Connect(function()
+-            MouseHolding = false --BP.Position = Character.Torso.Position
 +        Conn(Mouse.Button1Up, function()
-             MouseHolding = false --BP.Position = Character.Torso.Position
++            MouseHolding = false
          end)
  
  
@@ -444,7 +566,7 @@
          if MouseHolding == true then
              BP.Position = Mouse.Hit.p
          elseif MouseHolding == false then
-@@ -778,7 +797,7 @@
+@@ -778,7 +783,7 @@
          end)
  
          Bullet.Transparency = 1
@@ -453,7 +575,7 @@
  
          Outline.LineThickness = 0.15
          Outline.Adornee = Bullet
-@@ -788,7 +807,3 @@
+@@ -788,7 +793,3 @@
  end
  
  

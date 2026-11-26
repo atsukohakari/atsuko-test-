@@ -1,9 +1,16 @@
 --- a/CommanderV2.lua
 +++ b/CommanderV2.lua
-@@ -8,11 +8,18 @@
- 	and don't even add me in the credit, I'm too lazy to do it anyways
- ]]
- 
+@@ -1,30 +1,18 @@
+---[[
+-	Commander V2
+-	og script: Commander CR by Shackluster, converted by Melon
+-	reanimate by MyWorld & rqz
+-	gun: Sakura Futuristic Sniper (Back) and the og guns, bullet: Elemental Crystal Golem Shoulder Rock
+-
+-	credits for all of them because yeah, good people
+-	and don't even add me in the credit, I'm too lazy to do it anyways
+-]]
+-
 +local function hubNotify(title, text, kind, dur)
 +	local env = (typeof(getgenv) == "function" and getgenv()) or _G
 +	local f = env.AtsukoNotify
@@ -14,13 +21,224 @@
 +end
  local FD = (function()
  --!optimize 2
- --no need to load the whole thing cuz u can use the last one
+---no need to load the whole thing cuz u can use the last one
  if _G.GenesisFDless then 
 -	game:FindFirstChildOfClass("StarterGui"):SetCore("SendNotification",{Title="FDLESS",Text="Using FDless loaded by previously executed scripts to prevent reanimate conflicts. Rejoin to update reanimate settings.",Duration=10})
  	return _G.GenesisFDless 
  end
  
-@@ -369,7 +376,7 @@
+---oh you're still here? queue the reanimate
+ 
+---[[
+-	FDless Reanimate by MyWorld continued by rqz
+-	"var"
+-	Patchma Hub Discord: https://discord.com/invite/QMy5f6DrbH
+-]]
+-
+---no need to get and index the library tables with function names every time the script uses them
+ local osclock=os.clock
+ local tspawn=task.spawn
+ local tdelay=task.delay
+@@ -47,11 +35,9 @@
+ local cyield=coroutine.yield
+ local cresume=coroutine.resume
+ local crunning=coroutine.running
+-local vmagnitude=vector.magnitude --faster than indexing with Magnitude
+-local vnormalize=vector.normalize --faster than indexing with Unit
++local vmagnitude=vector.magnitude
++local vnormalize=vector.normalize
+ 
+---the script doesnt have to read global varaibles every time to get them
+---why not have them saved in local varaibles for faster access times
+ local next=next
+ local pcall=pcall
+ local xpcall=xpcall
+@@ -68,7 +54,7 @@
+ local c3=Color3.new 
+ local cf=CFrame.new
+ local cfl=CFrame.lookAt
+-local angles=CFrame.fromEulerAngles --faster than .Angles
++local angles=CFrame.fromEulerAngles
+ local u2=UDim2.new 
+ local e=Enum 
+ local rp=RaycastParams.new 
+@@ -98,7 +84,6 @@
+ table.remove(humstatesbl,tfind(humstatesbl,enumrunning))
+ table.remove(humstatesbl,tfind(humstatesbl,e.HumanoidStateType.None))
+ 
+---not "local function rs" to not assign debug names
+ local rs=function()
+ 	local s=""
+ 	for i=1,mrandom(8,15) do
+@@ -111,7 +96,6 @@
+ 	return s
+ end
+ 
+---it runs even faster if u call __index and __newindex metamethods directly
+ local getMetamethodFromErrorStack=function(userdata,f,test)
+ 	local ret=nil
+ 	xpcall(f,function()
+@@ -129,10 +113,7 @@
+ local cfAdd=getMetamethodFromErrorStack(cf_0,function(a,b) return a+b end,function(f) return cf(1,2,3)+v3(1,2,3)==f(cf(1,2,3),v3(1,2,3)) end)
+ local v3Get=getMetamethodFromErrorStack(v3_0,function(a,b) return a[b] end,function(f) return v3(1,2,3).Unit==f(v3(1,2,3),"Unit") end)
+ local v2Get=getMetamethodFromErrorStack(v2(),function(a,b) return a[b] end,function(f) return f(v2(1,2),"Y")==2 end)
+---multiplying and adding vector3 is faster if you use the * and + operators
+---its faster to multiply X and Y of vector2 than to multiply vector2 and then get X and Y from it
+ 
+---no need to index instances every time to call their functions
+ local Clone=insGet(game,"Clone")
+ local ClearAllChildren=insGet(game,"ClearAllChildren")
+ local Destroy=insGet(game,"Destroy")
+@@ -144,7 +125,6 @@
+ local QueryDescendants=insGet(game,"QueryDescendants")
+ local GetPropertyChangedSignal=insGet(game,"GetPropertyChangedSignal")
+ 
+---findfirstchildofclass faster than getservice
+ local plrs=FindFirstChildOfClass(game,"Players")
+ local rus=FindFirstChildOfClass(game,"RunService")
+ local ws=FindFirstChildOfClass(game,"Workspace")
+@@ -181,37 +161,16 @@
+ local Lerp=cfGet(cf_0,"Lerp")
+ 
+ local aligns={
+-	--[[
+-		example: 
+-		{PartName="Right Arm",meshid="123456789",textureid="123456789",AccessoryName="Name",C0=cf(1,2,3)*angles(1,2,3)},
+ 
+-		PartName (required) - the name of the body part you want to align the hat to
+-		meshid (optional) - mesh id of the mesh of the accessory you want to align
+-		textureid (optional) - texture id of the mesh of the accessory you want to align
+-		AccessoryName (optional) - instance name of the accessory you want to align 
+-		C0 (optional) - offset from the target body part to the accessory (defaults to cf(0,0,0) if unspecified)
+-		
+-		accessories will align to the first entry whose criteria they match
+-		(unspecified meshid/textureid/accessoryname accepts all accessories)
+-		
+-		each entry aligns one accessory at most
+-	]]
+-
+-	-- unknown head
+ 	{PartName="Head",meshid="11601535857",C0=angles(0,3.141592653589793,0)},
+ 
+-	-- patchma gear arms
+ 	{PartName="Left Arm",meshid="13831073174",C0=cfMul(cf(0.017,0,-0.23),angles(-1.4835298641951802,-0.15707963267948966,2.199114857512855))},
+ 	{PartName="Right Arm",meshid="13839903766",C0=cfMul(cf(0,-0.62,-0.01),angles(1.6580627893946132,0.15707963267948966,-2.199114857512855))},
+ 
+-	-- patchma yellow leg
+ 	{PartName="Left Leg",meshid="11159370334",textureid="11159285454",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+ 
+-	-- patchma lego piece leg
+ 	{PartName="Right Leg",meshid="12652772399",textureid="12652775021",C0=cf(0,-0.125,0)},
+ 
+-	-- offsale white rig
+-	-- a ton of offsaled black torso's
+ 	{PartName="Torso",meshid="14768666349"},
+ 	{PartName="Torso",meshid="14241018198"},
+ 	{PartName="Torso",meshid="13421774668"},
+@@ -220,7 +179,6 @@
+ 	{PartName="Left Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
+ 
+-	-- og fur body, r15 arms, smiley legs rig
+ 	{PartName="Head",meshid="13953154391"},
+ 	{PartName="Torso",meshid="13778226115"},
+ 	{PartName="Left Leg",meshid="11159370334",textureid="11159284657",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+@@ -228,28 +186,22 @@
+ 	{PartName="Left Arm",meshid="12344207333",C0=angles(2,0,0)},
+ 	{PartName="Right Arm",meshid="12344206657",C0=angles(2,0,0)},
+ 
+-	-- torso for both "white limbs black torso rig" and "black rig"
+ 	{PartName="Torso",meshid="110684113028749"},
+-	-- white limbs black torso rig
+ 	{PartName="Head",meshid="13058343355",C0=angles(0,3.141592653589793,0)},
+ 	{PartName="Left Leg",meshid="139733645770094",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Leg",meshid="99608462237958",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Left Arm",meshid="90736849096372",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Arm",meshid="105141400603933",C0=angles(0,0,1.5707963267948966)},
+-	-- head for black rigs
+ 	{PartName="Head",meshid="13953153289"},
+-	-- lay offsale black rig
+ 	{PartName="Left Leg",meshid="17387586286",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Right Leg",meshid="17387586286",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Left Arm",meshid="17374767929",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Right Arm",meshid="17374767929",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
+-	-- 7ws offsale black rig
+ 	{PartName="Left Leg",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Right Leg",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Left Arm",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
+ 	{PartName="Right Arm",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
+ 
+-	-- meshless rig
+ 	{PartName="Head",meshid="13953094351"},
+ 	{PartName="Torso",meshid="127552124837034",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Left Leg",meshid="121304376791439"},
+@@ -257,32 +209,26 @@
+ 	{PartName="Left Arm",meshid="117287001096396"},
+ 	{PartName="Right Arm",meshid="117287001096396"},
+ 
+-	-- head for noob rig
+ 	{PartName="Head",meshid="13058309233",C0=angles(0,3.141592653589793,0)},
+-	-- lay offsale noob rig
+ 	{PartName="Torso",meshid="18640899369"},
+ 	{PartName="Left Leg",meshid="18640901641"},
+ 	{PartName="Right Leg",meshid="18640901641"},
+ 	{PartName="Left Arm",meshid="18640914129"},
+ 	{PartName="Right Arm",meshid="18640914129"},
+-	-- 7ws offsale noob rig
+ 	{PartName="Torso",meshid="126825022897778"},
+ 	{PartName="Left Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Left Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
+ 
+-	-- white torso
+ 	{PartName="Torso",meshid="126825022897778"},
+ 
+-	-- lay onsale gray torso white arm black leg rig
+ 	{PartName="Torso",meshid="139792224823925"},
+ 	{PartName="Left Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Left Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
+ 	{PartName="Right Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
+ 
+-	-- shownape/geecee auto rig
+ 	{PartName="Head",AccessoryName="Accessory (autorig_Head)"},
+ 	{PartName="Torso",AccessoryName="Accessory (autorig_Torso)"},
+ 	{PartName="Left Leg",AccessoryName="Accessory (autorig_LeftLeg)"},
+@@ -290,16 +236,6 @@
+ 	{PartName="Left Arm",AccessoryName="Accessory (autorig_LeftArm)"},
+ 	{PartName="Right Arm",AccessoryName="Accessory (autorig_RightArm)"},
+ 
+-	-- free rig
+-	--[[{PartName="Left Arm",meshid="4324138105",textureid="4324138210",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(-0.125,0.3,0)},
+-	{PartName="Left Arm",meshid="4154474745",textureid="4154474807",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(-0.125,-0.3,0)},
+-	{PartName="Right Arm",meshid="3030546036",textureid="3650191503",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(0.125,-0.3,0)},
+-	{PartName="Right Arm",meshid="3030546036",textureid="3443321249",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(0.125,0.3,0)},
+-	{PartName="Left Leg",meshid="3030546036",textureid="3360974849",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(-0.125,-0.35,0)},
+-	{PartName="Left Leg",meshid="3030546036",textureid="3360978739",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(-0.125,0.3,0)},
+-	{PartName="Right Leg",meshid="3030546036",textureid="3033898741",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(0.125,-0.35,0)},
+-	{PartName="Right Leg",meshid="3030546036",textureid="3409604993",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(0.125,0.3,0)},
+-	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)}]]
+ 	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)},
+ 	{PartName="Left Leg",meshid="4094864753",textureid="4094881938",C0=angles(0,0,-1.5707963267948966)},
+ 	{PartName="Right Leg",meshid="4154474745",textureid="4154474807",C0=angles(0,0,1.5707963267948966)},
+@@ -333,8 +269,6 @@
+ local fling=fling~=false
+ local allowshiftlock=allowshiftlock~=false
+ local ctrltp=ctrltp~=false
+---local invisiblekeybind=false --invisiblekeybind~=false
+---local invisibleoffset=(type(invisibleoffset)=="number" and v3_010*-invisibleoffset) or v3_010*-100
+ local placeholders=placeholders~=false
+ local clickfling=clickfling==true
+ local flingdirection=(type(flingdirection)=="number" and flingdirection) or 0
+@@ -362,14 +296,13 @@
+ 	flingtargetting=0
+ end	
+ local highlightflingtargets=highlightflingtargets~=false
+---local rainbowflinghighlights=rainbowflinghighlights~=false
+ local discharscripts=discharscripts~=false and function(v) if IsA(v,"Script") then insSet(v,"Disabled",true) end end
+ local flingchangestate=(type(flingchangestate)=="number" and flingchangestate) or 3
+ local respawntp=(type(respawntp)=="number" and respawntp) or 3
  local disguiscripts=disguiscripts~=false
  local breakjointsmethod=(type(breakjointsmethod)=="number" and breakjointsmethod) or 1
  if (breakjointsmethod==4) and not replicatesignal then
@@ -29,7 +247,247 @@
  	breakjointsmethod=1
  end
  local simrad=simrad~=false
-@@ -2307,7 +2314,7 @@
+@@ -399,7 +332,7 @@
+ 			hrpcon0=nil
+ 		end
+ 		for i,v in next,flingtable do
+-			if v then --it could be false
++			if v then
+ 				Destroy(v)
+ 			end
+ 		end
+@@ -419,25 +352,19 @@
+ 	return false
+ end
+ local reanimate=function()
+-	--[[
+-		FDless reanimate by MyWorld continued by rqz
+-		optimize the optimized
+-	]]
+ 
+-	local novoid=true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
++	local novoid=true
+ 	local antivoid=true
+-	local speedlimit=3000 --makes your parts move slower if the magnitude of their velocity is higher than this
+-	local retVelTime=0.51 --time that claimed parts have velocity to reclaim in case u lose them
+-	local walkSpeed=16 --your walkspeed (can be changed at runtime)
+-	local jumpPower=50 --your jump power (can be changed at runtime)
+-	local gravity=196.2 --how fast the characters velocity decreases while falling (can be changed at runtime)
+-	local ctrlclicktp=ctrltp --makes you teleport where u point ur mouse cursor at when click and hold ctrl down
+-	--local invisible = false --moves your parts underground so you are not visible by pressing "i"
++	local speedlimit=3000
++	local retVelTime=0.51
++	local walkSpeed=16
++	local jumpPower=50
++	local gravity=196.2
++	local ctrlclicktp=ctrltp
+ 
+ 	if stopreanimate() then return end
+ 
+ 	local cam=nil
+-	--theres a way to have ws.currentcamera nil on heartbeat and still have the game run normally
+ 	local refcam=function()
+ 		local newcam=insGet(ws,"CurrentCamera")
+ 		while not newcam do
+@@ -898,7 +825,7 @@
+ 	tinsert(cons,Connect(insGet(plrs,"PlayerAdded"),onplayer))
+ 	if disguiscripts then
+ 		tinsert(cons,Connect(insGet(pg,"DescendantAdded"),function(v)
+-			if IsA(v,"Script") then --mind Enum.RunContext.Client
++			if IsA(v,"Script") then
+ 				insSet(v,"Disabled",true) 
+ 			end
+ 		end))
+@@ -1253,7 +1180,6 @@
+ 	refreshKeyboardMovement()
+ 
+ 	local keyShift=KeyCode.LeftShift
+-	--local keyI=KeyCode.I
+ 	tinsert(cons,Connect(insGet(uis,"InputBegan"),function(a)
+ 		if insGet(gs,"MenuIsOpen") or GetFocusedTextBox(uis) then
+ 			return
+@@ -1275,8 +1201,6 @@
+ 			jumpingInput=true
+ 		elseif a==keyShift then
+ 			shiftlock=allowshiftlock and not shiftlock
+-			--elseif invisiblekeybind and a==keyI then
+-			--invisible=not invisible
+ 		elseif modes[a] then
+ 			local modeLeft=modes[mode].modeLeft
+ 			if modeLeft then
+@@ -1508,15 +1432,6 @@
+ 			end
+ 			return true
+ 		end
+-		--[[if highlightflingtargets and rainbowflinghighlights then
+-			local c3hsv=Color3.fromHSV
+-			tinsert(cons,Connect(insGet(rus,"RenderStepped"),function()
+-				local c=c3hsv((sine*0.3)%1,1,1)
+-				for i,v in next,flingtable do
+-					insSet(v,"OutlineColor",c)
+-				end
+-			end))
+-		end]]
+ 	else
+ 		fling=emptyfunction
+ 	end
+@@ -1895,15 +1810,12 @@
+ 
+ 		local sine15=sine*15
+ 		local idlerv=v3(sin(sine15),sin(sine15+1.0471975511965976),sin(sine15+2.0943951023931953))
+-		local idleoff=idlerv*0.003910064697265625 --0.0156402587890625/4
++		local idleoff=idlerv*0.003910064697265625
+ 
+ 		local claimpos=insGet(primarypart,"Position")
+ 
+ 		for i,v in next,cframes do
+ 			local part=i.p
+-			--if invisible then
+-			--v=cfAdd(v,invisibleoffset)
+-			--end
+ 			if part then
+ 				if (insGet(part,"ReceiveAge")==0) and not GetJoints(part)[1] then
+ 					local placeholder=i.v
+@@ -1914,7 +1826,7 @@
+ 					local lastpos=i.l
+ 					local vel=(vpos-lastpos)/delta
+ 					local mag=vmagnitude(vel)
+-					if mag<0.11730194091796875 then --0.0156402587890625*15/2
++					if mag<0.11730194091796875 then
+ 						if placeholder and i.b then
+ 							insSet(placeholder,"Parent",nil)
+ 							i.b=false
+@@ -1945,9 +1857,9 @@
+ 						if (sine-claimtime)<retVelTime then
+ 							local offsetToPrimaryPart=claimpos-cfGet(v,"Position")
+ 							local a=625.5001+wsGravity*-2*v3Get(offsetToPrimaryPart,"Y")
+-							if a>0 then --part can reach primary part
++							if a>0 then
+ 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/((25.01+sqrt(a))/wsGravity))
+-							else --part cant reach primary part so at least aim for closest point
++							else
+ 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/(30.010999900019996/wsGravity))
+ 							end
+ 						else
+@@ -2001,15 +1913,15 @@
+ 	tinsert(cons,Connect(heartbeat,mainFunction))
+ 	mainFunction()
+ 
+-	local refreshjoints=function(v) --use this on the main part if u have parts that
+-		refreshjointsI(v) --are connected with each other but arent connected to rootpart
++	local refreshjoints=function(v)
++		refreshjointsI(v)
+ 		tclear(refreshedjoints)
+ 	end
+ 
+ 	local legcfR=cf(1,-1,0)
+ 	local legcfL=cf(-1,-1,0)
+ 	local raydir=v3_010*-2
+-	local raycastlegs=function() --this returns 2 values: right leg raycast offset, left leg raycast offset
++	local raycastlegs=function()
+ 		local rY=Raycast(ws,cfGet(cfMul(cfr,legcfR),"Position"),raydir,raycastparams)
+ 		local lY=Raycast(ws,cfGet(cfMul(cfr,legcfL),"Position"),raydir,raycastparams)
+ 		if rY then
+@@ -2025,7 +1937,7 @@
+ 		end
+ 	end
+ 
+-	local velbycfrvec=function() --this returns 2 values: forward/backwards movement (from -1 to 1), right/left movement (from -1 to 1)
++	local velbycfrvec=function()
+ 		local fw=cfGet(cfr,"LookVector")*xzvel/walkSpeed
+ 		local rt=cfGet(cfr,"RightVector")*xzvel/walkSpeed
+ 		return v3Get(fw,"X")+v3Get(fw,"Z"),v3Get(rt,"X")+v3Get(rt,"Z")
+@@ -2033,8 +1945,8 @@
+ 
+ 	local lastvel=v3_0
+ 	local velchg1=v3_0
+-	local velchgbycfrvec=function() --this returns 2 values: forward/backwards velocity change, right/left velocity change
+-		velchg1=velchg1+(lastvel-xzvel) --i recommend setting velchg1 to v3_0 when u start using this function or it will look worse
++	local velchgbycfrvec=function()
++		velchg1=velchg1+(lastvel-xzvel)
+ 		lastvel=xzvel
+ 		velchg1=velchg1-velchg1*(deltaTime/2)
+ 		local fw=cfGet(cfr,"LookVector")*velchg1/32
+@@ -2044,22 +1956,22 @@
+ 
+ 	local lastYvel=0
+ 	local velYchg1=0
+-	local velYchg=function() --this returns Y axis velocity change
+-		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50) --i recommend setting velYchg1 to 0 when u start using this function or it will look worse
++	local velYchg=function()
++		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50)
+ 		lastYvel=Yvel
+ 		velYchg1=velYchg1-velYchg1*(deltaTime/2)
+ 		return velYchg1
+ 	end
+ 
+-	local rotToMouse=function(alpha) --this rotates ur character towards your mouse hit position
++	local rotToMouse=function(alpha)
+ 		local pos1=pos*v3_010+cfGet(insGet(mouse,"Hit"),"Position")*v3_101
+-		if pos~=pos1 then --could make nan rotation
++		if pos~=pos1 then
+ 			cfr=Lerp(cfr,cfl(pos,pos1),alpha or deltaTime)
+ 		end
+ 	end
+ 
+ 	local glitchJoint=function(joint,targetGlitchTime,delayFrom,delayTo,radiansFrom,radiansTo) 
+-		if sine>targetGlitchTime then --example usage: local glitchtime=0 addMode("x",{idle=function() glitchtime=glitchJoint(joint,glitchtime,0.2,0.4,-0.1,0.1) end})
++		if sine>targetGlitchTime then
+ 			radiansFrom=radiansFrom*100
+ 			radiansTo=radiansTo*100
+ 			joint.C0=cfMul(joint.C0,angles(mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100)) 
+@@ -2086,7 +1998,7 @@
+ 		end
+ 		gravity=n
+ 	end
+-	local setCfr=function(v) --sets character cframe
++	local setCfr=function(v)
+ 		if typeof(v)=="CFrame" then
+ 			local newpos=cfGet(v,"Position")
+ 			camcf=cfAdd(camcf,newpos-pos)
+@@ -2100,22 +2012,22 @@
+ 			pos=v
+ 		end
+ 	end
+-	local getVel=function() --returns character velocity
+-		return xzvel+v3_010*Yvel --important: use only in lerps or it might not work
++	local getVel=function()
++		return xzvel+v3_010*Yvel
+ 	end
+-	local setShiftlock=function(b) --turns shift lock on/off (same as pressing Shift)
++	local setShiftlock=function(b)
+ 		shiftlock=allowshiftlock and (b==true)
+ 	end
+ 	local getShiftlock=function()
+ 		return shiftlock
+ 	end
+-	local getCamCF=function() --returns camera cframe
++	local getCamCF=function()
+ 		return camcf
+ 	end
+-	local isFirstPerson=function() --returns true if user is in first person camera mode
++	local isFirstPerson=function()
+ 		return firstperson
+ 	end
+-	local setCameraMoveable=function(b) --prevents the player from moving his camera
++	local setCameraMoveable=function(b)
+ 		cameraMoveable=b
+ 	end
+ 	local isOnGround=function()
+@@ -2191,12 +2103,10 @@
+ 	}
+ end
+ 
+--- gp backwards compatibility \240\159\151\191
+ local gp=function(p,n,c)
+ 	return QueryDescendants(p,">"..c.."[Name=\""..n.."\"]")[1]
+ end
+ 
+--- again no need to load the whole thing cuz u can use the last one
+ _G.GenesisFDless={reanimate=reanimate,stopreanimate=stopreanimate,gp=gp,rs=rs,insSet=insSet,insGet=insGet,cfMul=cfMul,mouse=mouse,isReanimated=function() return c end}
+ return _G.GenesisFDless
+ end)()
+@@ -2307,7 +2217,7 @@
  	end
  
  	function C.notify(title, text, dur)
@@ -38,7 +496,7 @@
  	end
  
  	local waiters = {}
-@@ -3278,144 +3285,37 @@
+@@ -3278,144 +3188,37 @@
  	end
  	_G.LCFD_Stop = C.stop
  
@@ -146,8 +604,12 @@
 -		for s = 1, #TAB do
 -			tabs[s].BackgroundColor3 = s == cur and COL.accent or COL.panel
 -			tabs[s].TextColor3 = s == cur and COL.bg or COL.text
--		end
--	end
++	local watchers = {}
++	local function fire(what)
++		for _, f in ipairs(table.clone(watchers)) do
++			pcall(f, what)
+ 		end
+ 	end
 -	local statusLbl
 -	local statusToken = 0
 -	local function status(text, col, long)
@@ -161,14 +623,19 @@
 -				statusLbl.TextColor3 = COL.muted
 -			end
 -		end)
--	end
++	local function hub()
++		local h = genv.AtsukoHub
++		return type(h) == "table" and h or nil
+ 	end
 -	local function setDirty(d)
 -		dirty = d
 -		saveBtn.Text = d and "Save *" or "Save"
 -		saveBtn.BackgroundColor3 = d and COL.good or COL.panel
 -		saveBtn.TextColor3 = d and COL.bg or COL.text
 -		toggle.Text = d and "Align *" or "Align"
--	end
++	function AL.alive()
++		return C.alive
+ 	end
 -
 -	local undo = {}
 -	local undoBtn
@@ -176,30 +643,15 @@
 -		undo[#undo + 1] = {cur, table.clone(VAL[cur])}
 -		if #undo > 40 then
 -			table.remove(undo, 1)
--		end
--		undoBtn.Text = "Undo (" .. #undo .. ")"
--	end
--	local function change(k, delta, absolute)
--		local v = VAL[cur]
--		local n = absolute or (v[k] + delta)
-+	local watchers = {}
-+	local function fire(what)
-+		for _, f in ipairs(table.clone(watchers)) do
-+			pcall(f, what)
-+		end
-+	end
-+	local function hub()
-+		local h = genv.AtsukoHub
-+		return type(h) == "table" and h or nil
-+	end
-+	function AL.alive()
-+		return C.alive
-+	end
 +	function AL.focus(s)
 +		if VAL[s] then
 +			cur = s
-+		end
-+	end
+ 		end
+-		undoBtn.Text = "Undo (" .. #undo .. ")"
+ 	end
+-	local function change(k, delta, absolute)
+-		local v = VAL[cur]
+-		local n = absolute or (v[k] + delta)
 +	function AL.get(s)
 +		return VAL[s] and table.clone(VAL[s]) or nil
 +	end
@@ -212,14 +664,18 @@
  		if k > 3 then
  			n = ((n + 180) % 360) - 180
  			n = math.floor(n * 10 + 0.5) / 10
-@@ -3423,337 +3323,126 @@
+@@ -3423,337 +3226,126 @@
  			n = math.floor(n * 1000 + 0.5) / 1000
  		end
  		v[k] = n
 -		rebuild(cur)
 -		boxes[k].Text = fmt(n, k > 3)
 -		setDirty(true)
--	end
++		rebuild(s)
++		AL.dirty = true
++		AL.later()
++		return n
+ 	end
 -
 -	local holdToken = 0
 -	local press = nil
@@ -257,7 +713,17 @@
 -				end
 -			end)
 -		end)
--	end
++	function AL.put(s, vals)
++		if not VAL[s] or type(vals) ~= "table" then
++			return
++		end
++		for k = 1, 6 do
++			VAL[s][k] = tonumber(vals[k]) or 0
++		end
++		rebuild(s)
++		AL.dirty = true
++		AL.later()
+ 	end
 -	C.connect(UIS.InputEnded, function(io)
 -		if io.UserInputType == MB1 or io.UserInputType == TOUCH then
 -			local p = press
@@ -267,7 +733,15 @@
 -				pushUndo()
 -				p.fn()
 -			end
--		end
++	function AL.reset(s)
++		AL.put(s, DEFAULT[s])
++	end
++	function AL.save()
++		AL.tok = (AL.tok or 0) + 1
++		local ok, e = saveAlign()
++		if ok then
++			AL.dirty = false
+ 		end
 -	end)
 -
 -	for k = 1, 6 do
@@ -299,16 +773,31 @@
 -				end
 -			else
 -				box.Text = fmt(VAL[cur][k], k > 3)
--			end
--		end)
--	end
++		return ok, e
++	end
++	function AL.later()
++		AL.tok = (AL.tok or 0) + 1
++		local my = AL.tok
++		task.delay(1.5, function()
++			if my == AL.tok and AL.dirty and C.alive and AL.save() then
++				fire("saved")
+ 			end
+ 		end)
+ 	end
 -
 -	local moveStep = btn({Size = UDim2.new(0, 124, 0, 30), Position = UDim2.new(0, 12, 0, 290 + TY), TextSize = 12}, body)
 -	local turnStep = btn({Size = UDim2.new(0, 124, 0, 30), Position = UDim2.new(0, 144, 0, 290 + TY), TextSize = 12}, body)
 -	local function stepText()
 -		moveStep.Text = "Move step: " .. fmt(MOVE_STEPS[mi])
 -		turnStep.Text = "Turn step: " .. TURN_STEPS[ti]
--	end
++	function AL.load()
++		local ok, e = loadAlign()
++		if ok then
++			AL.dirty = false
++		end
++		fire("load")
++		return ok, e
+ 	end
 -	stepText()
 -	moveStep.MouseButton1Click:Connect(function()
 -		mi = mi % #MOVE_STEPS + 1
@@ -342,90 +831,11 @@
 -	statusLbl = mk("TextLabel", {Size = UDim2.new(1, -24, 0, 18), Position = UDim2.new(0, 12, 0, 482 + TY), BackgroundTransparency = 1, Font = REG, TextSize = 11, TextColor3 = COL.muted, TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Text = HINT}, body)
 -
 -	saveBtn.MouseButton1Click:Connect(function()
-+		rebuild(s)
-+		AL.dirty = true
-+		AL.later()
-+		return n
-+	end
-+	function AL.put(s, vals)
-+		if not VAL[s] or type(vals) ~= "table" then
-+			return
-+		end
-+		for k = 1, 6 do
-+			VAL[s][k] = tonumber(vals[k]) or 0
-+		end
-+		rebuild(s)
-+		AL.dirty = true
-+		AL.later()
-+	end
-+	function AL.reset(s)
-+		AL.put(s, DEFAULT[s])
-+	end
-+	function AL.save()
-+		AL.tok = (AL.tok or 0) + 1
- 		local ok, e = saveAlign()
- 		if ok then
+-		local ok, e = saveAlign()
+-		if ok then
 -			setDirty(false)
 -			status("Saved to " .. FILE, COL.good)
-+			AL.dirty = false
-+		end
-+		return ok, e
-+	end
-+	function AL.later()
-+		AL.tok = (AL.tok or 0) + 1
-+		local my = AL.tok
-+		task.delay(1.5, function()
-+			if my == AL.tok and AL.dirty and C.alive and AL.save() then
-+				fire("saved")
-+			end
-+		end)
-+	end
-+	function AL.load()
-+		local ok, e = loadAlign()
-+		if ok then
-+			AL.dirty = false
-+		end
-+		fire("load")
-+		return ok, e
-+	end
-+	function AL.watch(f)
-+		watchers[#watchers + 1] = f
-+		return function()
-+			local i = table.find(watchers, f)
-+			if i then
-+				table.remove(watchers, i)
-+			end
-+		end
-+	end
-+	function AL.found()
-+		return C.foundText and C.foundText() or ""
-+	end
-+	function AL.hat(s)
-+		if C.alignHat then
-+			return C.alignHat(s)
-+		end
-+		return nil
-+	end
-+	AL.optList = {{"hatgun", "Hat Gun"}, {"roll", "Roll (upside down? tap this)", "button"}}
-+	AL.optsSaved = false
-+	function AL.opts()
-+		return {hatgun = not C.hatOn or C.hatOn("gun") == true}
-+	end
-+	function AL.setOpt(name, on)
-+		local v = VAL[cur]
-+		if name == "roll" and v then
-+			AL.set(cur, 4, v[4] + 180)
-+		elseif name == "hatgun" and C.toggleHat and C.hatOn then
-+			if (C.hatOn("gun") == true) ~= (on == true) then
-+				C.toggleHat("gun")
-+			end
-+		end
-+	end
-+	function C.toggleAlign()
-+		local h = hub()
-+		if h and type(h.Align) == "function" then
-+			pcall(h.Align)
- 		else
+-		else
 -			status("Not saved: " .. tostring(e), COL.bad)
 -		end
 -	end)
@@ -524,10 +934,16 @@
 -		for _, b in ipairs(solid) do
 -			if b.Parent and b ~= toggle then
 -				b.BackgroundTransparency = faded and 0.55 or 0
--			end
--		end
++	function AL.watch(f)
++		watchers[#watchers + 1] = f
++		return function()
++			local i = table.find(watchers, f)
++			if i then
++				table.remove(watchers, i)
+ 			end
+ 		end
 -		fadeBtn.Text = faded and "Solid" or "Fade"
--	end
+ 	end
 -	fadeBtn.MouseButton1Click:Connect(function()
 -		faded = not faded
 -		paintFade()
@@ -543,10 +959,36 @@
 -		if v then
 -			refreshBoxes()
 -			fit()
--		end
--	end
--	function C.toggleAlign()
++	function AL.found()
++		return C.foundText and C.foundText() or ""
++	end
++	function AL.hat(s)
++		if C.alignHat then
++			return C.alignHat(s)
++		end
++		return nil
++	end
++	AL.optList = {{"hatgun", "Hat Gun"}, {"roll", "Roll (upside down? tap this)", "button"}}
++	AL.optsSaved = false
++	function AL.opts()
++		return {hatgun = not C.hatOn or C.hatOn("gun") == true}
++	end
++	function AL.setOpt(name, on)
++		local v = VAL[cur]
++		if name == "roll" and v then
++			AL.set(cur, 4, v[4] + 180)
++		elseif name == "hatgun" and C.toggleHat and C.hatOn then
++			if (C.hatOn("gun") == true) ~= (on == true) then
++				C.toggleHat("gun")
++			end
+ 		end
+ 	end
+ 	function C.toggleAlign()
 -		setOpen(not main.Visible)
++		local h = hub()
++		if h and type(h.Align) == "function" then
++			pcall(h.Align)
++		else
 +			C.notify(AL.title, "Open Atsuko Hub to line things up, the alignment lives there now", 5)
 +		end
  	end
@@ -560,12 +1002,19 @@
 -	toggle.MouseButton1Click:Connect(C.toggleAlign)
 -	hideBtn.MouseButton1Click:Connect(function()
 -		setOpen(false)
+-	end)
+-	stopBtn.MouseButton1Click:Connect(function()
+-		if C.screenOn and C.screenOn() then
+-			status("-screen is on, type -screen stop first", COL.warn)
+-			return
 +	genv.AtsukoAlign = AL
 +	do
 +		local h = hub()
 +		if h and type(h.AlignReady) == "function" then
 +			pcall(h.AlignReady)
-+		end
+ 		end
+-		if dirty then
+-			saveAlign()
 +	end
 +
 +	local marker = C.newPart({Name = "AlignMarker", Shape = Enum.PartType.Ball, Size = V3(0.4, 0.4, 0.4), Color = C3(1, 0.25, 0.3), Transparency = 1})
@@ -573,7 +1022,11 @@
 +		if AL.dirty then
 +			pcall(saveAlign)
 +			AL.dirty = false
-+		end
+ 		end
+-		if C.requestStop then
+-			task.spawn(C.requestStop)
+-		else
+-			C.stop()
 +		AL.open = false
 +		if genv.AtsukoAlign == AL then
 +			genv.AtsukoAlign = nil
@@ -582,23 +1035,9 @@
 +		local h = hub()
 +		if h and type(h.AlignReady) == "function" then
 +			pcall(h.AlignReady)
-+		end
+ 		end
  	end)
--	stopBtn.MouseButton1Click:Connect(function()
--		if C.screenOn and C.screenOn() then
--			status("-screen is on, type -screen stop first", COL.warn)
--			return
--		end
--		if dirty then
--			saveAlign()
--		end
--		if C.requestStop then
--			task.spawn(C.requestStop)
--		else
--			C.stop()
--		end
--	end)
--
+ 
 -	local dragging, dragStart, startPos
 -	header.InputBegan:Connect(function(io)
 -		if io.UserInputType == MB1 or io.UserInputType == TOUCH then
@@ -634,7 +1073,7 @@
 -	C.onStop(function()
 -		gui:Destroy()
 -	end)
- 
+-
  	function C.alignFrame()
 -		if main.Visible then
 +		if AL.open then
@@ -656,12 +1095,38 @@
  		elseif marker.Transparency < 1 then
  			marker.Transparency = 1
  		end
-@@ -3777,22 +3466,12 @@
+@@ -3762,37 +3354,25 @@
+ 	return C
+ end
+ local CMD = {
+-	-- keys: Z = shoot (hold it to keep shooting), X = shockwaves, C = rain, V = slam, E = dash, Q = warp, T = taunt
+-	-- chat: -music = your music player (-music 2 = 2nd song, -music name = by name, -music close), -align, -hatgun, -stop
+-	Gun = "87566002870491", -- Sakura Futuristic Sniper (Back), it goes in your right hand
+-	GunWords = {"sakura", "sniper"}, -- or any hat with these words in its name
+-	OgGuns = true, -- the og script's guns work too: DG-40 Archangel, Cyber Heavy Revolver, Law Enforcement Beanbag, Starslayer Railgun, MARKA-17M, The Pogo, Kinetic Staff
+-	Bullet = "4307568890", -- golden golem rock (Elemental Crystal Golem Shoulder Rock): every shot flashes it at the gun and where it lands
+-	HatGun = true, -- false = the gun hat stays on you and the og gun shows instead (button in the align panel, or type -hatgun)
+-	ClientGun = "auto", -- the og gun, only you see it: "auto" = when you're not holding a gun hat, true = always, false = never
+-	Gear = true, -- the spinning gear on your hand (only you see it)
+-	Aura = true, -- the white slashes around your feet (only you see them)
+-	Visualizer = true, -- the music circle under you (only you see it), its colors are in the music list (chat -music)
++	Gun = "87566002870491",
++	GunWords = {"sakura", "sniper"},
++	OgGuns = true,
++	Bullet = "4307568890",
++	HatGun = true,
++	ClientGun = "auto",
++	Gear = true,
++	Aura = true,
++	Visualizer = true,
+ 	CamShake = true,
  	Music = true,
- 	MusicVolume = 2.5, -- the volume the music list starts with (it remembers what you set there)
+-	MusicVolume = 2.5, -- the volume the music list starts with (it remembers what you set there)
++	MusicVolume = 2.5,
  	WalkSpeed = 15,
 -	TouchButtons = "auto", -- skill buttons on screen: "auto" = phones only, true = always, false = never
- 	AlignKey = "p", -- align panel: Gun (how you hold it), Muzzle (where the beam and the bullet come out)
+-	AlignKey = "p", -- align panel: Gun (how you hold it), Muzzle (where the beam and the bullet come out)
++	AlignKey = "p",
  }
  
  if not game:IsLoaded() then
@@ -679,11 +1144,10 @@
  
  local C = LCCore(FD, {gunIds = {}, alignFile = "CommanderV2Align.json", alignKey = CMD.AlignKey, maxEffects = 420})
  if not C then
-@@ -3911,6 +3590,30 @@
- 		return rawget(e, "p").Parent.Name
+@@ -3912,6 +3492,30 @@
  	end)
  	return ok and type(n) == "string" and n or ""
-+end
+ end
 +local function hubJob(slot, e)
 +	local A = ((typeof(getgenv) == "function" and getgenv()) or _G).AtsukoAlignment
 +	if type(A) ~= "table" or type(A.match) ~= "function" or type(e) ~= "table" then
@@ -707,10 +1171,11 @@
 +	end
 +	local ok, undo = pcall(A.join, fd, e)
 +	return ok and type(undo) == "function" and undo or nil
- end
++end
  local H = {}
  local HATLIST = {}
-@@ -3969,6 +3672,9 @@
+ local GUNS = {}
+@@ -3969,6 +3573,9 @@
  end
  hatDef("rock", "", {}, CMD.Bullet)
  local function hatRank(h, e)
@@ -720,7 +1185,7 @@
  	local m, t = idOf(rawget(e, "m")), idOf(rawget(e, "t"))
  	if h.mesh and m == h.mesh then
  		return 1
-@@ -4007,6 +3713,10 @@
+@@ -4007,6 +3614,10 @@
  local function restore(h)
  	local j, home = h.j, h.home
  	h.glued = false
@@ -731,7 +1196,7 @@
  	if j and home then
  		pcall(function()
  			j.Part1, j.C0, j.C1 = home[1], home[2], home[3]
-@@ -4068,6 +3778,10 @@
+@@ -4068,6 +3679,10 @@
  		h.cf = GRIP * CF(0.26 * L, 0.33 * Hh, 0) * m:Inverse()
  	end
  	findTip(h)
@@ -742,7 +1207,7 @@
  end
  local function scanHats()
  	local t = os.clock()
-@@ -4133,10 +3847,31 @@
+@@ -4133,10 +3748,31 @@
  end
  local function glue(h, rel)
  	local j = h.j
@@ -774,7 +1239,7 @@
  end
  C.foundText = function()
  	local g = gunHat()
-@@ -4546,66 +4281,7 @@
+@@ -4546,66 +4182,7 @@
  	end
  end
  
@@ -841,7 +1306,7 @@
  	if CMD.Aura ~= false and W.root and RND(1, 2) == 1 then
  		C.Effect({Time = 25, EffectType = "Slash", Size = Vector3.zero, Size2 = VT(0.1, 0, 0.1), Transparency = 0, Transparency2 = 1, CFrame = W.root * CF(0, -3, 0) * A(RND(-5, 5), RND(-360, 360), RND(-5, 5)), RotationY = RND(-1, 1), Material = "Neon", Color = WHITE})
  	end
-@@ -5658,11 +5334,4 @@
+@@ -5658,11 +5235,4 @@
  	end
  end
  

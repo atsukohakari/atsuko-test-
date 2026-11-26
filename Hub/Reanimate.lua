@@ -1,8 +1,3 @@
---[[
-	Reanimate (Atsuko Hub)
-	the reanimate style comes from Uhhhhhh by STEVETHEREALONE: https://discord.gg/NASNUKRBVM
-]]
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")

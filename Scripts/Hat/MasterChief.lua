@@ -1,51 +1,3 @@
--- open sourcing fixed scripts cause they were already open sourced --
--- converted by melon -- 
-
---[[
-   "this script was originally converted by me in 2022 (and 2023) and
-    recently i recovered my scripts folder and found it
-    so expect a few classic scripts returning soon " - MelonScripter   
-
-   Credits:
-   Helkern - Creator
-   Emper - Reanimate
-   MyWorld - Optimization
-
-   Paid Weapons:
-   https://www.roblox.com/catalog/6775283114/Tactical-Cyberpunk-Railgun
-   https://www.roblox.com/catalog/5064344615/Type-12-Scattershot
-
-   Free Weapon:
-   https://www.roblox.com/catalog/5552252553/Kinetic-Staff
-   https://www.roblox.com/catalog/15254947445/24k-Gold-Plunger
-
-   Paid Rig:
-   https://www.roblox.com/catalog/14768701869/White-Extended-Left-Arm
-   https://www.roblox.com/catalog/14255554762/Extra-Left-White-Arm
-   https://www.roblox.com/catalog/14768693948/White-Extended-Right-Arm
-   https://www.roblox.com/catalog/14255556501/Extra-Right-White-Arm
-   https://www.roblox.com/catalog/14255528083/Torso-Extension
- 
-   Can also be used:
-   https://www.roblox.com/catalog/4504231783/Elemental-Crystal-Golem-Shoulder-Rock
-   https://www.roblox.com/catalog/12344545199/Extra-Left-hand-moving-Blocky-white
-   https://www.roblox.com/catalog/12344591101/Extra-Right-hand-moving-Blocky-white
-   https://www.roblox.com/catalog/13779879140/Black-Fluffy-Fur-Body
-   https://www.roblox.com/catalog/17374846953/Extra-Right-Black-Arm
-   https://www.roblox.com/catalog/17374851733/Extra-Left-Black-Arm 
-
-   Free Rig
-   https://www.roblox.com/catalog/3033910400/International-Fedora-Germany
-   https://www.roblox.com/catalog/3409612660/International-Fedora-USA
-   https://www.roblox.com/catalog/3398308134/International-Fedora-Canada
-   https://www.roblox.com/catalog/3033908130/International-Fedora-France
-   https://www.roblox.com/catalog/4819740796/Robox
-
-   Socials:
-   https://twitter.com/MelonScripter
-   https://www.youtube.com/@MelonScripter
-]]
-
 local function hubNotify(title, text, kind, dur)
 	local env = (typeof(getgenv) == "function" and getgenv()) or _G
 	local f = env.AtsukoNotify
@@ -1453,7 +1405,6 @@ function agyro()
 end
 
 
-
 songid = 0
 speed = 16
 riflequipped = true
@@ -1544,7 +1495,6 @@ MC.arm({rifle = {part = riflez, frame = rifle.Handle, model = rifle}, shotgun = 
 
 local SHOOTING = false
 
--- direct .position looks bad on server
 
 function makeafuckingtween(fuckingposition)
     local fuckingtween = game:GetService("TweenService"):Create(Bullet, TweenInfo.new(0.001, Enum.EasingStyle.Cubic, Enum.EasingDirection.In), {Position = fuckingposition})
@@ -1626,8 +1576,6 @@ function switch()
 		end)
 	end
 end
-
-
 
 
 function cs()

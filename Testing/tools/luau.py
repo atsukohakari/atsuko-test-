@@ -40,7 +40,7 @@ class Tok(object):
         return "Tok(%s,%r,%d)" % (self.k, self.v, self.line)
 
 
-def lex(src, line0=1, comments=None):
+def lex(src, line0=1, comments=None, spans=None):
     toks = []
     i = 0
     n = len(src)
@@ -68,6 +68,8 @@ def lex(src, line0=1, comments=None):
                 text = src[i:j + len(close)]
                 if comments is not None:
                     comments.append((line, "block", text))
+                if spans is not None:
+                    spans.append((i, j + len(close), text))
                 line += text.count("\n")
                 i = j + len(close)
             else:
@@ -76,6 +78,8 @@ def lex(src, line0=1, comments=None):
                     j = n
                 if comments is not None:
                     comments.append((line, "line", src[i:j].rstrip("\r")))
+                if spans is not None:
+                    spans.append((i, j, src[i:j]))
                 i = j
             continue
         if c.isalpha() or c == "_":

@@ -6,6 +6,10 @@ import re
 import sys
 import zipfile
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+import uncomment
+from difflib import SequenceMatcher
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 HUNK_HEADER = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
@@ -250,6 +254,42 @@ def footprints(hunks, old_lines):
     return result
 
 
+def real_changes(restored_text, shipped_text):
+    original = split_lines(restored_text)
+    bare = split_lines(uncomment.strip(restored_text)[0])
+    shipped = split_lines(shipped_text)
+    back = {}
+    for tag, i1, i2, j1, j2 in SequenceMatcher(None, original, bare, autojunk=False).get_opcodes():
+        for k in range(j1, j2):
+            back[k] = (i1 + (k - j1) if tag == "equal" else min(i1 + (k - j1), max(i1, i2 - 1))) + 1
+    back[len(bare)] = len(original) + 1
+    result = []
+    for tag, i1, i2, j1, j2 in SequenceMatcher(None, bare, shipped, autojunk=False).get_opcodes():
+        if tag == "equal":
+            continue
+        if "".join(bare[i1:i2]).strip() == "" and "".join(shipped[j1:j2]).strip() == "":
+            continue
+        if tag == "delete":
+            low, high = i1, i2
+            while low > 0 and bare[low - 1] == bare[high - 1]:
+                low -= 1
+                high -= 1
+            places = []
+            while True:
+                places.append((back[low], back[high - 1]))
+                if high >= len(bare) or bare[low] != bare[high]:
+                    break
+                low += 1
+                high += 1
+            result.append((places, None, "slide"))
+        elif i2 > i1:
+            result.append((back[i1], back[i2 - 1], "replace"))
+        else:
+            point = back.get(i1, len(original) + 1)
+            result.append((point - 1, point, "insert"))
+    return result
+
+
 def load_blocks():
     if not os.path.isfile(BLOCKS_FILE):
         return {}
@@ -334,8 +374,12 @@ def check_one(spec, roots, zips, blocks):
         result["notes"].append("no block list recorded, hunk placement not checked")
     else:
         outside = []
-        for first, last, kind in footprints(hunks, split_lines(restored.decode("latin-1"))):
-            if kind == "replace":
+        for first, last, kind in real_changes(restored.decode("latin-1"), shipped_bytes.decode("latin-1")):
+            if kind == "slide":
+                inside = any(low <= a and b <= high for a, b in first for low, high, _why in ranges)
+                if not inside:
+                    first, last = first[0]
+            elif kind == "replace":
                 inside = any(low <= first and last <= high for low, high, _why in ranges)
             else:
                 inside = any(not (last < low or first > high) for low, high, _why in ranges)
@@ -343,9 +387,9 @@ def check_one(spec, roots, zips, blocks):
                 outside.append("%d-%d" % (first, last))
         if outside:
             result["status"] = "FAIL"
-            result["notes"].append("hunks outside the named blocks at original lines " + ", ".join(outside))
+            result["notes"].append("apart from taking the comments out, changes outside the named blocks at original lines " + ", ".join(outside))
         else:
-            result["notes"].append("every hunk lies inside a named block (%d blocks)" % len(ranges))
+            result["notes"].append("apart from taking the comments out, every change lies inside a named block (%d blocks)" % len(ranges))
     return result
 
 

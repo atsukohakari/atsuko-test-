@@ -1,32 +1,12 @@
---[[
-	LAST★STAR  ·  FDless edition
-
-	reanimate : FDless by MyWorld (continued by rqz), built in further down. Works with every FDless hat rig.
-	swords    : your 6 sword hats (5316479641, 5316539421, 5699795428, 5316549755, 5268602207, 5268555719)
-	how it works:
-	  Last Star animates an invisible R6 body that only you have (the "puppet"). Every frame FDless copies the
-	  puppet's pose onto your real hats: your hat rig follows the body, and the 6 swords follow the 6 wings.
-	  FDless still reads your keys / thumbstick and runs the camera, so it feels exactly like FDless.
-]]
-
-LS_SETTINGS = { -- (global on purpose: the script already has ~200 locals, Luau's limit)
-	-- the 6 sword hats you get with -gh (only in the game that has the -gh command)
+LS_SETTINGS = {
 	SWORD_HATS = {"5316479641", "5316539421", "5699795428", "5316549755", "5268602207", "5268555719"},
-	-- sword 1..6 (Wing1..Wing6): each sword hat is found by its texture
 	SWORD_TEXTURES = {"5316471565", "5278777022", "5316510551", "5692006383", "5268538095", "5254572443"},
-	-- backup: if a texture is missing, any other hat with one of these sword meshes takes the empty slot
 	SWORD_MESHES = {"5278721954", "5254583415"},
-	-- where each sword sits on its wing (the same grip the script used before)
 	SWORD_OFFSET = CFrame.new(-6, 0, 0) * CFrame.Angles(0, math.rad(90), 0) * CFrame.Angles(math.rad(-40), 0, 0),
-	-- true = show the invisible body Last Star animates (only for testing without a hat rig)
 	SHOW_PUPPET = false,
-	-- false = no effects (no lag): no explosion/shockwave parts, particles, trails, beams, lights, screen flashes,
-	-- glitch screen, craters, debris, teleport trail, hitbox helpers. Music, sounds, chat, GUI and moves stay.
-	-- true = everything back like the original (heavy)
 	EFFECTS = false,
 }
 
--- /// GIVE THE 6 SWORDS (only in games that have the -gh command; anywhere else just wear them)
 do
 	local RS = game:GetService("ReplicatedStorage")
 	local remote = RS:FindFirstChild("01_server") or RS:WaitForChild("01_server", 3)
@@ -48,7 +28,7 @@ do
 			return false
 		end
 		local t0 = os.clock()
-		while os.clock() - t0 < 6 do -- wait (6 s max) until all 6 swords are on you
+		while os.clock() - t0 < 6 do
 			local n = 0
 			local ch = lp.Character
 			if ch then
@@ -61,7 +41,6 @@ do
 			task.wait(.25)
 		end
 		task.wait(.5)
-		-- FDless respawns your real character from time to time: if the new one comes without the swords, give them again
 		lp.CharacterAdded:Connect(function(ch)
 			task.wait(1.5)
 			local n = 0
@@ -79,25 +58,9 @@ GetObjects = function(asset) assert(game.GetObjects,"Your executor is not suppor
 GetInstanceFromScript = function(asset,name,class) for _,v in next,GetObjects(asset)[1]:GetDescendants() do if v:IsA(class) and v["Name"]==name then return v end end end
 GetInstance = function(parent,name,class) for _,v in next,parent:GetDescendants() do if v:IsA(class) and v.Name==name then return v end end end
 workspace=game.Workspace
--- script = GetInstanceFromScript("rbxassetid://11225944180","LastStar","Script")
--- you have a backup ID if this id got http 404
 script = GetInstanceFromScript("rbxassetid://17346979612","LastStar","Script")
 local fury = script.Values:WaitForChild("Fury")
 
---[[
-
-Script written from scratch by Asarii_IV.
-A month-long project orientated around creating the ultimate multi-purpose glitcher.
-
-Credits:
-Asarii_IV - Original creator and owner.
-StratopshericAero - CFrame animation base.
-GunsForGunsKidd - CFrame animation rigs.
-DangerRedile - Convert & More modes
-
-]]
-
--- /// CORE FUNCTIONS
 
 CFA = function(X,Y,Z)
 	return(CFrame.Angles(math.rad(X),math.rad(Y),math.rad(Z)))
@@ -123,9 +86,6 @@ Neon,Forcefield = Enum.Material.Neon,Enum.Material.ForceField
 C3R,C3H,C3N = Color3.fromRGB,Color3.fromHSV,Color3.new
 
 
--- /// LOCAL EVENTS
--- Last Star was a server script: it talks to itself with RemoteEvents (FireServer -> OnServerEvent). On your client
--- those never arrive, so here every event is a small local signal (same names, same arguments).
 LSEvents = {}
 do
 	local LocalPlayer = game:GetService("Players").LocalPlayer
@@ -167,24 +127,14 @@ do
 	function LSEvents:WaitForChild(name) return self[name] end
 end
 
--- /// FDLESS (MyWorld / rqz) — unchanged, built in so no extra loadstring is needed
 do
 local LS_FD = (function()
 --!optimize 2
---no need to load the whole thing cuz u can use the last one
 if _G.GenesisFDless then 
 	return _G.GenesisFDless 
 end
 
---oh you're still here? queue the reanimate
 
---[[
-	FDless Reanimate by MyWorld continued by rqz
-	"var"
-	Patchma Hub Discord: https://discord.com/invite/QMy5f6DrbH
-]]
-
---no need to get and index the library tables with function names every time the script uses them
 local osclock=os.clock
 local tspawn=task.spawn
 local tdelay=task.delay
@@ -207,11 +157,9 @@ local tfind=table.find
 local cyield=coroutine.yield
 local cresume=coroutine.resume
 local crunning=coroutine.running
-local vmagnitude=vector.magnitude --faster than indexing with Magnitude
-local vnormalize=vector.normalize --faster than indexing with Unit
+local vmagnitude=vector.magnitude
+local vnormalize=vector.normalize
 
---the script doesnt have to read global varaibles every time to get them
---why not have them saved in local varaibles for faster access times
 local next=next
 local pcall=pcall
 local xpcall=xpcall
@@ -228,7 +176,7 @@ local v3=Vector3.new
 local c3=Color3.new 
 local cf=CFrame.new
 local cfl=CFrame.lookAt
-local angles=CFrame.fromEulerAngles --faster than .Angles
+local angles=CFrame.fromEulerAngles
 local u2=UDim2.new 
 local e=Enum 
 local rp=RaycastParams.new 
@@ -258,7 +206,6 @@ local humstatesbl=e.HumanoidStateType:GetEnumItems()
 table.remove(humstatesbl,tfind(humstatesbl,enumrunning))
 table.remove(humstatesbl,tfind(humstatesbl,e.HumanoidStateType.None))
 
---not "local function rs" to not assign debug names
 local rs=function()
 	local s=""
 	for i=1,mrandom(8,15) do
@@ -271,7 +218,6 @@ local rs=function()
 	return s
 end
 
---it runs even faster if u call __index and __newindex metamethods directly
 local getMetamethodFromErrorStack=function(userdata,f,test)
 	local ret=nil
 	xpcall(f,function()
@@ -289,10 +235,7 @@ local cfMul=getMetamethodFromErrorStack(cf_0,function(a,b) return a*b end,functi
 local cfAdd=getMetamethodFromErrorStack(cf_0,function(a,b) return a+b end,function(f) return cf(1,2,3)+v3(1,2,3)==f(cf(1,2,3),v3(1,2,3)) end)
 local v3Get=getMetamethodFromErrorStack(v3_0,function(a,b) return a[b] end,function(f) return v3(1,2,3).Unit==f(v3(1,2,3),"Unit") end)
 local v2Get=getMetamethodFromErrorStack(v2(),function(a,b) return a[b] end,function(f) return f(v2(1,2),"Y")==2 end)
---multiplying and adding vector3 is faster if you use the * and + operators
---its faster to multiply X and Y of vector2 than to multiply vector2 and then get X and Y from it
 
---no need to index instances every time to call their functions
 local Clone=insGet(game,"Clone")
 local ClearAllChildren=insGet(game,"ClearAllChildren")
 local Destroy=insGet(game,"Destroy")
@@ -304,7 +247,6 @@ local IsDescendantOf=insGet(game,"IsDescendantOf")
 local QueryDescendants=insGet(game,"QueryDescendants")
 local GetPropertyChangedSignal=insGet(game,"GetPropertyChangedSignal")
 
---findfirstchildofclass faster than getservice
 local plrs=FindFirstChildOfClass(game,"Players")
 local rus=FindFirstChildOfClass(game,"RunService")
 local ws=FindFirstChildOfClass(game,"Workspace")
@@ -341,37 +283,16 @@ local Inverse=cfGet(cf_0,"Inverse")
 local Lerp=cfGet(cf_0,"Lerp")
 
 local aligns={
-	--[[
-		example: 
-		{PartName="Right Arm",meshid="123456789",textureid="123456789",AccessoryName="Name",C0=cf(1,2,3)*angles(1,2,3)},
 
-		PartName (required) - the name of the body part you want to align the hat to
-		meshid (optional) - mesh id of the mesh of the accessory you want to align
-		textureid (optional) - texture id of the mesh of the accessory you want to align
-		AccessoryName (optional) - instance name of the accessory you want to align 
-		C0 (optional) - offset from the target body part to the accessory (defaults to cf(0,0,0) if unspecified)
-		
-		accessories will align to the first entry whose criteria they match
-		(unspecified meshid/textureid/accessoryname accepts all accessories)
-		
-		each entry aligns one accessory at most
-	]]
-
-	-- unknown head
 	{PartName="Head",meshid="11601535857",C0=angles(0,3.141592653589793,0)},
 
-	-- patchma gear arms
 	{PartName="Left Arm",meshid="13831073174",C0=cfMul(cf(0.017,0,-0.23),angles(-1.4835298641951802,-0.15707963267948966,2.199114857512855))},
 	{PartName="Right Arm",meshid="13839903766",C0=cfMul(cf(0,-0.62,-0.01),angles(1.6580627893946132,0.15707963267948966,-2.199114857512855))},
 
-	-- patchma yellow leg
 	{PartName="Left Leg",meshid="11159370334",textureid="11159285454",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 
-	-- patchma lego piece leg
 	{PartName="Right Leg",meshid="12652772399",textureid="12652775021",C0=cf(0,-0.125,0)},
 
-	-- offsale white rig
-	-- a ton of offsaled black torso's
 	{PartName="Torso",meshid="14768666349"},
 	{PartName="Torso",meshid="14241018198"},
 	{PartName="Torso",meshid="13421774668"},
@@ -380,7 +301,6 @@ local aligns={
 	{PartName="Left Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="14768684979",C0=angles(0,0,1.5707963267948966)},
 
-	-- og fur body, r15 arms, smiley legs rig
 	{PartName="Head",meshid="13953154391"},
 	{PartName="Torso",meshid="13778226115"},
 	{PartName="Left Leg",meshid="11159370334",textureid="11159284657",C0=angles(1.5707963267948966,0,1.5707963267948966)},
@@ -388,28 +308,22 @@ local aligns={
 	{PartName="Left Arm",meshid="12344207333",C0=angles(2,0,0)},
 	{PartName="Right Arm",meshid="12344206657",C0=angles(2,0,0)},
 
-	-- torso for both "white limbs black torso rig" and "black rig"
 	{PartName="Torso",meshid="110684113028749"},
-	-- white limbs black torso rig
 	{PartName="Head",meshid="13058343355",C0=angles(0,3.141592653589793,0)},
 	{PartName="Left Leg",meshid="139733645770094",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="99608462237958",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="90736849096372",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105141400603933",C0=angles(0,0,1.5707963267948966)},
-	-- head for black rigs
 	{PartName="Head",meshid="13953153289"},
-	-- lay offsale black rig
 	{PartName="Left Leg",meshid="17387586286",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="17387586286",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="17374767929",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="17374767929",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
-	-- 7ws offsale black rig
 	{PartName="Left Leg",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="125405780718494",C0=angles(1.5707963267948966,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="125405780718494",C0=angles(-1.5707963267948966,0,1.5707963267948966)},
 
-	-- meshless rig
 	{PartName="Head",meshid="13953094351"},
 	{PartName="Torso",meshid="127552124837034",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Leg",meshid="121304376791439"},
@@ -417,32 +331,26 @@ local aligns={
 	{PartName="Left Arm",meshid="117287001096396"},
 	{PartName="Right Arm",meshid="117287001096396"},
 
-	-- head for noob rig
 	{PartName="Head",meshid="13058309233",C0=angles(0,3.141592653589793,0)},
-	-- lay offsale noob rig
 	{PartName="Torso",meshid="18640899369"},
 	{PartName="Left Leg",meshid="18640901641"},
 	{PartName="Right Leg",meshid="18640901641"},
 	{PartName="Left Arm",meshid="18640914129"},
 	{PartName="Right Arm",meshid="18640914129"},
-	-- 7ws offsale noob rig
 	{PartName="Torso",meshid="126825022897778"},
 	{PartName="Left Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",textureid="73798034827573",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",textureid="135650240593878",C0=angles(0,0,1.5707963267948966)},
 
-	-- white torso
 	{PartName="Torso",meshid="126825022897778"},
 
-	-- lay onsale gray torso white arm black leg rig
 	{PartName="Torso",meshid="139792224823925"},
 	{PartName="Left Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Leg",meshid="83395427313429",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Left Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 	{PartName="Right Arm",meshid="105263225400272",C0=angles(0,0,1.5707963267948966)},
 
-	-- shownape/geecee auto rig
 	{PartName="Head",AccessoryName="Accessory (autorig_Head)"},
 	{PartName="Torso",AccessoryName="Accessory (autorig_Torso)"},
 	{PartName="Left Leg",AccessoryName="Accessory (autorig_LeftLeg)"},
@@ -450,16 +358,6 @@ local aligns={
 	{PartName="Left Arm",AccessoryName="Accessory (autorig_LeftArm)"},
 	{PartName="Right Arm",AccessoryName="Accessory (autorig_RightArm)"},
 
-	-- free rig
-	--[[{PartName="Left Arm",meshid="4324138105",textureid="4324138210",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Left Arm",meshid="4154474745",textureid="4154474807",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(-0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3650191503",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(0.125,-0.3,0)},
-	{PartName="Right Arm",meshid="3030546036",textureid="3443321249",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360974849",C0=angles(1.5271630954950384,1.5707963267948966,0)*cf(-0.125,-0.35,0)},
-	{PartName="Left Leg",meshid="3030546036",textureid="3360978739",C0=angles(-1.6144295580947547,-1.5707963267948966,0)*cf(-0.125,0.3,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3033898741",C0=angles(1.5271630954950384,-1.5707963267948966,0)*cf(0.125,-0.35,0)},
-	{PartName="Right Leg",meshid="3030546036",textureid="3409604993",C0=angles(-1.6144295580947547,1.5707963267948966,0)*cf(0.125,0.3,0)},
-	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)}]]
 	{PartName="Torso",meshid="4819720316",textureid="4819722776",C0=angles(0,0,0.2617993877991494)},
 	{PartName="Left Leg",meshid="4094864753",textureid="4094881938",C0=angles(0,0,-1.5707963267948966)},
 	{PartName="Right Leg",meshid="4154474745",textureid="4154474807",C0=angles(0,0,1.5707963267948966)},
@@ -493,8 +391,6 @@ local emptyfunction=function() end
 local fling=fling~=false
 local allowshiftlock=allowshiftlock~=false
 local ctrltp=ctrltp~=false
---local invisiblekeybind=false --invisiblekeybind~=false
---local invisibleoffset=(type(invisibleoffset)=="number" and v3_010*-invisibleoffset) or v3_010*-100
 local placeholders=placeholders~=false
 local clickfling=clickfling==true
 local flingdirection=(type(flingdirection)=="number" and flingdirection) or 0
@@ -522,7 +418,6 @@ if (flingtargetting==2) and not setscriptable then
 	flingtargetting=0
 end	
 local highlightflingtargets=highlightflingtargets~=false
---local rainbowflinghighlights=rainbowflinghighlights~=false
 local discharscripts=discharscripts~=false and function(v) if IsA(v,"Script") then insSet(v,"Disabled",true) end end
 local flingchangestate=(type(flingchangestate)=="number" and flingchangestate) or 3
 local respawntp=(type(respawntp)=="number" and respawntp) or 3
@@ -567,7 +462,7 @@ local stopreanimate=function()
 			hrpcon0=nil
 		end
 		for i,v in next,flingtable do
-			if v then --it could be false
+			if v then
 				Destroy(v)
 			end
 		end
@@ -587,24 +482,18 @@ local stopreanimate=function()
 	return false
 end
 local reanimate=function()
-	--[[
-		FDless reanimate by MyWorld continued by rqz
-		optimize the optimized
-	]]
 
-	local novoid=true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them
-	local speedlimit=3000 --makes your parts move slower if the magnitude of their velocity is higher than this
-	local retVelTime=0.51 --time that claimed parts have velocity to reclaim in case u lose them
-	local walkSpeed=16 --your walkspeed (can be changed at runtime)
-	local jumpPower=50 --your jump power (can be changed at runtime)
-	local gravity=196.2 --how fast the characters velocity decreases while falling (can be changed at runtime)
-	local ctrlclicktp=ctrltp --makes you teleport where u point ur mouse cursor at when click and hold ctrl down
-	--local invisible = false --moves your parts underground so you are not visible by pressing "i"
+	local novoid=true
+	local speedlimit=3000
+	local retVelTime=0.51
+	local walkSpeed=16
+	local jumpPower=50
+	local gravity=196.2
+	local ctrlclicktp=ctrltp
 
 	if stopreanimate() then return end
 
 	local cam=nil
-	--theres a way to have ws.currentcamera nil on heartbeat and still have the game run normally
 	local refcam=function()
 		local newcam=insGet(ws,"CurrentCamera")
 		while not newcam do
@@ -1064,7 +953,7 @@ local reanimate=function()
 	tinsert(cons,Connect(insGet(plrs,"PlayerAdded"),onplayer))
 	if disguiscripts then
 		tinsert(cons,Connect(insGet(pg,"DescendantAdded"),function(v)
-			if IsA(v,"Script") then --mind Enum.RunContext.Client
+			if IsA(v,"Script") then
 				insSet(v,"Disabled",true) 
 			end
 		end))
@@ -1419,7 +1308,6 @@ local reanimate=function()
 	refreshKeyboardMovement()
 
 	local keyShift=KeyCode.LeftShift
-	--local keyI=KeyCode.I
 	tinsert(cons,Connect(insGet(uis,"InputBegan"),function(a)
 		if insGet(gs,"MenuIsOpen") or GetFocusedTextBox(uis) then
 			return
@@ -1441,8 +1329,6 @@ local reanimate=function()
 			jumpingInput=true
 		elseif a==keyShift then
 			shiftlock=allowshiftlock and not shiftlock
-			--elseif invisiblekeybind and a==keyI then
-			--invisible=not invisible
 		elseif modes[a] then
 			local modeLeft=modes[mode].modeLeft
 			if modeLeft then
@@ -1668,15 +1554,6 @@ local reanimate=function()
 			end
 			return true
 		end
-		--[[if highlightflingtargets and rainbowflinghighlights then
-			local c3hsv=Color3.fromHSV
-			tinsert(cons,Connect(insGet(rus,"RenderStepped"),function()
-				local c=c3hsv((sine*0.3)%1,1,1)
-				for i,v in next,flingtable do
-					insSet(v,"OutlineColor",c)
-				end
-			end))
-		end]]
 	else
 		fling=emptyfunction
 	end
@@ -2045,15 +1922,12 @@ local reanimate=function()
 
 		local sine15=sine*15
 		local idlerv=v3(sin(sine15),sin(sine15+1.0471975511965976),sin(sine15+2.0943951023931953))
-		local idleoff=idlerv*0.003910064697265625 --0.0156402587890625/4
+		local idleoff=idlerv*0.003910064697265625
 
 		local claimpos=insGet(primarypart,"Position")
 
 		for i,v in next,cframes do
 			local part=i.p
-			--if invisible then
-			--v=cfAdd(v,invisibleoffset)
-			--end
 			if part then
 				if (insGet(part,"ReceiveAge")==0) and not GetJoints(part)[1] then
 					local placeholder=i.v
@@ -2064,7 +1938,7 @@ local reanimate=function()
 					local lastpos=i.l
 					local vel=(vpos-lastpos)/delta
 					local mag=vmagnitude(vel)
-					if mag<0.11730194091796875 then --0.0156402587890625*15/2
+					if mag<0.11730194091796875 then
 						if placeholder and i.b then
 							insSet(placeholder,"Parent",nil)
 							i.b=false
@@ -2095,9 +1969,9 @@ local reanimate=function()
 						if (sine-claimtime)<retVelTime then
 							local offsetToPrimaryPart=claimpos-cfGet(v,"Position")
 							local a=625.5001+wsGravity*-2*v3Get(offsetToPrimaryPart,"Y")
-							if a>0 then --part can reach primary part
+							if a>0 then
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/((25.01+sqrt(a))/wsGravity))
-							else --part cant reach primary part so at least aim for closest point
+							else
 								insSet(part,"AssemblyLinearVelocity",v3_net+offsetToPrimaryPart*v3_101/(30.010999900019996/wsGravity))
 							end
 						else
@@ -2151,15 +2025,15 @@ local reanimate=function()
 	tinsert(cons,Connect(heartbeat,mainFunction))
 	mainFunction()
 
-	local refreshjoints=function(v) --use this on the main part if u have parts that
-		refreshjointsI(v) --are connected with each other but arent connected to rootpart
+	local refreshjoints=function(v)
+		refreshjointsI(v)
 		tclear(refreshedjoints)
 	end
 
 	local legcfR=cf(1,-1,0)
 	local legcfL=cf(-1,-1,0)
 	local raydir=v3_010*-2
-	local raycastlegs=function() --this returns 2 values: right leg raycast offset, left leg raycast offset
+	local raycastlegs=function()
 		local rY=Raycast(ws,cfGet(cfMul(cfr,legcfR),"Position"),raydir,raycastparams)
 		local lY=Raycast(ws,cfGet(cfMul(cfr,legcfL),"Position"),raydir,raycastparams)
 		if rY then
@@ -2175,7 +2049,7 @@ local reanimate=function()
 		end
 	end
 
-	local velbycfrvec=function() --this returns 2 values: forward/backwards movement (from -1 to 1), right/left movement (from -1 to 1)
+	local velbycfrvec=function()
 		local fw=cfGet(cfr,"LookVector")*xzvel/walkSpeed
 		local rt=cfGet(cfr,"RightVector")*xzvel/walkSpeed
 		return v3Get(fw,"X")+v3Get(fw,"Z"),v3Get(rt,"X")+v3Get(rt,"Z")
@@ -2183,8 +2057,8 @@ local reanimate=function()
 
 	local lastvel=v3_0
 	local velchg1=v3_0
-	local velchgbycfrvec=function() --this returns 2 values: forward/backwards velocity change, right/left velocity change
-		velchg1=velchg1+(lastvel-xzvel) --i recommend setting velchg1 to v3_0 when u start using this function or it will look worse
+	local velchgbycfrvec=function()
+		velchg1=velchg1+(lastvel-xzvel)
 		lastvel=xzvel
 		velchg1=velchg1-velchg1*(deltaTime/2)
 		local fw=cfGet(cfr,"LookVector")*velchg1/32
@@ -2194,22 +2068,22 @@ local reanimate=function()
 
 	local lastYvel=0
 	local velYchg1=0
-	local velYchg=function() --this returns Y axis velocity change
-		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50) --i recommend setting velYchg1 to 0 when u start using this function or it will look worse
+	local velYchg=function()
+		velYchg1=clamp(velYchg1+(lastYvel-Yvel),-50,50)
 		lastYvel=Yvel
 		velYchg1=velYchg1-velYchg1*(deltaTime/2)
 		return velYchg1
 	end
 
-	local rotToMouse=function(alpha) --this rotates ur character towards your mouse hit position
+	local rotToMouse=function(alpha)
 		local pos1=pos*v3_010+cfGet(insGet(mouse,"Hit"),"Position")*v3_101
-		if pos~=pos1 then --could make nan rotation
+		if pos~=pos1 then
 			cfr=Lerp(cfr,cfl(pos,pos1),alpha or deltaTime)
 		end
 	end
 
 	local glitchJoint=function(joint,targetGlitchTime,delayFrom,delayTo,radiansFrom,radiansTo) 
-		if sine>targetGlitchTime then --example usage: local glitchtime=0 addMode("x",{idle=function() glitchtime=glitchJoint(joint,glitchtime,0.2,0.4,-0.1,0.1) end})
+		if sine>targetGlitchTime then
 			radiansFrom=radiansFrom*100
 			radiansTo=radiansTo*100
 			joint.C0=cfMul(joint.C0,angles(mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100,mrandom(radiansFrom,radiansTo)/100)) 
@@ -2236,7 +2110,7 @@ local reanimate=function()
 		end
 		gravity=n
 	end
-	local setCfr=function(v) --sets character cframe
+	local setCfr=function(v)
 		if typeof(v)=="CFrame" then
 			local newpos=cfGet(v,"Position")
 			camcf=cfAdd(camcf,newpos-pos)
@@ -2250,16 +2124,16 @@ local reanimate=function()
 			pos=v
 		end
 	end
-	local getVel=function() --returns character velocity
-		return xzvel+v3_010*Yvel --important: use only in lerps or it might not work
+	local getVel=function()
+		return xzvel+v3_010*Yvel
 	end
-	local getCamCF=function() --returns camera cframe
+	local getCamCF=function()
 		return camcf
 	end
-	local isFirstPerson=function() --returns true if user is in first person camera mode
+	local isFirstPerson=function()
 		return firstperson
 	end
-	local setCameraMoveable=function(b) --prevents the player from moving his camera
+	local setCameraMoveable=function(b)
 		cameraMoveable=b
 	end
 	local isOnGround=function()
@@ -2314,31 +2188,26 @@ local reanimate=function()
 	}
 end
 
--- gp backwards compatibility \240\159\151\191
 local gp=function(p,n,c)
 	return QueryDescendants(p,">"..c.."[Name=\""..n.."\"]")[1]
 end
 
--- again no need to load the whole thing cuz u can use the last one
 _G.GenesisFDless={reanimate=reanimate,stopreanimate=stopreanimate,gp=gp,rs=rs,insSet=insSet,insGet=insGet,cfMul=cfMul,mouse=mouse,isReanimated=function() return c end}
 return _G.GenesisFDless
 end)()
 if LS_FD.isReanimated and LS_FD.isReanimated() then
-	pcall(LS_FD.stopreanimate)          -- another FDless script was running: stop it first
+	pcall(LS_FD.stopreanimate)
 	task.wait(.2)
 end
 local LS_API = LS_FD.reanimate()
 assert(LS_API, "[LAST STAR] FDless did not start")
 
--- /// THE PUPPET: an invisible R6 body that only you have. Last Star animates it like a normal character.
--- /// THE BRIDGE: every FDless frame, your real hats copy the puppet (hat rig = body, 6 swords = 6 wings).
 LS_PUPPET = (function(api, CFG)
 	local V3, CFn = Vector3.new, CFrame.new
 	local UIS = game:GetService("UserInputService")
 	local vRoot, vTorso = api.getPart("HumanoidRootPart"), api.getPart("Torso")
 	local startCF = (vRoot and api.cframes[vRoot]) or CFn(0, 10, 0)
 
-	-- build the R6 body (standard R6 sizes and joints)
 	local m = Instance.new("Model")
 	m.Name = "LastStarPuppet"
 	local function part(name, size, collide)
@@ -2364,11 +2233,11 @@ LS_PUPPET = (function(api, CFG)
 	hm.MeshType = Enum.MeshType.Head
 	hm.Scale = V3(1.25, 1.25, 1.25)
 	hm.Parent = head
-	local face = Instance.new("Decal")                -- Last Star's hidden "bee" form removes the face, so there must be one
+	local face = Instance.new("Decal")
 	face.Name = "face"
 	face.Texture = "rbxasset://textures/face.png"
 	face.Parent = head
-	local bc = Instance.new("BodyColors")              -- ...and it recolours "Body Colors"
+	local bc = Instance.new("BodyColors")
 	bc.Name = "Body Colors"
 	bc.Parent = m
 	local function motor(name, parent, p0, p1, c0, c1)
@@ -2390,11 +2259,11 @@ LS_PUPPET = (function(api, CFG)
 	}
 	local hum = Instance.new("Humanoid")
 	hum.RigType = Enum.HumanoidRigType.R6
-	hum.AutoRotate = false                              -- the bridge turns you like FDless does
+	hum.AutoRotate = false
 	pcall(function() hum.UseJumpPower = true end)
 	pcall(function() hum.BreakJointsOnDeath = false end)
 	pcall(function() hum.RequiresNeck = false end)
-	pcall(function()                                    -- the body never trips over or ragdolls
+	pcall(function()
 		hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
 		hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
 	end)
@@ -2404,7 +2273,7 @@ LS_PUPPET = (function(api, CFG)
 	m.PrimaryPart = hrp
 	m.Parent = workspace
 	local BODY = {hrp, torso, head, ra, la, rl, ll}
-	local function hideBody()                          -- invisible for you too (your hat rig is the body people see)
+	local function hideBody()
 		if CFG.SHOW_PUPPET then return end
 		for _, p in ipairs(BODY) do p.LocalTransparencyModifier = 1 end
 		face.Transparency = 1
@@ -2414,7 +2283,6 @@ LS_PUPPET = (function(api, CFG)
 		for _, p in ipairs({torso, head, ra, la, rl, ll}) do p.Transparency = .5 end
 	end
 
-	-- FDless: never hit the puppet with its floor ray, and only read your input (the puppet does the moving)
 	pcall(function()
 		api.characters.LastStarPuppet = m
 		api.refreshrayfilter()
@@ -2422,11 +2290,9 @@ LS_PUPPET = (function(api, CFG)
 	pcall(api.setWalkSpeed, 1e-3)
 	pcall(api.setJumpPower, 1e-3)
 
-	-- FDless's joints of your hat rig
 	local VJ = {}
 	for name in pairs(PJ) do VJ[name] = api.getJoint(name) end
 
-	-- the 6 swords: each slot = one FDless hat entry (found by texture, backup by sword mesh)
 	local SW, used = {}, {}
 	for i = 1, 6 do
 		local p = api.getPartFromMesh("", CFG.SWORD_TEXTURES[i], used)
@@ -2439,7 +2305,7 @@ LS_PUPPET = (function(api, CFG)
 			pcall(function()
 				for i = 1, 6 do
 					local s = SW[i]
-					if not s.p.p then                            -- no hat in this slot: take any free sword-mesh hat
+					if not s.p.p then
 						for v in pairs(api.cframes) do
 							if v.p and v.m and not table.find(used, v) then
 								local ok = false
@@ -2468,7 +2334,7 @@ LS_PUPPET = (function(api, CFG)
 	end)
 
 	local wingSec = {}
-	local function secondaryOf(i)                         -- the wing part each sword follows (Wing1..Wing6 . Secondary)
+	local function secondaryOf(i)
 		local s = wingSec[i]
 		if s and s.Parent then return s end
 		local w = m:FindFirstChild("Wing" .. i)
@@ -2484,24 +2350,24 @@ LS_PUPPET = (function(api, CFG)
 	local CF0 = CFn()
 	local function step(jump)
 		if not (hrp.Parent and hum.Parent) then return end
-		local fd = api.cframes[vRoot]                       -- where FDless wants you this frame
+		local fd = api.cframes[vRoot]
 		local now = hrp.CFrame
 		if fd and (fd.Position - now.Position).Magnitude > 6 then
-			now = fd                                         -- FDless teleport (Ctrl + click): the body comes along
+			now = fd
 			hrp.CFrame = now
 			hrp.AssemblyLinearVelocity = V3()
 		end
-		local v = api.getVel()                             -- FDless only measures your input direction
+		local v = api.getVel()
 		local dir = V3(v.X, 0, v.Z)
 		local moving = dir.Magnitude > 1e-7
 		if not hrp.Anchored then
 			hum:Move(moving and dir.Unit or V3(), false)
 			if jump then hum.Jump = true end
 			if fd and (moving or UIS.MouseBehavior == LOCKC) then
-				now = CFn(now.Position) * fd.Rotation        -- face where FDless faces (walking, shift lock, first person)
+				now = CFn(now.Position) * fd.Rotation
 				hrp.CFrame = now
 			end
-			if now.Y < fpdh + 25 then                      -- fell into the void: back to the last ground you stood on
+			if now.Y < fpdh + 25 then
 				now = lastSafe + V3(0, 4, 0)
 				hrp.CFrame = now
 				hrp.AssemblyLinearVelocity = V3()
@@ -2509,14 +2375,14 @@ LS_PUPPET = (function(api, CFG)
 				lastSafe = now
 			end
 		end
-		api.setCfr(now)                                    -- FDless (and the camera) stay on the body
+		api.setCfr(now)
 		api.cframes[vRoot] = now
-		for name, vj in pairs(VJ) do                       -- hat rig copies the body's pose
+		for name, vj in pairs(VJ) do
 			local pj = PJ[name]
 			vj.C0, vj.C1 = pj.C0, pj.C1
 		end
 		local tcf = torso.CFrame
-		for i = 1, 6 do                                    -- swords copy the wings
+		for i = 1, 6 do
 			local s, sec = SW[i], secondaryOf(i)
 			local j = s and s.j
 			if j and sec then
@@ -2531,16 +2397,13 @@ LS_PUPPET = (function(api, CFG)
 		return function()
 			local ok, err = pcall(step, jump)
 			if not ok and not warned[tostring(err)] then
-				warned[tostring(err)] = true                   -- say each problem once, not every frame
+				warned[tostring(err)] = true
 				warn("[LAST STAR] " .. tostring(err))
 			end
 		end
 	end
 	api.addmode("default", {idle = safe(false), walk = safe(false), jump = safe(true), fall = safe(false)})
 
-	-- EFFECTS OFF: every particle / trail / beam / light that Last Star puts on the body (wings, core, arms, torso)
-	-- or in its effects folder stays switched off, even when a form switches it back on. No per-frame cost:
-	-- each one is only touched when it appears or when the script tries to turn it on.
 	if not CFG.EFFECTS then
 		local FX = {ParticleEmitter = true, Trail = true, Beam = true, PointLight = true, SpotLight = true,
 			SurfaceLight = true, Fire = true, Smoke = true, Sparkles = true}
@@ -2862,7 +2725,7 @@ for i,v in pairs(d:GetChildren()) do
 end
 
 function effect(shape,cframe,sizevector,color,material,transparency,tweentime,easingstyle,easingdirection,reverse,tableprop,newtransparency,transparencystyle)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
 	local s = d:FindFirstChild(shape)
 	local count = 0
 	for i,v in pairs(d:GetChildren()) do
@@ -2918,7 +2781,7 @@ function effect(shape,cframe,sizevector,color,material,transparency,tweentime,ea
 	end
 end
 function bolt(startpos,endpos,thickness,length,offset,colour,duration)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
 	local mag = (startpos-endpos).Magnitude
 	local amount = math.floor(mag/length+.5)
 	local x,y,z = rand(-offset,offset),rand(-offset,offset),rand(-offset,offset)
@@ -2936,7 +2799,7 @@ function bolt(startpos,endpos,thickness,length,offset,colour,duration)
 	effect("Cube",finalcf*CFN(0,0,-finalmag/2),V3(thickness,thickness,finalmag),colour,Neon,0,duration,Sine,In,false,{Size=V3(thickness/2,thickness/2,finalmag)},1,Sine)
 end
 function camshake(pos,power,time)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
     for index, child in pairs(workspace:GetDescendants()) do
 		if child:FindFirstChildOfClass("Humanoid") then
 			local human = child:FindFirstChildOfClass("Humanoid")
@@ -2994,7 +2857,7 @@ function ray(position,vector)
 	return RPA,RPS,NO
 end
 
-function rayCast(Pos, Dir, Max, Ignore)  -- Origin Position , Direction, MaxDistance , IgnoreDescendants
+function rayCast(Pos, Dir, Max, Ignore)
 	return game:service("Workspace"):FindPartOnRay(Ray.new(Pos, Dir.unit * (Max or 999.999)), Ignore) 
 end 
 
@@ -3180,7 +3043,6 @@ end
 
 if game:GetService("RunService"):IsStudio() then
 	Theme.RollOffMinDistance = 0
-	--beeify()
 end
 
 if game.PlaceId ~= 2578460148 then
@@ -3195,10 +3057,8 @@ end
 
 local RPA,RPS,NO = ray(Root.Position,V3(0,-1000,0))
 if RPA then
-	--effect("Sphere",CFN(RPS,RPS+NO)*CFA(-90,0,0),V3(0,0,0),C3R(255,0,0),Neon,0,1.8,Quint,InOut,false,{Size=V3(2048,0,2048)},1,Linear)
 end
 
--- FORMS
 
 local dclimit = 0
 d.ChildAdded:Connect(function(child)
@@ -3216,134 +3076,6 @@ local instakill = false
 local damageplayers = true
 local ds = false
 function damage(position,range,damage,setonfireduration,KBpower,stun)
---[[	for i,v in pairs(workspace:GetDescendants()) do
-		if v:IsA("Humanoid") then
-			if v.Parent ~= plr then
-				local r,head,compiler = nil,v.Parent:FindFirstChild("Head"),v.Parent:FindFirstChild("Compile")
-				if head then
-					local candamage = true
-					if head.Parent:FindFirstChild("LastStar") then
-						if head.Parent.LastStar.Values.Safezone.Value == 1 then
-							candamage = false
-						end
-					end
-					if script.Values.Safezone.Value == 1 then
-						candamage = false
-					end
-					if damageplayers == false and game:GetService("Players"):FindFirstChild(v.Parent.Name) then
-						candamage = false
-					end
-					if head:IsA("Part") then
-						local magnitude = (position-head.Position).Magnitude
-						if magnitude <= range and candamage == true then
-							if ds == true then
-								local x = damage*(v.MaxHealth/1000000)
-								damage = x
-							end
-							if dclimit <= 50 then
-								local c = script.DamageCount:Clone()
-								c.CFrame = CFN(head.Position)*CFR(-50,50,0,360,-50,50)*CFN(rand(-5,5),rand(5,10),rand(-5,5))
-								if ds == false then
-									c.Bill.Amount.Text = "-"..math.ceil(damage*script.Values.Attack.Value/1000+.5).."k!"
-								else
-									c.Bill.Amount.Text = "-"..math.ceil(damage+.5).."!"
-								end
-								c.Bill.Amount.Rotation = rand(-5,5)
-								c.Bill.Amount.TextColor3 = NG.LowerHalf.FormName.TextColor3
-								c.Bill.Amount.TextStrokeColor3 = NG.LowerHalf.FormName.TextStrokeColor3
-								local x = rand(-1,1)
-								local tim = rand(15,30)/10
-								local info = TweenInfo.new(tim,Sine,In,0,false,0)
-								local prop = {Rotation=90*x;TextTransparency=1;TextStrokeTransparency=1}
-								local tween = tweens:Create(c.Bill.Amount,info,prop)
-								tween:Play()
-								local prop = {CFrame=c.CFrame+V3(0,30,0)}
-								local tween = tweens:Create(c,info,prop)
-								tween:Play()
-								if instakill == true then
-									c.Bill.Amount.Text = "INSTAKILL!"
-								end
-								c.Parent = d
-								game:GetService("Debris"):AddItem(c,3)
-							end
-							if KBpower then
-								if KBpower > 0 then
-									local bv = Instance.new("BodyVelocity",head)
-									bv.MaxForce = V3(math.huge,math.huge,math.huge)
-									bv.Velocity = CFN(position,head.Position).LookVector.Unit*rand(100,150)/100*KBpower+Vector3.new(0,rand(50,100)/100*KBpower,0)
-									game:GetService("Debris"):AddItem(bv,.2)
-									local bav = Instance.new("BodyAngularVelocity",head)
-									bav.MaxTorque = V3(math.huge,math.huge,math.huge)
-									bav.AngularVelocity = V3(rand(-30,30),rand(-30,30),rand(-30,30))
-									game:GetService("Debris"):AddItem(bav,.2)
-								end
-							end
-							if stun then
-								if stun > 0 then
-									local s = Instance.new("StringValue",v)
-									s.Name = "LASTSTARSTUN"
-									game:GetService("Debris"):AddItem(s,stun)
-								end
-							end
-							if setonfireduration then
-								if setonfireduration > 0 then
-									if not v.Parent:FindFirstChild("LASTSTARONFIRE") then
-										local val = Instance.new("StringValue",v.Parent)
-										val.Name = "LASTSTARONFIRE"
-										val.Value = plr.Name
-										local c1,c2 = Instance.new("Color3Value",val),Instance.new("Color3Value",val)
-										c1.Name = "c1"
-										c2.Name = "c2"
-										c1.Value = W1PC
-										c2.Value = W1SC
-										game:GetService("Debris"):AddItem(val,setonfireduration)
-									end
-								end
-							end
-							if v.Health == 0 or instakill == true then
-								local cf = head.CFrame*CFR(0,0,0,360,0,0)
-								local cf2 = head.CFrame*CFR(0,0,0,360,0,0)
-								effect("Fire",cf,V3(.05,.05,.05),W1SC,Neon,0,.25,Sine,Out,false,{Size=V3(70,.05,70);CFrame=cf*CFR(0,0,-50,50,0,0)},1,Sine)
-								for i = 1,2 do
-									local cf = head.CFrame*CFR(0,360,0,360,0,360)
-									local a = rand(30,50)
-									effect("LightWind",cf,V3(.05,.05,.05),W1PC,Neon,0,rand(2,5)/10,Quart,Out,false,{Size=V3(a,.05,a);CFrame=cf*CFR(-50,50,-50,50,-50,50)},1,Linear)
-								end
-								local cf = head.CFrame*CFR(0,360,0,360,0,360)
-								effect("Sphere",cf,V3(.05,.05,.05),W1SC,Neon,0,.25,Quad,Out,false,{Size=V3(20,20,20);CFrame=cf*CFR(0,360,0,360,0,360)},1,Linear)
-								effect("Sphere",cf2,V3(.05,.05,.05),W1PC,Neon,0,.25,Quad,Out,false,{Size=V3(40,40,40);CFrame=cf2*CFR(0,360,0,360,0,360)},1,Linear)
-								effect("HoleSphere2",cf,V3(.05,.05,.05),W1SC,Neon,0,.5,Quad,Out,false,{Size=V3(40,40,40);CFrame=cf*CFR(0,360,0,360,0,360)},1,Linear)
-								effect("HoleSphere2",cf2,V3(.05,.05,.05),W1PC,Neon,0,.5,Quad,Out,false,{Size=V3(40,40,40);CFrame=cf2*CFR(0,360,0,360,0,360)},1,Linear)
-								sound(head.CFrame,282061033,1,1,0,40)
-								sound(head.CFrame,3199238931,1,1,0,40)
-								sound(head.CFrame,1192402877,.5,1,0,40)
-								for _,c in pairs(v.Parent:GetDescendants()) do
-									if c:IsA("Part") or c:IsA("MeshPart") then
-										local cf = c.CFrame
-										effect("Cube",cf,c.Size,W1PC,Neon,0,rand(10,30)/10,Quad,In,false,{Size=c.Size*3;CFrame=cf*CFR(-30,30,-30,30,-30,30)*CFN(rand(-10,10)/2,rand(-10,10)/2,rand(-10,10)/2)*CFR(-30,30,-30,30,-30,30)+V3(rand(-10,10),rand(30,70),rand(-10,10))},1,Sine)
-										local p = Instance.new("Part",d)
-										p.Anchored=true
-										p.CanCollide=false
-										p.CFrame = c.CFrame
-										p.Size = c.Size
-										p.Transparency=1
-										game:GetService("Debris"):AddItem(p,5)
-										local kp1,kp2 = script.Particles.KP1:Clone(),script.Particles.KP2:Clone()
-										for i,v in pairs({kp1,kp2}) do
-											v.Parent = p
-											v.Color = ColorSequence.new(W1PC)
-											v:Emit(8)
-										end
-										c:Destroy()
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end]]
 end
 function heal(position,range,amount,selfbool,othersbool)
 	for i,v in pairs(workspace:GetDescendants()) do
@@ -3383,7 +3115,7 @@ end
 
 
 function crater(cframe,size,distance)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
 	local angle = 0
 	for i = 1,18 do
 		angle = angle + 20
@@ -3419,7 +3151,7 @@ local switchcooldown = 0
 gui.Enabled=true
 
 function glitchscreen(time,color)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
 	task.spawn(function()
 		local images = {18328673765,15988110169,15988121014,15988137121,17219734815,8277325490,8277320341,17219756536,13729435867,9484176300,8277321458,15826350380,5197343873}
 		
@@ -3793,9 +3525,6 @@ function teleport()
 end
 
 
-
-
--- APEX MOVES
 function tweenroot(tim,style,direction,prop)
 	LSEvents.TweenRoot:FireAllClients(tim,style,direction,prop)
 end
@@ -4132,32 +3861,6 @@ function AEROnt()
 	local res = script.Values.Anim.Value
 	script.Values.Anim.Value = "SWITCH"
 	sound(Root.CFrame,255679384,1,1.1,0,350)
-	--[[for i = 1,50 do
-		distance = distance - 8
-		size = size + 1.2
-		rotation = rotation+6
-		local angle = 0
-		for _ = 1,4 do
-			angle = angle + 90
-			local cf = CFN(Root.Position)*CFA(0,rotation+angle,0)*CFN(0,10,distance)
-			local ray = Ray.new(cf.Position,V3(0,-20,0))
-			local RPA,RPS,NO = workspace:FindPartOnRayWithIgnoreList(ray,{plr,d},false,true)
-			if RPA then
-				damage(RPS,size/2,rand(20000,30000))
-				local cf = CFN(RPS,RPS+NO)*CFA(-90,0,0)*CFR(0,0,0,360,0,0)
-				local t = rand(30,70)/100
-				effect("Sphere",cf,V3(.05,.05,.05),W1PC,Neon,0,t,Sine,Out,false,{Size=V3(size,size*2,size)},1,Linear)
-				effect("HoleSphere",cf,V3(.05,.05,.05),W1SC,Neon,0,t,Sine,Out,false,{Size=V3(size+1,size*2+1,size+1)},1,Linear)
-				effect("Wind",cf,V3(.05,.05,.05),W1SC,Neon,0,t,Sine,Out,false,{Size=V3(size*1.5,05,size*1.5);CFrame=cf*CFR(0,0,-50,50,0,0)},1,Linear)
-			end
-			local cf = Root.CFrame*CFR(0,360,0,360,0,360)
-			local a = rand(1,2)
-			local c = W1SC
-			if a == 1 then c = W1PC end
-			effect("Sphere",cf*CFN(0,300,0),V3(10,10,10),c,Neon,0,rand(70,100)/100,Sine,In,false,{Size=V3(10,60,10);CFrame=cf},1,Quad)
-		end
-		wait()
-	end]]
 	for i = 1,10 do
 		effect("LightWind",Root.CFrame*CFR(0,360,0,360,0,360),V3(900+i*100,0,900+i*100)*rand(80,120)/100,W1SC,Neon,1,i/5,Quint,In,false,{Size=V3(0,0,0)},0,Quint)
 		effect("Sphere",Root.CFrame,V3(1500-i*100,1500-i*100,1500-i*100),W1PC,Neon,1,i/5,Quint,In,false,{Size=V3(0,0,0)},0,Quint)
@@ -4222,7 +3925,6 @@ function AEROnt()
 	script.Values.Anim.Value = res
 end
 
--- REPRESSION MOVES
 function repressionbombs()
 	if canswitch == false then return end
 	canswitch = false
@@ -4384,7 +4086,6 @@ function bigepic()
 	canswitch = true
 end
 
--- EXECUTION MOVES
 function burger()
 	if canswitch == false then return end
 	local target,hum,root,torso = nil,nil,nil,nil
@@ -4577,7 +4278,6 @@ function bigbolt()
 	canswitch = true
 end
 
--- ANARCHY MOVES
 function bombo()
 	if canswitch == false then return end
 	canswitch = false
@@ -4658,7 +4358,6 @@ function bombo()
 	Root.Anchored=false
 end
 
--- VIRTUE MOVES
 function burst()
 	if canswitch == false then return end
 	canswitch = false
@@ -4685,7 +4384,6 @@ function burst()
 	Root.Anchored=false
 end
 
--- ABSOLUTION MOVES
 function bigexplosioneee()
 	if canswitch == false then return end
 	canswitch = false
@@ -4732,7 +4430,6 @@ function bigexplosioneee()
 	Root.Anchored=false
 end
 
--- INFERNUM MOVES
 function pyrotf2()
 	if canswitch == false then return end
 	canswitch = false
@@ -4865,7 +4562,6 @@ function hadouken()
 	Root.Anchored=false
 end
 
--- VINDICTIVE MOVES
 function erase()
 	if canswitch == false then return end
 	if script.Values.CurrentForm.Value ~= "EUPHORIA" then
@@ -4999,7 +4695,6 @@ local dissonancelines = {"Hello everyone","I bend reality as it bends me.","This
 local warpspeedlines = {"Untouchable!.","I saw Epic around here somewhere.","Demolition!"}
 local intricacylines = {"Complexity at its finest.","This ends now.","Face your fears."}
 local OHGODWHYHELPMESOMEBODYPLEASE = {"Secret mode.","cum or else...","Is anyone actually going to see this?"}
--- // BASE FORMS
 
 local returnwheel = "BASE"
 local baseformtable = {
@@ -5016,17 +4711,16 @@ local baseformtable = {
 }
 local disgraceformtable = {
 	["DOWNFALL"]=function() if altwheel == false then formswitch(C3R(0,0,0),C3R(190,60,60),6941090644,C3R(190, 60, 60),C3R(0,0,0),16,50,1,"DOWNFALL","Antique","APEX","DOWNFALL",0.6,true,0,true,"LAST★STAR?",false,"Water Spirit // P.L.U.R",false,"rbxassetid://6595974565") returnwheel = "DISGRACE" end end;
-	["ADMISSION"]=function() formswitch(C3R(0,0,0),C3R(255, 175, 62),1057854857,C3R(170, 130, 60),C3R(0,0,0),20,40,1,"ADMISSION","Oswald","REPRESSION","ADMISSION",0.4,true,0,true,"LAST★STAR?",false,"Bossfight // Mescalink") returnwheel = "DISGRACE" end;  -- REPRESSION
-	["STIGMA"]=function() formswitch(C3R(0,0,0),script.Dynamics.Execution.Value,5113228942,script.Dynamics.Execution.Value,C3R(0,0,0),100,100,1,"STIGMA","Bodoni","EXECUTION","STIGMA",0.4,true,0,true,"LAST★STAR?",true,"Yooh // Heracles (Extended)") returnwheel = "DISGRACE" end; -- EXECUTION
-	["SILENCE"]=function() formswitch(C3R(0,0,0),C3R(70, 0, 255),5097730967,C3R(70, 0, 255),C3R(0, 0, 0),60,100,1,"SILENCE","Antique","ANARCHY","ANARCHY",0.3,true,0,true,"LAST★STAR?",false,"This Song is 3:04 Min's LONG LOL") returnwheel = "DISGRACE" end; -- ANARCHY
-	["IGNOMINY"]=function() end; -- VIRTUE
-	["RETENTION"]=function() formswitch(C3R(0,0,0),C3R(255, 80, 140),6735674317,C3R(255, 80, 140),C3R(255, 0, 70),300,100,1,"RETENTION","Fondamento","ABSOLUTION","RETENTION",1.1,true,0,true,"LAST★STAR?",false,"Yonaka // Vespertilism") returnwheel = "DISGRACE" end; -- ABSOLUTION
-	["DIFFLAMED"]=function() end; -- INFERNUM
-	["RAPTURE"]=function() end; -- DISSONANCE
-	["HINDRANCE"]=function() end; -- WARPSPEED
-	["LIMPIDITY"]=function() end; -- INTRICACY
+	["ADMISSION"]=function() formswitch(C3R(0,0,0),C3R(255, 175, 62),1057854857,C3R(170, 130, 60),C3R(0,0,0),20,40,1,"ADMISSION","Oswald","REPRESSION","ADMISSION",0.4,true,0,true,"LAST★STAR?",false,"Bossfight // Mescalink") returnwheel = "DISGRACE" end;
+	["STIGMA"]=function() formswitch(C3R(0,0,0),script.Dynamics.Execution.Value,5113228942,script.Dynamics.Execution.Value,C3R(0,0,0),100,100,1,"STIGMA","Bodoni","EXECUTION","STIGMA",0.4,true,0,true,"LAST★STAR?",true,"Yooh // Heracles (Extended)") returnwheel = "DISGRACE" end;
+	["SILENCE"]=function() formswitch(C3R(0,0,0),C3R(70, 0, 255),5097730967,C3R(70, 0, 255),C3R(0, 0, 0),60,100,1,"SILENCE","Antique","ANARCHY","ANARCHY",0.3,true,0,true,"LAST★STAR?",false,"This Song is 3:04 Min's LONG LOL") returnwheel = "DISGRACE" end;
+	["IGNOMINY"]=function() end;
+	["RETENTION"]=function() formswitch(C3R(0,0,0),C3R(255, 80, 140),6735674317,C3R(255, 80, 140),C3R(255, 0, 70),300,100,1,"RETENTION","Fondamento","ABSOLUTION","RETENTION",1.1,true,0,true,"LAST★STAR?",false,"Yonaka // Vespertilism") returnwheel = "DISGRACE" end;
+	["DIFFLAMED"]=function() end;
+	["RAPTURE"]=function() end;
+	["HINDRANCE"]=function() end;
+	["LIMPIDITY"]=function() end;
 }
--- // WHEEL CHANGES
 local changewheeltable = {
 	["BASE"]=function() changewheel(false,"APEX","REPRESSION","EXECUTION","ANARCHY","VIRTUE","ABSOLUTION","INFERNUM","DISSONANCE","WARPSPEED","INTRICACY","Antique","Oswald","Bodoni","Antique","FredokaOne","Fondamento","JosefinSans","Kalam","Michroma","RobotoCondensed",c3(255,0,0),c3(0,0,0),c3(255,130,0),c3(0,0,0),c3(255,255,255),c3(255,255,255),c3(100,0,255),c3(0,0,0),c3(0,230,255),c3(255,255,255),c3(255,80,80),c3(255,0,0),c3(255,70,0),c3(0,0,0),c3(10,10,10),c3(10,10,10),c3(208, 241, 255),c3(70, 181, 255),c3(0,255,0),c3(255,255,255)) end;
 	["DISGRACE"]=function() changewheel(false,"DOWNFALL","ADMISSION","STIGMA","SILENCE","","RETENTION","","","","","Antique","Oswald","Bodoni","Antique","Arial","Fondamento","Arial","Arial","Arial","Arial",c3(190,60,60),c3(0,0,0),c3(255, 175, 62),c3(0,0,0),c3(255,255,255),c3(0,0,0),c3(70, 0, 255),c3(0,0,0),c3(20,20,20),c3(20,20,20),c3(255, 80, 140),c3(0,0,0),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20)) end;
@@ -5041,7 +4735,6 @@ local changewheeltable = {
 	["VIRTUEALTS"]=function()changewheel(true,"VIRTUE","DIAPHANOUS","DELICACY","CONTRIVANCE","ENIGMA","MOTIVATION","HEARTFELT","SENTIMENT","","","FredokaOne","Fantasy","GothamBold","Cartoon","SciFi","Nunito","Nunito","IndieFlower","Arial","Arial",c3(0,230,255),c3(255,255,255),c3(255,255,255),c3(150,150,150),c3(255,130,200),c3(255,255,255),c3(255,0,115),c3(255,255,255),c3(0,130,255),c3(0,0,0),C3N(0.0313725, 0.494118, 0.545098),C3N(1, 0.352941, 0.372549),c3(127,96,170),c3(35,14,57),c3(47, 14, 86),c3(255, 182, 99),c3(20,20,20),c3(20,20,20),c3(20,20,20),c3(20,20,20)) returnwheel = "BASE" end;
 }
 
--- // ALTS
 
 local apexalttable = {
 	["APEX"]=function()
@@ -5161,7 +4854,6 @@ LSEvents.Switching.OnServerEvent:Connect(function(player,form)
 		end
 	end
 	
-	-- MAJORS
 	
 	if form == "APEXMAJORS" then
 		returnwheel = "BASE"
@@ -5206,7 +4898,6 @@ LSEvents.Switching.OnServerEvent:Connect(function(player,form)
 		end
 	end
 	
-	-- ALTS
 	
 	
 	if form == "ABSOLUTIONALTS" then
@@ -5335,62 +5026,62 @@ end)
 
 function moveset(id)
 	local movetable = {
-		[1]=apexslam, -- APEX
+		[1]=apexslam,
 		[2]=cocacola,
 		[3]=YOU,
 		[4]=AEROnt,
 		
-		[5]=repressionbombs, -- REPRESSION
+		[5]=repressionbombs,
 		[6]=nil,
 		[7]=circlesofdeath,
 		[8]=bigepic,
 		
-		[9]=bigbolt, -- EXECUTION
+		[9]=bigbolt,
 		[10]=nil,
 		[11]=nil,
 		[12]=nil,
 		
-		[13]=nil, -- ANARCHY
+		[13]=nil,
 		[14]=nil,
 		[15]=bombo,
 		[16]=nil,
 		
-		[17]=burst, -- VIRTUE
+		[17]=burst,
 		[18]=nil,
 		[19]=nil,
 		[20]=nil,
 		
-		[21]=nil, -- ABSOLUTION
+		[21]=nil,
 		[22]=nil,
 		[23]=nil,
 		[24]=bigexplosioneee,
 		
-		[25]=pyrotf2, -- INFERNUM
+		[25]=pyrotf2,
 		[26]=nil,
 		[27]=hadouken,
 		[28]=nil,
 		
-		[29]=nil, -- DISSONANCE
+		[29]=nil,
 		[30]=nil,
 		[31]=nil,
 		[32]=nil,
 		
-		[33]=nil, -- WARPSPEED
+		[33]=nil,
 		[34]=nil,
 		[35]=nil,
 		[36]=nil,
 		
-		[37]=nil, -- INTRICACY
+		[37]=nil,
 		[38]=nil,
 		[39]=nil,
 		[40]=nil,
 		
-		[41]=nil, -- PENDURANCE
+		[41]=nil,
 		[42]=nil,
 		[43]=nil,
 		[44]=nil,
 		
-		[1001]=erase, -- VINDICTIVE
+		[1001]=erase,
 		[1002]=nil,
 		[1003]=nil,
 		[1004]=nil,
@@ -5453,7 +5144,6 @@ function mouse2()
 	local res = script.Values.Anim.Value
 	script.Values.Anim.Value = "SWITCH START"
 	sound(RCF,550965268,1,1,0,50)
-	--sound(RCF,615910787,1,1,0,50)
 	for i = 1,3 do
 		effect("ThinRing",torsocframe*CFR(0,360,0,360,0,360)+RV*.1,V3(200,10,200),W1PC,Forcefield,1,rand(20,30)/100,Quart,In,false,{Size=V3(0,0,0)},0,Linear)
 	end
@@ -5538,7 +5228,6 @@ local chosenleftclick = 1
 LSEvents.Key.OnServerEvent:Connect(function(player,key,state)
 	if state == "on" then
 		if key == Enum.KeyCode.K then
-			--function formswitch(textcolor,textstrokecolor,theme,primary,secondary,walkspeed,jumppower,attack,formname,formfont,wingstyle,formidle,themevolume,fancyexplosionbool,altindexnumber,corebool,scriptname,dynamic,themename,extrawingsbool,marbleimage)
 			formswitch(C3R(0,0,0),C3R(255,255,255),4866206472,C3R(170,170,170),C3R(0,0,0),30,50,1,"VISUALISER","Code","APEX","APEX",.4,true,0,true,"True Star Glitcher",true,"man",false,"rbxassetid://6595974565")
 		elseif key == Enum.KeyCode.M then
 			if script.Values.CurrentForm.Value == "ANARCHY" then
@@ -5946,7 +5635,6 @@ local spectrafieldprop = {Value=C3R(100,255,50)}
 local sdt = tweens:Create(script.Dynamics.Spectrafield,nebulainfo,spectrafieldprop)
 sdt:Play()
 
--- InputScript
 
 rs = game:GetService("RunService")
 local inputs = game:GetService("UserInputService")
@@ -6223,9 +5911,6 @@ coroutine.resume(coroutine.create(function()
 end))
 
 
-
--- GUI
-
 function transform(seconds)
 	seconds = math.floor(seconds+.5)
 	local minutes,extra = 0,""
@@ -6269,7 +5954,7 @@ local theme = plr:WaitForChild("HumanoidRootPart"):WaitForChild("Theme")
 local offset = 0
 local d = workspace:WaitForChild("LastStarMouseIgnore")
 function effect(shape,cframe,sizevector,color,material,transparency,tweentime,easingstyle,easingdirection,reverse,tableprop,newtransparency,transparencystyle)
-	if not LS_SETTINGS.EFFECTS then return end -- effects off (lag)
+	if not LS_SETTINGS.EFFECTS then return end
 	local s = d:FindFirstChild(shape)
 	local count = 0
 	for i,v in pairs(d:GetChildren()) do
@@ -6506,7 +6191,7 @@ gui.FormSelection.BackButton.MouseButton1Click:Connect(function()
 end)
 button = gui.FormSelection.Shade.Switch.Button
 
-gui.FormSelection.Shade.Switch.Visible=true -- DISGRACE / STANDARD switch (was creator-only)
+gui.FormSelection.Shade.Switch.Visible=true
 
 button.MouseButton1Click:Connect(function()
 	if button.Text == "DISGRACE" then
@@ -6563,7 +6248,6 @@ end
 leftlegheight,rightlegheight = 0,0
 
 instmult = 1
--- FINAL LOOP
 heartbeat:connect(function()
 	pcall(function()
 	
@@ -7637,10 +7321,8 @@ heartbeat:connect(function()
 										if i == 1 then c = wing1.Secondary.Color end
 										if NG.LowerHalf.FormName.Text ~= "VOID" then
 											effect("LightWind",cf,Vector3.new(0,0,0),c,Enum.Material.Neon,0,.4,Enum.EasingStyle.Quad,Enum.EasingDirection.Out,false,{Size=Vector3.new(a*1.2,0,a*1.2);CFrame=cf*cframerandomizer(0,0,-50,50,0,0)},1,Enum.EasingStyle.Sine)
-											--effect("HeavyShockwave",cf,Vector3.new(0,0,0),c,Enum.Material.Neon,0,.4,Enum.EasingStyle.Quad,Enum.EasingDirection.Out,false,{Size=Vector3.new(a*.6,0,a*.6);CFrame=cf*cframerandomizer(0,0,-50,50,0,0)},1,Enum.EasingStyle.Sine)
 										else
 											effect("LightWind",cf,Vector3.new(0,0,0),wing1.Primary.Color,Enum.Material.Neon,0,.4,Enum.EasingStyle.Quad,Enum.EasingDirection.Out,false,{Size=Vector3.new(a*1.2,0,a*1.2);CFrame=cf*cframerandomizer(0,0,-50,50,0,0);Color=wing1.Secondary.Color},1,Enum.EasingStyle.Sine)
-											--effect("HeavyShockwave",cf,Vector3.new(0,0,0),wing1.Primary.Color,Enum.Material.Neon,0,.4,Enum.EasingStyle.Quad,Enum.EasingDirection.Out,false,{Size=Vector3.new(a*.6,0,a*.6);CFrame=cf*cframerandomizer(0,0,-50,50,0,0);Color=wing1.Secondary.Color},1,Enum.EasingStyle.Sine)
 										end
 									end
 								end
@@ -9007,4 +8689,3 @@ heartbeat:connect(function()
 end)
 
 
--- /// SWORDS: the 6 sword hats are moved by FDless (see THE BRIDGE near the top), following Wing1..Wing6.

@@ -1,15 +1,3 @@
---[[
-	Atsuko Hub - Emotes
-	Uhhhhhh by STEVETHEREALONE (MIT license) - github.com/STEVE-916-create/Uhhhhhh
-	his discord: https://discord.gg/NASNUKRBVM
-	some dance songs and animations in Uhhhhhh come from Dubmood and Solary-3
-	the dances, songs and anims come from your UhhhhhhReanim folder, missing ones get downloaded into it
-	it only dances while one of your scripts is reanimated with Reanimate
-
-	credits for all of them because yeah, good people
-	and don't even add me in the credit, I'm too lazy to do it anyways
-]]
-
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")

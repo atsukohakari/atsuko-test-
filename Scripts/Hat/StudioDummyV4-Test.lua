@@ -1,5 +1,3 @@
--- @desc Studio Dummy V4, rig version: modes, guns, fly, the screen and emotes
-
 local ALIGNS = (function()
 	local angles, cf = CFrame.Angles, CFrame.new
 	local function cfMul(a, b)
@@ -7872,7 +7870,6 @@ local busy = false
 local stops = 0
 local lastCmdAt = -10
 local placeToken = 0
--- on = you pressed run and haven't pressed stop. while it's off nothing works, not even the chat commands
 local on = false
 local restarting = false
 local lpp = game:GetService("Players").LocalPlayer
@@ -7956,7 +7953,6 @@ local function runCmd()
 	end
 end
 local function stopCmd(noPlace, keepOn)
-	-- the hub says its own "stopped", so it passes its name and this one stays quiet
 	local quiet = noPlace == "Atsuko Hub"
 	stops += 1
 	busy = false
@@ -8040,7 +8036,6 @@ local function refreshCmd()
 		return
 	end
 	if current and current.alive then
-		-- stop the dummy, put you back right here, then bring it back once your avatar is ready
 		restarting = true
 		local my = stops + 1
 		stopCmd(false, true)
@@ -8121,12 +8116,10 @@ local function onChat(msg)
 	local key = string.lower(body)
 	local now = os.clock()
 	if key == lastCmd and now - lastAt < 3 then
-		-- the same message arrives up to three times (sent, chatted, received), it only runs once
 		return
 	end
 	lastCmd, lastAt = key, now
 	if not on then
-		-- stopped means stopped: no commands, no messages, until you press run again
 		return
 	end
 	if ANYTIME[name] then
