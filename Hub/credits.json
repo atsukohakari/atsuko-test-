@@ -710,10 +710,12 @@
       "handle": "",
       "kind": "person",
       "roles": [
-        "Neptunian V remake author"
+        "Neptunian V remake author",
+        "Exotic Ban Hammer author"
       ],
       "usedIn": [
-        "Main Scripts / Neptunian V"
+        "Main Scripts / Neptunian V",
+        "Hat / Ban Hammer"
       ],
       "links": {
         "github": "https://github.com/Jskfhggjxu/nep-remake-tory-assets",
@@ -728,7 +730,7 @@
         "userId": null
       },
       "profileStyle": "full",
-      "description": "Made the Neptunian V remake ours is built on, and hosts its music.",
+      "description": "Made the Neptunian V remake ours is built on and hosts its music, and made the Exotic Ban Hammer.",
       "license": "",
       "source": "the owner's message (discord and youtube); Neptunian_Tory_remake_5.lua (the YeImTory tag 'Neptunian remaker' and the repository its music files come from)",
       "verified": false,

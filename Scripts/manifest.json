@@ -13,6 +13,18 @@
       ],
       "desc": "Uhhhhhh's own AK-47. \"what comes before 47?\" \"AK.\" M1 - Shoot."
     },
+    "Scripts/Hat/BanHammer.lua": {
+      "name": "Ban Hammer",
+      "kind": "hat",
+      "reanim": [
+        "atsuko",
+        "fdless"
+      ],
+      "credit": [
+        "Tory"
+      ],
+      "desc": "Tory's Exotic Ban Hammer, with its theme song. Wear the Ban Hammer (catalog 14464140694). Click - Swing, R - Fast mode, E - Jump mode, Q - Heavy mode (press the key again to go back)."
+    },
     "Scripts/Hat/Banisher.lua": {
       "name": "Banisher",
       "kind": "hat",
