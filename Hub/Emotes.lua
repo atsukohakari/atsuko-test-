@@ -35,7 +35,7 @@ end
 local ROOT = "UhhhhhhReanim/"
 local CDN = "https://raw.githubusercontent.com/STEVE-916-create/Uhhhhhh/main/"
 local STORE = "https://raw.githubusercontent.com/STEVE-916-create/Uhhhhhh-Store/main/"
-local SAVE_FILE = "AtsukoHub/emotes.json"
+local SAVE_FILE = "Atsuko Hub/emotes.json"
 
 local function has(path)
 	local ok, yes = pcall(function()
@@ -1132,7 +1132,7 @@ function E.load()
 			end
 		end
 		for _, pack in ipairs(PACKS) do
-			local path = "AtsukoHub/emotes/" .. pack:gsub("/", ".")
+			local path = "Atsuko Hub/emotes/" .. pack:gsub("/", ".")
 			local src = read(path)
 			if not src then
 				src = httpGet(STORE .. encode(pack))

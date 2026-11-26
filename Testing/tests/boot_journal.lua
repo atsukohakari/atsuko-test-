@@ -4,7 +4,7 @@ local boot, journal, logHas = Runner.boot, Runner.journal, Runner.logHas
 local SCRIPT = "Scripts/Hat/StudioDummyV4-Test.lua"
 
 local function settings(t)
-	return { ["AtsukoHub/settings.json"] = jsonencode(t) }
+	return { ["Atsuko Hub/settings.json"] = jsonencode(t) }
 end
 
 local function merge(a, b)
@@ -32,7 +32,7 @@ do
 	T.eq(#env.hooks, 0, "no engine hooks were installed while the hub started")
 	T.eq(env.core.Boot.safe, false, "no previous note means a normal start")
 	local j = journal(env)
-	T.ok(j ~= nil, "the hub wrote AtsukoHub/boot.json")
+	T.ok(j ~= nil, "the hub wrote Atsuko Hub/boot.json")
 	T.eq(j and j.ok, true, "the note says the start finished")
 	T.eq(j and j.stage, "ok", "the last stage is ok")
 	T.eq(j and j.ver, "1.6.1", "the note names the version")
@@ -50,7 +50,7 @@ do
 		before = function(e)
 			local orig = _G.writefile
 			_G.writefile = function(path, data)
-				if path == "AtsukoHub/boot.json" then
+				if path == "Atsuko Hub/boot.json" then
 					local j = jsondecode(data)
 					if j then
 						stages[#stages + 1] = tostring(j.stage) .. ":" .. tostring(j.ok)
@@ -69,7 +69,7 @@ end
 
 T.section("journal: a start that never finished comes back in safe mode")
 do
-	local files = merge(settings({ hookChat = true, hookNotices = true }), { ["AtsukoHub/boot.json"] = '{"v":1,"ver":"1.6.1","stage":"commands","ok":false,"n":0}' })
+	local files = merge(settings({ hookChat = true, hookNotices = true }), { ["Atsuko Hub/boot.json"] = '{"v":1,"ver":"1.6.1","stage":"commands","ok":false,"n":0}' })
 	local env = boot({ seconds = 12, files = files })
 	okBoot("died", env)
 	local Boot = env.core.Boot
@@ -91,7 +91,7 @@ do
 	T.eq(j and j.n, 0, "and resets the count")
 	T.eq(env.hub.S.hookChat, true, "the setting itself was not thrown away, it just waits")
 
-	local again = boot({ seconds = 12, files = merge(settings({ hookChat = true, hookNotices = true }), { ["AtsukoHub/boot.json"] = env.files["AtsukoHub/boot.json"] }) })
+	local again = boot({ seconds = 12, files = merge(settings({ hookChat = true, hookNotices = true }), { ["Atsuko Hub/boot.json"] = env.files["Atsuko Hub/boot.json"] }) })
 	okBoot("after safe", again)
 	T.eq(again.core.Boot.safe, false, "the start after a clean safe start is normal")
 	T.eq(#again.hooks, 2, "and the two hooks the user asked for go in, one each")
@@ -99,7 +99,7 @@ end
 
 T.section("journal: a start that died inside a hook switches that hook off")
 do
-	local files = merge(settings({ hookChat = true, hookNotices = true }), { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:chat","n":0}' })
+	local files = merge(settings({ hookChat = true, hookNotices = true }), { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:chat","n":0}' })
 	local env = boot({ seconds = 12, files = files })
 	okBoot("chat died", env)
 	T.eq(env.core.Boot.safe, true, "safe mode")
@@ -107,15 +107,15 @@ do
 	T.eq(env.hub.S.hookChat, false, "hiding commands from chat is off now")
 	T.eq(env.hub.S.hookNotices, true, "the other hook stays as the user left it")
 	T.eq(#env.core.Boot.flipped, 1, "one switch was flipped")
-	T.ok(string.find(env.files["AtsukoHub/settings.json"] or "", '"hookChat":false', 1, true) ~= nil, "and it was saved")
+	T.ok(string.find(env.files["Atsuko Hub/settings.json"] or "", '"hookChat":false', 1, true) ~= nil, "and it was saved")
 	T.eq(#env.hooks, 0, "no hooks in safe mode")
 
-	local files2 = merge(settings({ smartStop = true }), { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:conn","n":1}' })
+	local files2 = merge(settings({ smartStop = true }), { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:conn","n":1}' })
 	local env2 = boot({ seconds = 12, files = files2 })
 	okBoot("conn died", env2)
 	T.eq(env2.hub.S.smartStop, false, "Smart Stop is off after a start that died while it was hooking")
 
-	local files3 = merge(settings({ hookNotices = true }), { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:notices","n":0}' })
+	local files3 = merge(settings({ hookNotices = true }), { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:notices","n":0}' })
 	local env3 = boot({ seconds = 12, files = files3 })
 	okBoot("notices died", env3)
 	T.eq(env3.hub.S.hookNotices, false, "the pop-up hook is off after a start that died inside it")
@@ -140,7 +140,7 @@ end
 T.section("journal: a note that makes no sense does not trigger safe mode")
 do
 	for _, text in ipairs({ "{{{ not json", "[]", '{"ok":false}', '{"stage":5,"ok":false}', "" }) do
-		local env = boot({ seconds = 8, files = { ["AtsukoHub/boot.json"] = text } })
+		local env = boot({ seconds = 8, files = { ["Atsuko Hub/boot.json"] = text } })
 		okBoot("odd note", env)
 		T.eq(env.core.Boot.safe, false, "normal start for note " .. string.format("%q", text))
 	end
@@ -155,7 +155,7 @@ do
 		before = function(e)
 			local orig = _G.hookmetamethod
 			_G.hookmetamethod = function(...)
-				local j = jsondecode(e.files["AtsukoHub/boot.json"] or "{}")
+				local j = jsondecode(e.files["Atsuko Hub/boot.json"] or "{}")
 				seen[#seen + 1] = { doing = j.doing, ok = j.ok, ready = e.genv.__AtsukoHubInstance and e.genv.__AtsukoHubInstance.ready }
 				return orig(...)
 			end
@@ -214,7 +214,7 @@ end
 
 T.section("journal: in safe mode a switch is saved but not installed, and reanimation can be retried")
 do
-	local env = boot({ seconds = 12, files = { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"repo","ok":false,"n":0}' } })
+	local env = boot({ seconds = 12, files = { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"repo","ok":false,"n":0}' } })
 	okBoot("safe switch", env)
 	local hub, core = env.hub, env.core
 	hub.S.hookNotices = true
@@ -228,7 +228,7 @@ end
 
 T.section("journal: a script that was starting when the game closed does not auto-run again")
 do
-	local files = merge(settings({ perScript = { [SCRIPT] = { autorun = true } } }), { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"ok","ok":true,"n":0,"script":"' .. SCRIPT .. '"}' })
+	local files = merge(settings({ perScript = { [SCRIPT] = { autorun = true } } }), { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ok","ok":true,"n":0,"script":"' .. SCRIPT .. '"}' })
 	local env = boot({ seconds = 12, files = files })
 	okBoot("marked", env)
 	T.eq(env.core.Boot.safe, false, "that alone is not safe mode")
@@ -260,7 +260,7 @@ do
 	local env = boot({ seconds = 8, without = { "writefile", "readfile", "isfile", "isfolder", "makefolder", "delfile", "listfiles", "appendfile", "delfolder" } })
 	T.ok(env.mainOk, "main chunk")
 	T.eq(env.genv.__AtsukoHubInstance and env.genv.__AtsukoHubInstance.ready, true, "ready")
-	T.eq(env.files["AtsukoHub/boot.json"], nil, "nothing written")
+	T.eq(env.files["Atsuko Hub/boot.json"], nil, "nothing written")
 	T.eq(env.core.Boot.safe, false, "normal")
 end
 
@@ -302,7 +302,7 @@ end
 
 T.section("journal: in safe mode the switches are kept but nothing is hooked")
 do
-	local env = boot({ seconds = 6, files = { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"gui","ok":false,"n":0}' } })
+	local env = boot({ seconds = 6, files = { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"gui","ok":false,"n":0}' } })
 	okBoot("safe switches", env)
 	local chat = rowFor(env, "Hide my commands from chat")
 	T.ok(chat ~= nil, "the switch is there")
@@ -310,7 +310,7 @@ do
 	env.run(1)
 	T.eq(env.hub.S.hookChat, true, "the choice is kept")
 	T.eq(#env.hooks, 0, "but the game is not hooked")
-	T.ok(string.find(env.files["AtsukoHub/settings.json"] or "", '"hookChat":true', 1, true) ~= nil, "and saved for the next normal start")
+	T.ok(string.find(env.files["Atsuko Hub/settings.json"] or "", '"hookChat":true', 1, true) ~= nil, "and saved for the next normal start")
 end
 
 T.section("journal: a switch the executor can't honour goes back to off")

@@ -647,7 +647,7 @@ do
 	local world = boot()
 	local url = "https://cdn.example.com/a.png"
 	world.route("GET", url, { code = 200, body = W.fixture("png_rgb_3x2"), delay = 2 })
-	local first = { ok = true, src = "url", value = url, cached = "AtsukoHub/cache/art/1111111111111111.png", format = "png", ext = "png" }
+	local first = { ok = true, src = "url", value = url, cached = "Atsuko Hub/cache/art/1111111111111111.png", format = "png", ext = "png" }
 	world.put(first.cached, "x")
 	Art.set("Scripts/A.lua", "logo", first)
 	world.files[first.cached] = nil
@@ -668,20 +668,20 @@ end
 T.section("scriptart load: the cache cleanup at start")
 do
 	local world = W.new()
-	local keep = "AtsukoHub/cache/art/aaaaaaaaaaaaaaaa.png"
-	local drop = "AtsukoHub/cache/art/bbbbbbbbbbbbbbbb.png"
+	local keep = "Atsuko Hub/cache/art/aaaaaaaaaaaaaaaa.png"
+	local drop = "Atsuko Hub/cache/art/bbbbbbbbbbbbbbbb.png"
 	world.put(keep, "A")
 	world.put(drop, "B")
-	world.put("AtsukoHub/cache/art_thumb/t1.png", "T")
-	world.put("AtsukoHub/cache/art_thumb/t2.jpg", "T")
-	world.put("AtsukoHub/cache/other.txt", "O")
+	world.put("Atsuko Hub/cache/art_thumb/t1.png", "T")
+	world.put("Atsuko Hub/cache/art_thumb/t2.jpg", "T")
+	world.put("Atsuko Hub/cache/other.txt", "O")
 	world.put(Art.DATA_FILE, jsonencode({ version = 1, items = { ["Scripts/A.lua"] = { logo = { src = "file", value = "x.png", cached = keep } } } }))
 	Art.init(world.ctx)
 	T.eq(world.files[keep], "A", "a copy in use is kept")
 	T.eq(world.files[drop], nil, "an unused copy is removed")
-	T.eq(world.files["AtsukoHub/cache/art_thumb/t1.png"], nil, "thumbnails never survive a reload")
-	T.eq(world.files["AtsukoHub/cache/art_thumb/t2.jpg"], nil)
-	T.eq(world.files["AtsukoHub/cache/other.txt"], "O", "other files are left alone")
+	T.eq(world.files["Atsuko Hub/cache/art_thumb/t1.png"], nil, "thumbnails never survive a reload")
+	T.eq(world.files["Atsuko Hub/cache/art_thumb/t2.jpg"], nil)
+	T.eq(world.files["Atsuko Hub/cache/other.txt"], "O", "other files are left alone")
 	local world2 = W.new({ has = { list = false } })
 	world2.put(drop, "B")
 	Art.init(world2.ctx)
@@ -708,7 +708,7 @@ do
 	T.eq(string.sub(nameA, -4), ".png")
 	T.eq(#nameA, #(Art.CACHE_DIR .. "/") + 16 + 4, "16 characters then the ending")
 	T.eq(string.sub(Art.cacheName(a, "x", "jpg"), -4), ".jpg")
-	T.eq(string.sub(Art.cacheName(a, "x", "png", "AtsukoHub/cache/art_thumb"), 1, 26), "AtsukoHub/cache/art_thumb/")
+	T.eq(string.sub(Art.cacheName(a, "x", "png", "Atsuko Hub/cache/art_thumb"), 1, 26), "Atsuko Hub/cache/art_thumb/")
 	local big1 = W.fatPng(100000)
 	local big2 = string.sub(big1, 1, 50000) .. "Y" .. string.sub(big1, 50002)
 	T.eq(#big1, #big2)

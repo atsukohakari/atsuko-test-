@@ -182,7 +182,7 @@ end
 T.section("emotes_gate: an old save that ended on the emotes page")
 local e2 = Runner.boot({
 	seconds = 6,
-	files = { ["AtsukoHub/settings.json"] = jsonencode({ lastPage = "emotes" }) },
+	files = { ["Atsuko Hub/settings.json"] = jsonencode({ lastPage = "emotes" }) },
 })
 T.eq(e2.hub.S.lastPage, "home", "it starts on Home instead")
 T.eq(#e2.errors, 0, "no errors")

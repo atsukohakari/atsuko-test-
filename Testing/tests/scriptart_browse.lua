@@ -83,7 +83,7 @@ do
 	local id2, state2, meta2 = Art.thumbNow("pics/lie.png")
 	T.eq(state2, "ok")
 	T.eq(meta2.info.format, "jpeg")
-	T.ok(string.find(id2, "AtsukoHub/cache/art_thumb/", 1, true) ~= nil, "a picture with the wrong ending is copied: " .. tostring(id2))
+	T.ok(string.find(id2, "Atsuko Hub/cache/art_thumb/", 1, true) ~= nil, "a picture with the wrong ending is copied: " .. tostring(id2))
 	T.eq(string.sub(id2, -4), ".jpg")
 	T.eq(#world.cacheFiles(Art.CACHE_DIR), 0, "thumbnails never go in the picture cache")
 	world.put("pics/scrambled", W.fixture("png_rgba_1x1"))

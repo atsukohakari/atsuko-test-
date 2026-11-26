@@ -220,7 +220,7 @@ local myBoard = boardRow(env, 1, "Tester")
 core.setVerifiedBadge(true)
 env.run(2)
 T.eq(S.verifiedBadge, true)
-T.ok(string.find(env.files["AtsukoHub/settings.json"] or "", '"verifiedBadge":true', 1, true) ~= nil, "it is saved")
+T.ok(string.find(env.files["Atsuko Hub/settings.json"] or "", '"verifiedBadge":true', 1, true) ~= nil, "it is saved")
 T.eq(homeBadge[1].Visible, true, "Home shows it next to your name")
 T.ok(core.chatStyle ~= nil and core.chatStyle.active, "the chat window is styled")
 T.ok(core.badgeView ~= nil and core.badgeView.chat(), "and the hub found Roblox's chat window")
@@ -394,7 +394,7 @@ clean(env, "off again")
 
 T.section("verified_badge: a saved badge comes back")
 do
-	local e2 = Runner.boot({ seconds = 8, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = true, vbStyle = "ff00aa", chatNameColors = true }) }, before = world })
+	local e2 = Runner.boot({ seconds = 8, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = true, vbStyle = "ff00aa", chatNameColors = true }) }, before = world })
 	T.eq(e2.hub.S.verifiedBadge, true)
 	T.eq(e2.hub.S.vbStyle, nil, "old color settings are dropped")
 	T.eq(e2.hub.S.chatNameColors, nil)
@@ -405,13 +405,13 @@ do
 	e2.genv.__AtsukoHubInstance.Destroy()
 	e2.run(1)
 	T.eq(e2.service("TextChatService").OnChatWindowAdded, nil, "closing the hub gives the chat window back")
-	local e3 = Runner.boot({ seconds = 8, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = "yes" }) } })
+	local e3 = Runner.boot({ seconds = 8, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = "yes" }) } })
 	T.eq(e3.hub.S.verifiedBadge, false, "junk is off")
 end
 
 T.section("verified_badge: waits until the hub has started")
 do
-	local e4 = Runner.boot({ seconds = 1, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = world })
+	local e4 = Runner.boot({ seconds = 1, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = world })
 	T.eq(e4.service("TextChatService").OnChatWindowAdded, nil, "nothing is touched in the first second")
 	e4.run(4)
 	T.eq(type(e4.service("TextChatService").OnChatWindowAdded), "function", "it goes on a few seconds in")
@@ -419,7 +419,7 @@ end
 
 T.section("verified_badge: no chat window to draw in")
 do
-	local e8 = Runner.boot({ seconds = 8, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = function(e)
+	local e8 = Runner.boot({ seconds = 8, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = function(e)
 		local cfg = e.newInstance("ChatWindowConfiguration")
 		cfg.Name = "ChatWindowConfiguration"
 		cfg.Parent = e.service("TextChatService")
@@ -431,7 +431,7 @@ end
 
 T.section("verified_badge: safe mode")
 do
-	local e3 = Runner.boot({ seconds = 8, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = true }), ["AtsukoHub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:chat","n":0}' }, before = world })
+	local e3 = Runner.boot({ seconds = 8, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = true }), ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"hook:chat","n":0}' }, before = world })
 	T.eq(e3.core.Boot.safe, true, "this is a safe start")
 	T.eq(e3.core.chatStyle, nil, "no chat callback")
 	T.eq(e3.core.badgeView, nil, "nothing drawn into Roblox's screens")
@@ -440,7 +440,7 @@ end
 
 T.section("verified_badge: an executor without getcallbackvalue")
 do
-	local e5 = Runner.boot({ seconds = 8, without = { "getcallbackvalue" }, files = { ["AtsukoHub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = world })
+	local e5 = Runner.boot({ seconds = 8, without = { "getcallbackvalue" }, files = { ["Atsuko Hub/settings.json"] = jsonencode({ verifiedBadge = true }) }, before = world })
 	T.ok(e5.core.chatStyle ~= nil and e5.core.chatStyle.active, "the badge still shows in chat")
 	T.eq(e5.core.chatStyle.readable, nil)
 	local said = false

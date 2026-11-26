@@ -382,7 +382,7 @@ do
 	cmdOf("ak", "bulletspersecond").run("30")
 	T.eq(U.module().BooletsPerSec, 30, "the slider sets the bullets per second")
 	env.run(0.1)
-	local saved = files["AtsukoHub/movesets/WHATCOMESBEFORE47.json"]
+	local saved = files["Atsuko Hub/movesets/WHATCOMESBEFORE47.json"]
 	T.ok(saved ~= nil and string.find(saved, "30", 1, true) ~= nil, "and it is saved like Uhhhhhh saves it")
 	click(true)
 	frames(w, "idle", 20)

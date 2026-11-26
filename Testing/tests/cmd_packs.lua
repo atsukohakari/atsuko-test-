@@ -556,8 +556,8 @@ end
 T.section("packs: a pack that closed the game is switched off")
 do
 	local files = {
-		["AtsukoHub/settings.json"] = '{"lastVersion":"1.6.1"}',
-		["AtsukoHub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"pack:extras","n":0}',
+		["Atsuko Hub/settings.json"] = '{"lastVersion":"1.6.1"}',
+		["Atsuko Hub/boot.json"] = '{"v":1,"stage":"ready","ok":false,"doing":"pack:extras","n":0}',
 	}
 	local e1 = Runner.boot({ seconds = 8, files = files })
 	T.eq(e1.core.Boot.safe, true, "the next start is a safe start")
@@ -569,8 +569,8 @@ do
 	local e2 = Runner.boot({
 		seconds = 8,
 		files = {
-			["AtsukoHub/settings.json"] = e1.files["AtsukoHub/settings.json"],
-			["AtsukoHub/boot.json"] = e1.files["AtsukoHub/boot.json"],
+			["Atsuko Hub/settings.json"] = e1.files["Atsuko Hub/settings.json"],
+			["Atsuko Hub/boot.json"] = e1.files["Atsuko Hub/boot.json"],
 		},
 	})
 	T.eq(e2.core.Boot.safe, false, "the start after that is normal")
@@ -584,8 +584,8 @@ do
 	local e3 = Runner.boot({
 		seconds = 8,
 		files = {
-			["AtsukoHub/settings.json"] = string.gsub(e1.files["AtsukoHub/settings.json"], '"lastVersion":"[^"]*"', '"lastVersion":"1.4.0"'),
-			["AtsukoHub/boot.json"] = e1.files["AtsukoHub/boot.json"],
+			["Atsuko Hub/settings.json"] = string.gsub(e1.files["Atsuko Hub/settings.json"], '"lastVersion":"[^"]*"', '"lastVersion":"1.4.0"'),
+			["Atsuko Hub/boot.json"] = e1.files["Atsuko Hub/boot.json"],
 		},
 	})
 	T.eq(e3.hub.S.skipPacks.extras, nil, "a new version tries the pack again")

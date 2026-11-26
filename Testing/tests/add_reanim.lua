@@ -172,7 +172,7 @@ do
 	env.run(0.3)
 	T.same(AL.vals[1], { 0, 0, 0, 0, 0, 0 }, "the next gun you added starts from the default, not the last one")
 	env.run(2)
-	local file = env.files["AtsukoHub/alignment_user.lua"]
+	local file = env.files["Atsuko Hub/alignment_user.lua"]
 	T.ok(type(file) == "string" and string.find(file, '["Test Gun"]', 1, true) ~= nil, "the spots are written to your hat file a moment later")
 	genv.AtsukoAlign = nil
 	hub.Bus.fire("align")

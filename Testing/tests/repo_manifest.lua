@@ -48,7 +48,7 @@ local function run(code, name)
 	end
 end
 
-LOCAL_DIR = "AtsukoHub"
+LOCAL_DIR = "Atsuko Hub"
 HUB_DIR = "Hub"
 HOME_REPO = "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 SRC = { owner = "atsukohakari", repo = "atsuko-test-", branch = "main" }
@@ -213,8 +213,8 @@ ok, why = Repo.loadManifest(false)
 T.eq(ok, true)
 T.eq(why, SHIPPED, "the number of scripts in the shipped manifest")
 T.eq(Repo.manifest[REAL].name, "Neptunian V")
-T.eq(disk["AtsukoHub/cache/manifest.json"], readsource("Scripts/manifest.json"), "the manifest is cached for the next start")
-T.eq(disk["AtsukoHub/cache/mod_manifest.lua"], readsource("Hub/modules/manifest.lua"), "the module is cached too")
+T.eq(disk["Atsuko Hub/cache/manifest.json"], readsource("Scripts/manifest.json"), "the manifest is cached for the next start")
+T.eq(disk["Atsuko Hub/cache/mod_manifest.lua"], readsource("Hub/modules/manifest.lua"), "the module is cached too")
 local asked = false
 for _, url in ipairs(net.calls) do
 	if string.find(url, HOME_REPO .. "Scripts/manifest.json?t=", 1, true) then
@@ -282,8 +282,8 @@ T.eq(errorsLogged(), 0)
 
 T.section("repo_manifest: the saved script list uses the manifest and drops the hidden folders")
 fresh()
-disk["AtsukoHub/cache/manifest.json"] = readsource("Scripts/manifest.json")
-disk["AtsukoHub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
+disk["Atsuko Hub/cache/manifest.json"] = readsource("Scripts/manifest.json")
+disk["Atsuko Hub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
 disk[Core.LIST_CACHE] = '{"key":"atsukohakari/atsuko-test-@main","list":['
 	.. '{"path":"Scripts/Hat/NeptunianV.lua","size":263512},'
 	.. '{"path":"Reanimation/Hat/FDless.lua","size":900},'
@@ -309,11 +309,11 @@ ok, why = Repo.loadManifest(false)
 T.eq(ok, false)
 T.eq(Repo.manifest, good, "the last good manifest is kept")
 T.eq(errorsLogged(), 1, "the problem is written to the log")
-T.eq(disk["AtsukoHub/cache/manifest.json"], readsource("Scripts/manifest.json"), "a bad download does not replace the cache")
+T.eq(disk["Atsuko Hub/cache/manifest.json"], readsource("Scripts/manifest.json"), "a bad download does not replace the cache")
 net.override["Scripts/manifest.json"] = "<!DOCTYPE html><html><body>Not Found</body></html>"
 ok = Repo.loadManifest(false)
 T.eq(ok, true, "an error page is not taken for the manifest")
-T.eq(disk["AtsukoHub/cache/manifest.json"], readsource("Scripts/manifest.json"))
+T.eq(disk["Atsuko Hub/cache/manifest.json"], readsource("Scripts/manifest.json"))
 T.eq(errorsLogged(), 1, "an error page adds nothing to the log")
 net.override["Scripts/manifest.json"] = false
 ok = Repo.loadManifest(false)
@@ -342,7 +342,7 @@ T.ok(after ~= before)
 
 T.section("repo_manifest: an unreadable cache file")
 fresh()
-disk["AtsukoHub/cache/manifest.json"] = false
+disk["Atsuko Hub/cache/manifest.json"] = false
 ok, why = Repo.loadManifest(true)
 T.eq(ok, false)
 T.eq(why, "no manifest yet")
@@ -379,8 +379,8 @@ T.eq(next(disk), nil)
 T.eq(errorsLogged(), 0, "a missing manifest in your folder is not an error")
 Repo.set(listOf({ REAL }))
 T.eq(Repo.byPath[REAL].name, "NeptunianV", "the list still works without it")
-disk["AtsukoHub/cache/manifest.json"] = readsource("Scripts/manifest.json")
-disk["AtsukoHub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
+disk["Atsuko Hub/cache/manifest.json"] = readsource("Scripts/manifest.json")
+disk["Atsuko Hub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
 Core.mods = {}
 Repo.manifest = {}
 ok, why = Repo.loadManifest(false)
@@ -390,7 +390,7 @@ T.eq(next(Repo.manifest), nil)
 T.section("repo_manifest: any file of the repo can be fetched and cached")
 fresh()
 local registryPath = "Reanimation/providers/registry.lua"
-local registryCache = "AtsukoHub/cache/file_Reanimation_providers_registry.lua"
+local registryCache = "Atsuko Hub/cache/file_Reanimation_providers_registry.lua"
 local got, problem = Core.fileSource(registryPath, true)
 T.eq(got, readsource(registryPath))
 T.eq(problem, nil)
@@ -425,7 +425,7 @@ net.override["Reanimation/x.lua"] = string.rep("a", 60)
 got, problem = Core.fileSource("Reanimation/x.lua", true)
 T.eq(got, nil, "a module with no return is not taken")
 T.eq(problem, "couldn't download Reanimation/x.lua")
-T.eq(disk["AtsukoHub/cache/file_Reanimation_x.lua"], nil, "and it is not cached")
+T.eq(disk["Atsuko Hub/cache/file_Reanimation_x.lua"], nil, "and it is not cached")
 T.eq(Core.fileSource("Reanimation/x.lua", false), string.rep("a", 60), "a file with no return is fine when none is needed")
 fresh()
 net.override["Reanimation/x.lua"] = "short"
@@ -435,7 +435,7 @@ fresh()
 net.override["Reanimation/x.lua"] = "<html>" .. string.rep("a", 60) .. "return"
 got = Core.fileSource("Reanimation/x.lua", false)
 T.eq(got, nil, "an error page is not taken for a file")
-T.eq(disk["AtsukoHub/cache/file_Reanimation_x.lua"], nil, "nothing bad is cached")
+T.eq(disk["Atsuko Hub/cache/file_Reanimation_x.lua"], nil, "nothing bad is cached")
 fresh()
 net.override["Reanimation/x.lua"] = "return " .. string.rep("a", 60)
 Core.fileSource("Reanimation/x.lua", true)
@@ -444,11 +444,11 @@ T.eq(Core.fileSource("Reanimation/x.lua", true), "return " .. string.rep("a", 60
 
 fresh()
 net.offline = true
-disk["AtsukoHub/cache/file_Reanimation_x.lua"] = "short"
+disk["Atsuko Hub/cache/file_Reanimation_x.lua"] = "short"
 got, problem = Core.fileSource("Reanimation/x.lua", false)
 T.eq(got, nil, "a cache that is too small to be a file is not used")
 T.eq(problem, "couldn't download Reanimation/x.lua")
-disk["AtsukoHub/cache/file_Reanimation_x.lua"] = string.rep("a", 60)
+disk["Atsuko Hub/cache/file_Reanimation_x.lua"] = string.rep("a", 60)
 T.eq(Core.fileSource("Reanimation/x.lua", false), string.rep("a", 60), "a cache of a fair size is")
 fresh()
 net.override["Reanimation/y.lua"] = string.rep("a", 60)
@@ -483,13 +483,13 @@ Origin.root = nil
 net.override["Hub/modules/mentions.lua"] = "local M = {}\n" .. string.rep("-", 420) .. "\nM.a = \"<html\"\nM.b = \"<!doctype\"\nreturn M"
 got, problem = Core.moduleSource("mentions")
 T.ok(type(got) == "string" and #got > 400, "a module that only mentions html is taken: " .. tostring(problem))
-T.ok(disk["AtsukoHub/cache/mod_mentions.lua"] ~= nil, "and cached")
+T.ok(disk["Atsuko Hub/cache/mod_mentions.lua"] ~= nil, "and cached")
 fresh()
 net.override["Hub/modules/oops.lua"] = "<!DOCTYPE html><html><body>" .. string.rep("a", 60) .. "return</body></html>"
 got, problem = Core.moduleSource("oops")
 T.eq(got, nil, "an error page is not taken for a module")
 T.eq(problem, "couldn't download oops")
-T.eq(disk["AtsukoHub/cache/mod_oops.lua"], nil, "and not cached")
+T.eq(disk["Atsuko Hub/cache/mod_oops.lua"], nil, "and not cached")
 
 T.section("repo_manifest: your own folder is used for any file, and the cache is left alone")
 fresh()
@@ -509,7 +509,7 @@ local registry = Core.loadModule("@Reanimation/providers/registry")
 T.eq(type(registry), "table", "an @ name is read from the repo root")
 T.same(registry.IDS, { "atsuko", "fdless", "gelatek", "uhhhhhh" })
 T.eq(disk[registryCache], readsource(registryPath), "it is cached like any file")
-T.eq(disk["AtsukoHub/cache/mod_@Reanimation_providers_registry.lua"], nil, "an @ module is not cached as a hub module")
+T.eq(disk["Atsuko Hub/cache/mod_@Reanimation_providers_registry.lua"], nil, "an @ module is not cached as a hub module")
 T.eq(Core.loadModule("@Reanimation/providers/registry"), registry, "the second time it is the same table")
 T.eq(errorsLogged(), 0)
 local PROBE = "local M = {} function M.init(c) M.got = c end return M"

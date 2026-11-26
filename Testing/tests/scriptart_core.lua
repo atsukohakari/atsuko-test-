@@ -257,22 +257,22 @@ end
 
 T.section("scriptart: which cache names are safe")
 do
-	T.eq(Art.safeCache("AtsukoHub/cache/art/abc123.png"), true)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/0123456789abcdef.jpg"), true)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/../x.png"), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/.."), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/sub/x.png"), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/"), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art"), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/other/x.png"), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art_thumb/x.png"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/abc123.png"), true)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/0123456789abcdef.jpg"), true)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/../x.png"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/.."), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/sub/x.png"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/other/x.png"), false)
+	T.eq(Art.safeCache("Atsuko Hub/cache/art_thumb/x.png"), false)
 	T.eq(Art.safeCache("x.png"), false)
-	T.eq(Art.safeCache("/AtsukoHub/cache/art/x.png"), false)
+	T.eq(Art.safeCache("/Atsuko Hub/cache/art/x.png"), false)
 	T.eq(Art.safeCache(""), false)
 	T.eq(Art.safeCache(nil), false)
 	T.eq(Art.safeCache(5), false)
-	T.eq(Art.safeCache("AtsukoHub/cache/art/a..b.png"), false, "two dots in a row are never allowed")
-	T.eq(Art.safeCache("AtsukoHub/cache/art/a.b.png"), true, "single dots are fine")
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/a..b.png"), false, "two dots in a row are never allowed")
+	T.eq(Art.safeCache("Atsuko Hub/cache/art/a.b.png"), true, "single dots are fine")
 end
 
 T.section("scriptart: arranging a folder")
@@ -390,7 +390,7 @@ end
 
 T.section("scriptart: bad entries in the list file are dropped")
 do
-	local good = "AtsukoHub/cache/art/0123456789abcdef.png"
+	local good = "Atsuko Hub/cache/art/0123456789abcdef.png"
 	local data = {
 		version = 1,
 		lastFolder = "pics/cats",
@@ -456,8 +456,8 @@ end
 T.section("scriptart: the copy of a picture is released when nobody uses it")
 do
 	local world = boot()
-	local a = "AtsukoHub/cache/art/aaaaaaaaaaaaaaaa.png"
-	local b = "AtsukoHub/cache/art/bbbbbbbbbbbbbbbb.png"
+	local a = "Atsuko Hub/cache/art/aaaaaaaaaaaaaaaa.png"
+	local b = "Atsuko Hub/cache/art/bbbbbbbbbbbbbbbb.png"
 	world.put(a, "A")
 	world.put(b, "B")
 	local function result(path)
@@ -477,10 +477,10 @@ do
 	T.eq(world.files[b], "B")
 	Art.set("Scripts/One.lua", "logo", result(b))
 	T.eq(world.files[b], "B", "setting the same picture again keeps it")
-	T.eq(Art.release("AtsukoHub/cache/art/../../evil.txt"), false)
-	world.put("AtsukoHub/other.txt", "keep")
-	T.eq(Art.release("AtsukoHub/other.txt"), false, "files outside the cache are never touched")
-	T.eq(world.files["AtsukoHub/other.txt"], "keep")
+	T.eq(Art.release("Atsuko Hub/cache/art/../../evil.txt"), false)
+	world.put("Atsuko Hub/other.txt", "keep")
+	T.eq(Art.release("Atsuko Hub/other.txt"), false, "files outside the cache are never touched")
+	T.eq(world.files["Atsuko Hub/other.txt"], "keep")
 	T.eq(Art.release(b), false, "a copy in use is not released")
 	T.eq(world.files[b], "B")
 	Art.clear("Scripts/One.lua", "logo")
@@ -538,7 +538,7 @@ end
 
 T.section("scriptart: pictures follow a script that moved")
 do
-	local good = "AtsukoHub/cache/art/abc.png"
+	local good = "Atsuko Hub/cache/art/abc.png"
 	local data = {
 		version = 1,
 		items = {

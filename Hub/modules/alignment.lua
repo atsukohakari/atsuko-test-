@@ -14,9 +14,9 @@ Mod.MAX_PUBLISHED = 700
 Mod.MAX_LOOKUPS = 40
 Mod.MAX_WORN = 40
 Mod.BUILTIN_PATH = "Alignment/alignment.lua"
-Mod.CACHE_FILE = "AtsukoHub/cache/alignment.lua"
-Mod.USER_FILE = "AtsukoHub/alignment_user.lua"
-Mod.BROKEN_FILE = "AtsukoHub/alignment_user_broken.lua"
+Mod.CACHE_FILE = "Atsuko Hub/cache/alignment.lua"
+Mod.USER_FILE = "Atsuko Hub/alignment_user.lua"
+Mod.BROKEN_FILE = "Atsuko Hub/alignment_user_broken.lua"
 Mod.SHARED = { "gun", "sword", "shotgun", "rifle", "any" }
 Mod.SHARED_SLOTS = {
 	gun = { gun = true, gun1 = true, rifle = true, shotgun = true },

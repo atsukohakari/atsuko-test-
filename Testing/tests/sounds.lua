@@ -1,6 +1,6 @@
 local Runner = loadmodule("Testing/mocks/boot_runner.lua")
 local Pure = loadmodule("Hub/modules/sounds.lua")
-local SETTINGS = "AtsukoHub/settings.json"
+local SETTINGS = "Atsuko Hub/settings.json"
 
 local function voices(env)
 	local out = {}
@@ -380,7 +380,7 @@ do
 	e3.run(4)
 	T.eq(e3.hub.S.loginPick, "login/Shiroko_LogIn_1.ogg.mp3", "it can be picked")
 	T.eq(st3.last, "login/Shiroko_LogIn_1.ogg.mp3", "and it plays")
-	local list = jsondecode(e3.files["AtsukoHub/cache/list.json"] or "{}")
+	local list = jsondecode(e3.files["Atsuko Hub/cache/list.json"] or "{}")
 	T.ok(type(list.login) == "table" and table.find(list.login, "login/Shiroko_LogIn_1.ogg.mp3") ~= nil, "the files are saved with the script list for next time")
 	T.eq(#e3.errors, 0, "no errors: " .. table.concat(e3.errors, " | "))
 	e3.run(12)

@@ -363,7 +363,7 @@ do
 	picker = first(block.frame, "ColorPicker")
 	T.eq(valueOf(block, "bg"), "#223344", "its background row shows it")
 	T.ok(withText(hub.Pages.settings.views[2], "My colors") ~= nil, "the theme card says My colors")
-	local saved = env.files["AtsukoHub/settings.json"] or ""
+	local saved = env.files["Atsuko Hub/settings.json"] or ""
 	T.ok(string.find(saved, '"bg":"#223344"', 1, true) ~= nil, "and it was written to the settings file")
 	T.ok(string.find(saved, '"version":2', 1, true) ~= nil, "with its version")
 	tap(rowOf(block, "bg"))
@@ -587,7 +587,7 @@ T.section("colors_ui: the rainbow comes back after a reload")
 do
 	local e2 = Runner.boot({
 		seconds = 8,
-		files = { ["AtsukoHub/settings.json"] = jsonencode({ rainbowBg = true, rainbowBgPeriod = 45 }) },
+		files = { ["Atsuko Hub/settings.json"] = jsonencode({ rainbowBg = true, rainbowBgPeriod = 45 }) },
 	})
 	local S2 = e2.core.ctx.S
 	T.eq(S2.rainbowBg, true, "the setting is read")
@@ -603,24 +603,24 @@ do
 	local e3 = Runner.boot({
 		seconds = 8,
 		files = {
-			["AtsukoHub/settings.json"] = jsonencode({ rainbowBg = true }),
-			["AtsukoHub/boot.json"] = '{"v":1,"ver":"1.6.1","stage":"commands","ok":false,"n":0}',
+			["Atsuko Hub/settings.json"] = jsonencode({ rainbowBg = true }),
+			["Atsuko Hub/boot.json"] = '{"v":1,"ver":"1.6.1","stage":"commands","ok":false,"n":0}',
 		},
 	})
 	T.eq(e3.core.mods.settings_colors, nil, "in safe mode the module is not even loaded at the start")
 	local e4 = Runner.boot({
 		seconds = 8,
-		files = { ["AtsukoHub/settings.json"] = jsonencode({ rainbowBg = true, animations = false }) },
+		files = { ["Atsuko Hub/settings.json"] = jsonencode({ rainbowBg = true, animations = false }) },
 	})
 	T.eq(e4.core.mods.settings_colors, nil, "with animations off at the start it is not loaded either")
 	local e5 = Runner.boot({
 		seconds = 8,
-		files = { ["AtsukoHub/settings.json"] = jsonencode({ rainbowBgPeriod = 5000 }) },
+		files = { ["Atsuko Hub/settings.json"] = jsonencode({ rainbowBgPeriod = 5000 }) },
 	})
 	T.eq(e5.core.ctx.S.rainbowBgPeriod, 120, "a loop longer than 120 is cut to 120")
 	local e6 = Runner.boot({
 		seconds = 8,
-		files = { ["AtsukoHub/settings.json"] = jsonencode({ rainbowBgPeriod = 2 }) },
+		files = { ["Atsuko Hub/settings.json"] = jsonencode({ rainbowBgPeriod = 2 }) },
 	})
 	T.eq(e6.core.ctx.S.rainbowBgPeriod, 30, "and one shorter than 30 is raised to 30")
 end
@@ -632,7 +632,7 @@ do
 	local odd = { id = "c1700000000_3", name = "Odd one", bg = "#102032", version = 9, rainbowBg = "yes" }
 	local e7 = Runner.boot({
 		seconds = 6,
-		files = { ["AtsukoHub/settings.json"] = jsonencode({ themes = { old, fresh, odd } }) },
+		files = { ["Atsuko Hub/settings.json"] = jsonencode({ themes = { old, fresh, odd } }) },
 	})
 	local list = e7.core.ctx.S.themes
 	T.eq(#list, 3, "all three load")

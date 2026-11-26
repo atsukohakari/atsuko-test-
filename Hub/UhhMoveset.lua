@@ -1111,7 +1111,7 @@ function Uhh.new(cfg)
 	end
 
 	local mod = nil
-	local folder = "AtsukoHub/movesets"
+	local folder = "Atsuko Hub/movesets"
 	local function configFile()
 		local id = mod and (mod.InternalName or mod.Name) or TITLE
 		return folder .. "/" .. tostring(id):gsub("[^%w]", "") .. ".json"

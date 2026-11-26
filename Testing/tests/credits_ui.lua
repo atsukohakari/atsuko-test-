@@ -229,7 +229,7 @@ do
 		seen[call.userId] = true
 	end
 	T.eq(seen[TESTER_ID], true, "the tester's picture was asked for")
-	local cache = env.files["AtsukoHub/data/credits_cache.json"]
+	local cache = env.files["Atsuko Hub/data/credits_cache.json"]
 	T.ok(type(cache) == "string", "names are cached")
 	local saved = jsondecode(cache or "{}")
 	T.eq(saved.names[tostring(TESTER_ID)].display, "Test Nick", "the cached nickname")

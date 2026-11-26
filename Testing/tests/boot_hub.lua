@@ -46,7 +46,7 @@ T.section("boot: no character yet")
 check("nochar", boot({ character = false }))
 
 T.section("boot: a broken settings file and a broken hat file")
-check("broken", boot({ files = { ["AtsukoHub/settings.json"] = "{not json at all", ["AtsukoHub/alignment_user.lua"] = "return { rows = ", ["AtsukoHub/cache/alignment.lua"] = "garbage(" } }))
+check("broken", boot({ files = { ["Atsuko Hub/settings.json"] = "{not json at all", ["Atsuko Hub/alignment_user.lua"] = "return { rows = ", ["Atsuko Hub/cache/alignment.lua"] = "garbage(" } }))
 
 T.section("boot: settings from an older hub")
-check("older", boot({ files = { ["AtsukoHub/settings.json"] = '{"prefix":"/","theme":"dark","animations":true,"openOnLoad":true,"favorites":{"Scripts/Hat/x.lua":true},"recent":["Scripts/Hat/x.lua"]}' } }))
+check("older", boot({ files = { ["Atsuko Hub/settings.json"] = '{"prefix":"/","theme":"dark","animations":true,"openOnLoad":true,"favorites":{"Scripts/Hat/x.lua":true},"recent":["Scripts/Hat/x.lua"]}' } }))

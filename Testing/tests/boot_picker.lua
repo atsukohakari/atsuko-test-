@@ -103,9 +103,9 @@ do
 		end))
 	end
 	local png = bytes(Fix.valid.png_wide_300x100.hex)
-	env.files["AtsukoHub/pics/kxjqzpw.png"] = png
-	env.files["AtsukoHub/pics/notes.txt"] = "hello"
-	env.folders["AtsukoHub/pics"] = true
+	env.files["Atsuko Hub/pics/kxjqzpw.png"] = png
+	env.files["Atsuko Hub/pics/notes.txt"] = "hello"
+	env.folders["Atsuko Hub/pics"] = true
 	hub.Win.close("art_browser")
 	env.run(1)
 	T.ok(core.loadModule("imagebrowser").state() == nil, "the first browser is gone")
@@ -117,14 +117,14 @@ do
 	local fileBox = box(gui, "pics/me.png")
 	T.ok(fileBox ~= nil, "the workspace box is there")
 	local Browser = core.loadModule("imagebrowser")
-	core.scriptArt().setLastFolder("AtsukoHub/pics")
+	core.scriptArt().setLastFolder("Atsuko Hub/pics")
 	local browseButton = byText(gui, "Browse")[1]
 	T.ok(browseButton ~= nil, "Browse is there")
 	press(browseButton)
 	env.run(2)
 	local st = Browser.state()
 	T.ok(st ~= nil and st.alive, "a browser is open")
-	T.eq(st and st.dir, "AtsukoHub/pics", "it opens in the folder you used last")
+	T.eq(st and st.dir, "Atsuko Hub/pics", "it opens in the folder you used last")
 	local names = {}
 	for _, e in ipairs(st and st.view or {}) do
 		names[#names + 1] = tostring(e.name)
@@ -140,7 +140,7 @@ do
 	if not cell then
 		hub.Win.close("art_browser")
 		env.run(1)
-		fileBox.Text = "AtsukoHub/pics/kxjqzpw.png"
+		fileBox.Text = "Atsuko Hub/pics/kxjqzpw.png"
 		fileBox.FocusLost:Fire(true)
 		env.run(1)
 	else
@@ -156,7 +156,7 @@ do
 		end
 	end
 	T.ok(Browser.state() == nil, "the browser closed itself")
-	T.eq(session.file, "AtsukoHub/pics/kxjqzpw.png", "the picker took the path")
+	T.eq(session.file, "Atsuko Hub/pics/kxjqzpw.png", "the picker took the path")
 	T.eq(#env.errors, 0, "no errors while picking: " .. table.concat(env.errors, " | "))
 	T.eq(#env.badProps, 0, "no bad property values while picking: " .. table.concat(env.badProps, " | "))
 	env.run(5)
@@ -171,7 +171,7 @@ do
 		T.eq(item and item.src, "file", "as a file")
 		local cached = false
 		for path in pairs(env.files) do
-			if string.sub(path, 1, #"AtsukoHub/cache/art/") == "AtsukoHub/cache/art/" and string.sub(path, -4) == ".png" then
+			if string.sub(path, 1, #"Atsuko Hub/cache/art/") == "Atsuko Hub/cache/art/" and string.sub(path, -4) == ".png" then
 				cached = true
 			end
 		end

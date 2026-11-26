@@ -724,7 +724,7 @@ do
 		{ 18, "buttons", "Add hat" },
 		{ 21, "action", "Read the hats I'm wearing" },
 		{ 40, "buttons", "Copy rows" },
-		{ 41, "note", "Your hats are saved in AtsukoHub/alignment_user.lua" },
+		{ 41, "note", "Your hats are saved in Atsuko Hub/alignment_user.lua" },
 	}
 	T.eq(#inFrame, #expected)
 	for i, want in ipairs(expected) do
@@ -744,7 +744,7 @@ do
 	T.eq(inFrame[6].row.Visible, false, "the script row only shows for one script")
 	T.eq(inFrame[7].row.Visible, false, "and the job row too")
 	T.eq(inFrame[14].text, "Studs for x y z, degrees for the three turns. Leave it empty to keep the reanimate's own default.")
-	T.eq(inFrame[19].text, "Your hats are saved in AtsukoHub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
+	T.eq(inFrame[19].text, "Your hats are saved in Atsuko Hub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
 	T.eq(inFrame[16].height, 38)
 	T.eq(inFrame[18].height, 38)
 	local picker = block.frame:FindFirstChild("Picker")

@@ -425,7 +425,7 @@ do
 	local h = setup()
 	local url = "https://cdn.example.com/a.png"
 	h.world.route("GET", url, { code = 200, body = W.fixture("png_rgb_3x2"), delay = 2 })
-	local cached = "AtsukoHub/cache/art/1111111111111111.png"
+	local cached = "Atsuko Hub/cache/art/1111111111111111.png"
 	h.world.put(cached, "x")
 	Art.set("Scripts/A.lua", "banner", { ok = true, src = "url", value = url, cached = cached, format = "png", ext = "png" })
 	h.world.files[cached] = nil

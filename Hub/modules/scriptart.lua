@@ -1,10 +1,10 @@
 local Art = {}
 
 Art.VERSION = 1
-Art.DATA_FILE = "AtsukoHub/data/scriptart.json"
-Art.BROKEN_FILE = "AtsukoHub/data/scriptart_broken.json"
-Art.CACHE_DIR = "AtsukoHub/cache/art"
-Art.THUMB_DIR = "AtsukoHub/cache/art_thumb"
+Art.DATA_FILE = "Atsuko Hub/data/scriptart.json"
+Art.BROKEN_FILE = "Atsuko Hub/data/scriptart_broken.json"
+Art.CACHE_DIR = "Atsuko Hub/cache/art"
+Art.THUMB_DIR = "Atsuko Hub/cache/art_thumb"
 Art.MAX_BYTES = 8 * 1024 * 1024
 Art.WARN_BYTES = 2 * 1024 * 1024
 Art.THUMB_MAX = 1536 * 1024

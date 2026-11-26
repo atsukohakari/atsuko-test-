@@ -37,7 +37,7 @@ end
 
 T.section("script pictures: safe mode leaves them out and the pane still works")
 do
-	local env = boot({ seconds = 6, files = { ["AtsukoHub/boot.json"] = '{"v":1,"stage":"repo","ok":false,"n":0}' } })
+	local env = boot({ seconds = 6, files = { ["Atsuko Hub/boot.json"] = '{"v":1,"stage":"repo","ok":false,"n":0}' } })
 	okBoot("safe art", env)
 	local Detail = env.hub.Detail
 	T.eq(Detail.art, nil, "no picture view in safe mode")

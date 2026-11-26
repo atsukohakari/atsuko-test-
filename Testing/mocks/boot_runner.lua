@@ -52,7 +52,7 @@ function Boot.boot(opts)
 end
 
 function Boot.journal(env)
-	local text = env.files["AtsukoHub/boot.json"]
+	local text = env.files["Atsuko Hub/boot.json"]
 	if type(text) ~= "string" then
 		return nil
 	end

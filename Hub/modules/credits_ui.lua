@@ -1,6 +1,6 @@
 local Mod = {}
 
-Mod.CACHE = "AtsukoHub/data/credits_cache.json"
+Mod.CACHE = "Atsuko Hub/data/credits_cache.json"
 Mod.ROBLOX_PREFIX = "https://www.roblox.com/"
 Mod.KINDS = { person = true, team = true, project = true, service = true, assistant = true }
 Mod.KIND_NAMES = { person = "Person", team = "Team", project = "Project", service = "Service", assistant = "AI assistant" }
@@ -1025,7 +1025,7 @@ local function packagePicture(rel)
 	if not ext then
 		return nil
 	end
-	local dir = ctx.Core.IMG_DIR or "AtsukoHub/images"
+	local dir = ctx.Core.IMG_DIR or "Atsuko Hub/images"
 	local path = dir .. "/credit_" .. ctx.Util.hash(rel) .. "_" .. #data .. "." .. ext
 	if not FS.exists(path) and not FS.write(path, data) then
 		return nil

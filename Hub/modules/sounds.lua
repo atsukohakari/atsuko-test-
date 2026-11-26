@@ -301,7 +301,7 @@ function Mod.asset(file)
 		if not ok or not Mod.sniff(data) then
 			return nil, tostring(err or ("couldn't download " .. rel))
 		end
-		path = (ctx.Core.LOCAL_DIR or "AtsukoHub") .. "/sounds/" .. string.gsub(file, "[^%w_%.%-]", "_")
+		path = (ctx.Core.LOCAL_DIR or "Atsuko Hub") .. "/sounds/" .. string.gsub(file, "[^%w_%.%-]", "_")
 		if FS.read(path) ~= data and not FS.write(path, data) then
 			return nil, "couldn't save " .. file
 		end

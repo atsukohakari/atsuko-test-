@@ -10,7 +10,7 @@ Core.OWNER_ID = 10959525032
 local HUB_DIR = "Hub"
 local SRC = { owner = "atsukohakari", repo = "atsuko-test-", branch = "main" }
 local HOME_REPO = "https://raw.githubusercontent.com/" .. SRC.owner .. "/" .. SRC.repo .. "/" .. SRC.branch .. "/"
-local LOCAL_DIR = "AtsukoHub"
+local LOCAL_DIR = "Atsuko Hub"
 Core.SCRIPT_EXT = { lua = true, luau = true, txt = true }
 
 local Players = game:GetService("Players")
@@ -315,6 +315,97 @@ function FS.delete(path)
 	if X.delfile and FS.exists(path) then pcall(X.delfile, path) end
 end
 
+Core.OLD_DIR = "AtsukoHub"
+Core.MOVE_MARK = LOCAL_DIR .. "/moved.txt"
+Core.MOVE_LATER = { music = true, videos = true, images = true, assets = true, icons = true, sounds = true, emotes = true, movesets = true, spotify = true }
+Core.MOVE_CACHE = { ["cache/art"] = true, ["cache/art_thumb"] = true }
+Core.MOVE_SKIP = { ["boot.json"] = true, ["moved.txt"] = true }
+Core.SAVE_NAMES = {
+	["settings.json"] = true, ["boot.json"] = true, ["moved.txt"] = true, ["servers.json"] = true, ["player.json"] = true,
+	["owner.key"] = true, ["check.txt"] = true, ["ai.json"] = true, ["ai_module.lua"] = true, ["editor_draft.lua"] = true,
+	["spotify.json"] = true, ["spotify_free.json"] = true, ["emotes.json"] = true, ["alignment_user.lua"] = true,
+	["alignment_user_broken.lua"] = true, cache = true, data = true, assets = true, videos = true, spotify = true,
+	myscripts = true, music = true, images = true, icons = true, sounds = true, emotes = true, movesets = true,
+}
+
+function Core.movedText(rel, data)
+	if string.match(string.lower(rel), "%.json$") then
+		data = string.gsub(data, Core.OLD_DIR .. "/", LOCAL_DIR .. "/")
+		data = string.gsub(data, Core.OLD_DIR .. "\\/", LOCAL_DIR .. "\\/")
+	end
+	return data
+end
+
+function Core.moveSaveDir(later)
+	if not (HAS_FS and X.isfolder and X.listfiles) then return 0, false end
+	if FS.exists(Core.MOVE_MARK) then return 0, true end
+	local okOld, hasOld = pcall(X.isfolder, Core.OLD_DIR)
+	if not (okOld and hasOld) then return 0, true end
+	local copied, seen, full = 0, 0, true
+	local function isDir(path)
+		local ok, r = pcall(X.isfolder, path)
+		return ok and r == true
+	end
+	local function wanted(rel, dir)
+		local top = string.match(rel, "^([^/]+)")
+		if dir then
+			if top == "cache" then
+				return rel == "cache" or Core.MOVE_CACHE[rel] == true or Core.MOVE_CACHE[string.match(rel, "^(cache/[^/]+)") or ""] == true
+			end
+			return later or not Core.MOVE_LATER[top]
+		end
+		if Core.MOVE_SKIP[rel] then return false end
+		if top == "cache" then return Core.MOVE_CACHE[string.match(rel, "^(cache/[^/]+)/") or ""] == true end
+		if string.find(rel, "/", 1, true) and Core.MOVE_LATER[top] then return later == true end
+		return true
+	end
+	local function walk(rel, depth)
+		local here = rel == "" and Core.OLD_DIR or (Core.OLD_DIR .. "/" .. rel)
+		local ok, items = pcall(X.listfiles, here)
+		if not ok or type(items) ~= "table" then
+			full = false
+			return
+		end
+		for _, item in ipairs(items) do
+			seen += 1
+			if seen > 20000 then
+				full = false
+				return
+			end
+			local name = string.match((string.gsub(tostring(item), "\\", "/")), "([^/]+)/*$")
+			if name and name ~= "." and name ~= ".." then
+				local child = rel == "" and name or (rel .. "/" .. name)
+				local from = Core.OLD_DIR .. "/" .. child
+				if isDir(from) then
+					if depth < 10 and wanted(child, true) then walk(child, depth + 1) end
+				elseif wanted(child, false) then
+					local to = LOCAL_DIR .. "/" .. child
+					if not FS.exists(to) then
+						local data = FS.read(from)
+						if data and FS.write(to, Core.movedText(child, data)) then
+							copied += 1
+						else
+							full = false
+						end
+					end
+					if later then task.wait() end
+				end
+			end
+		end
+	end
+	walk("", 0)
+	if later and full then
+		FS.write(Core.MOVE_MARK, "the hub copied what was in " .. Core.OLD_DIR .. " here once. nothing that was already here was replaced, and " .. Core.OLD_DIR .. " was left as it is.")
+	end
+	return copied, full
+end
+
+do
+	local ok, n = pcall(Core.moveSaveDir, false)
+	Core.movedNow = ok and n or 0
+	if not ok then Core.moveError = tostring(n) end
+end
+
 local function jsonDecode(s)
 	if type(s) ~= "string" then return nil end
 	local ok, r = pcall(function() return HttpService:JSONDecode(s) end)
@@ -406,6 +497,10 @@ function Origin.clean(s)
 	s = string.gsub(tostring(s), "\\", "/")
 	s = string.gsub(s, "/+$", "")
 	return s
+end
+
+function Core.isSaveName(name)
+	return Origin.root ~= nil and Origin.clean(Origin.root) == LOCAL_DIR and Core.SAVE_NAMES[string.lower(tostring(name))] == true
 end
 
 function Origin.has(root)
@@ -4520,9 +4615,9 @@ function Origin.list()
 				local child = rel == "" and name or (rel .. "/" .. name)
 				if isDir(child) then
 					local c = string.sub(name, 1, 1)
-					local hidden = c == "_" or c == "." or (depth == 0 and Core.HIDDEN_TOP[string.lower(name)] == true)
+					local hidden = c == "_" or c == "." or (depth == 0 and (Core.HIDDEN_TOP[string.lower(name)] == true or Core.isSaveName(name)))
 					if not hidden and depth < 8 then walk(child, depth + 1) end
-				elseif Repo.isScript(child) then
+				elseif Repo.isScript(child) and not (depth == 0 and Core.isSaveName(name)) then
 					local body = Origin.read(child)
 					out[#out + 1] = Core.makeEntry(child, body and #body or 0)
 				end
@@ -20432,7 +20527,7 @@ do
 		Core.applyHooks(true, "notices")
 		hookNoticeRow.render()
 	end))
-	Ctl.note(v, 17, Core.Boot.safe and "Safe mode is on for this start, so hooks, auto-run, reanimation and chat are left out until the next normal start" or "If the game closes while the hub is starting, the next start comes up in safe mode. Its note is AtsukoHub/boot.json")
+	Ctl.note(v, 17, Core.Boot.safe and "Safe mode is on for this start, so hooks, auto-run, reanimation and chat are left out until the next normal start" or "If the game closes while the hub is starting, the next start comes up in safe mode. Its note is Atsuko Hub/boot.json")
 end
 
 function Core.diagnostics()
@@ -25736,6 +25831,20 @@ task.delay(2.6, function()
 end)
 task.delay(5.5, function()
 	if HUB.alive then Core.Boot.good() end
+end)
+if Core.movedNow and Core.movedNow > 0 then
+	Log.add("ok", "Hub", "copied " .. Core.movedNow .. " saved files from " .. Core.OLD_DIR .. " to " .. LOCAL_DIR .. ", nothing was replaced")
+elseif Core.moveError then
+	Log.add("warn", "Hub", "couldn't copy the old saves from " .. Core.OLD_DIR .. ": " .. Util.firstLine(Core.moveError))
+end
+task.delay(8, function()
+	if not HUB.alive or FS.exists(Core.MOVE_MARK) then return end
+	local ok, n = pcall(Core.moveSaveDir, true)
+	if ok and n > 0 then
+		Log.add("ok", "Hub", "copied " .. n .. " more files from " .. Core.OLD_DIR .. " to " .. LOCAL_DIR)
+	elseif not ok then
+		Log.add("warn", "Hub", "couldn't copy the old files from " .. Core.OLD_DIR .. ": " .. Util.firstLine(tostring(n)))
+	end
 end)
 if Origin.root then
 	Log.add("ok", "Hub", "running from your folder: " .. Origin.root .. " (nothing is loaded from GitHub)")

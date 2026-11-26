@@ -78,7 +78,7 @@ do
 	T.eq(checks, moduleCount(), "every module file was checked once")
 	T.ok(string.find(text, "read %d+ bytes, %d+ lines") ~= nil, "the size is written")
 	T.eq(env.genv.__AtsukoHubInstance, nil, "the hub itself was not started")
-	T.eq(env.files["AtsukoHub/boot.json"], nil, "and no boot note was written")
+	T.eq(env.files["Atsuko Hub/boot.json"], nil, "and no boot note was written")
 	T.eq(#env.hooks, 0, "nothing in the game was hooked")
 end
 
@@ -102,7 +102,7 @@ do
 	end)
 	T.ok(done and failed == nil, "finished")
 	T.ok(indexOf(env.files[OUT] or "", "done: everything compiled") ~= nil, "a named folder is found")
-	local env2, done2, failed2 = runProbe({ rootName = "Somewhere Else" })
+	local env2, done2, failed2 = runProbe({ rootName = "Somewhere Else", localRoot = false })
 	T.ok(done2 and failed2 == nil, "finished with the folder missing")
 	local text = env2.files[OUT] or ""
 	T.ok(indexOf(text, "couldn't find Hub/AtsukoHub.lua inside: Atsuko Hub, Atsuko") ~= nil, "it says where it looked")
@@ -146,5 +146,5 @@ do
 	local inst = env.genv.__AtsukoHubInstance
 	T.ok(type(inst) == "table" and inst.ready == true, "the hub came up")
 	T.eq(#env.hooks, 0, "and nothing in the game was hooked")
-	T.ok(type(env.files["AtsukoHub/boot.json"]) == "string", "the hub wrote its own boot note")
+	T.ok(type(env.files["Atsuko Hub/boot.json"]) == "string", "the hub wrote its own boot note")
 end

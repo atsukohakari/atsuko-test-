@@ -220,7 +220,7 @@ S.toastPos = "top"
 grid:FindFirstChild("bottomleft").Activated:Fire()
 env.run(1.5)
 T.eq(S.toastPos, "bottomleft", "tapping a spot moves them there")
-T.ok(string.find(env.files["AtsukoHub/settings.json"] or "", "bottomleft", 1, true) ~= nil, "and it is saved")
+T.ok(string.find(env.files["Atsuko Hub/settings.json"] or "", "bottomleft", 1, true) ~= nil, "and it is saved")
 local bx, by = box()
 T.eq(bx, 8, "the box moved to the bottom left")
 local said = false

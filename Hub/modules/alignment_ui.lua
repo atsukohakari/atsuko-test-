@@ -881,7 +881,7 @@ function Mod.build(parent, order)
 		end },
 		{ "refresh-cw", "Reload", reload },
 	}, 38)
-	Ctl.note(frame, 41, "Your hats are saved in AtsukoHub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
+	Ctl.note(frame, 41, "Your hats are saved in Atsuko Hub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
 
 	return block
 end
