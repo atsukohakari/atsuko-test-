@@ -98,7 +98,7 @@ local patchma=(function()
 	local onHub=type(hubFd)=="table" and type(hubFd.reanimate)=="function" and type(hubFd.stopreanimate)=="function"
 	local R=genv.LumenReanim
 	if not onHub and (type(R)~="table" or type(R.rig)~="function") then
-		local base=type(genv.AtsukoHubRaw)=="string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
+		local base=type(genv.AtsukoHubRaw)=="string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 		local ok,src=pcall(function()
 			if type(genv.AtsukoHubRead)=="function" then
 				local body=genv.AtsukoHubRead("Hub/Reanimate.lua")

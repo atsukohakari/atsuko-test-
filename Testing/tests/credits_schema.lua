@@ -108,7 +108,7 @@ do
 		T.ok(type(person.description) == "string" and #person.description >= 20, person.id .. " has one real description")
 	end
 	local atsuko = find(data.people, "atsuko")
-	T.eq(atsuko.links.github, "https://github.com/atsukohakari/Atsuko", "the hub's repository")
+	T.eq(atsuko.links.github, "https://github.com/atsukohakari/atsuko-test-", "the hub's repository")
 	T.eq(atsuko.description, "he's a weird guy ngl, plus he's soooo lazy like very lazyy..... and he's a femboy so.. yeah :3", "Atsuko's description, byte for byte")
 	T.eq(atsuko.picture, "Hub/credits/atsuko.png", "his picture")
 	T.eq(atsuko.handle, "AtsukoHakariBA", "his handle is his Roblox username")

@@ -96,7 +96,7 @@ local FD = (function()
 	end
 	local R = genv.LumenReanim
 	if type(R) ~= "table" or type(R.rig) ~= "function" then
-		local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
+		local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 		local ok, src = pcall(function()
 			if type(genv.AtsukoHubRead) == "function" then
 				local body = genv.AtsukoHubRead("Hub/Reanimate.lua")
@@ -1475,7 +1475,7 @@ local SD = {
 	FlyMinSpeed = 40,
 	AttackWalkSpeed = 3,
 	TeleportRange = 300,
-	EmotesUrl = "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/Hub/Emotes.lua",
+	EmotesUrl = "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/Hub/Emotes.lua",
 	Songs = {
 		normal = {id = "9047050075", speed = 0.8},
 		hi = {file = "SD_Hi.mp3", url = "https://github.com/atsukohakari/Studio-Dummy-V3/releases/download/songs/SD_Hi.mp3"},

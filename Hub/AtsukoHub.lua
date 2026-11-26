@@ -8,7 +8,7 @@ Core.VTAG = "v"
 local HUB_VERSION = "1.6.1"
 Core.OWNER_ID = 10959525032
 local HUB_DIR = "Hub"
-local SRC = { owner = "atsukohakari", repo = "Atsuko", branch = "main" }
+local SRC = { owner = "atsukohakari", repo = "atsuko-test-", branch = "main" }
 local HOME_REPO = "https://raw.githubusercontent.com/" .. SRC.owner .. "/" .. SRC.repo .. "/" .. SRC.branch .. "/"
 local LOCAL_DIR = "AtsukoHub"
 Core.SCRIPT_EXT = { lua = true, luau = true, txt = true }
@@ -413,13 +413,12 @@ function Origin.has(root)
 end
 
 function Origin.detect()
-	if not HAS_FS then
-		Origin.why = "this executor has no file functions"
+	local want = GENV.AtsukoLocalRoot
+	if want == nil or want == false or want == "" then
 		return
 	end
-	local want = GENV.AtsukoLocalRoot
-	if want == false then
-		Origin.why = "turned off"
+	if not HAS_FS then
+		Origin.why = "this executor has no file functions"
 		return
 	end
 	if type(want) == "string" and want ~= "" then
@@ -431,14 +430,14 @@ function Origin.detect()
 		end
 		return
 	end
-	for _, name in ipairs(Origin.GUESS) do
-		if Origin.has(name) then
-			local v = FS.read(name .. "/" .. HUB_DIR .. "/version.txt")
-			if want == true or (v and string.match(v, "%d+%.%d+%.%d+") == HUB_VERSION) then
+	if want == true then
+		for _, name in ipairs(Origin.GUESS) do
+			if Origin.has(name) then
 				Origin.root = name
 				return
 			end
 		end
+		Origin.why = "there is no " .. table.concat(Origin.GUESS, " or ") .. " folder with " .. HUB_DIR .. "/AtsukoHub.lua in it"
 	end
 end
 
@@ -1536,7 +1535,7 @@ Spot.ctxNames = {}
 Spot.lists = { playlists = nil, state = "idle", err = nil }
 Spot.img = { cache = {}, files = {}, wait = {}, active = 0, queue = {} }
 Spot.lrc = { cache = {}, order = {}, busy = {} }
-Spot.UA = "AtsukoHub/" .. HUB_VERSION .. " (github.com/atsukohakari/Atsuko)"
+Spot.UA = "AtsukoHub/" .. HUB_VERSION .. " (github.com/atsukohakari/atsuko-test-)"
 
 function Spot.hasScope(name)
 	return string.find(" " .. (Spot.cfg.scope or "") .. " ", " " .. name .. " ", 1, true) ~= nil

@@ -1655,6 +1655,9 @@ function World.install(opts)
 		return p
 	end
 	local rootName = opts.rootName or "Atsuko Hub"
+	if opts.localRoot ~= false and G.getgenv and type(G.getgenv()) == "table" and G.getgenv().AtsukoLocalRoot == nil then
+		G.getgenv().AtsukoLocalRoot = opts.localRoot or rootName
+	end
 	local function hostRel(p)
 		local prefix = rootName .. "/"
 		if string.sub(p, 1, #prefix) == prefix then

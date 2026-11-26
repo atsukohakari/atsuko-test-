@@ -50,8 +50,8 @@ end
 
 LOCAL_DIR = "AtsukoHub"
 HUB_DIR = "Hub"
-HOME_REPO = "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
-SRC = { owner = "atsukohakari", repo = "Atsuko", branch = "main" }
+HOME_REPO = "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
+SRC = { owner = "atsukohakari", repo = "atsuko-test-", branch = "main" }
 Core = { SCRIPT_EXT = { lua = true, luau = true, txt = true }, mods = {}, ctx = {} }
 Util = {}
 Origin = { root = nil }
@@ -284,7 +284,7 @@ T.section("repo_manifest: the saved script list uses the manifest and drops the 
 fresh()
 disk["AtsukoHub/cache/manifest.json"] = readsource("Scripts/manifest.json")
 disk["AtsukoHub/cache/mod_manifest.lua"] = readsource("Hub/modules/manifest.lua")
-disk[Core.LIST_CACHE] = '{"key":"atsukohakari/Atsuko@main","list":['
+disk[Core.LIST_CACHE] = '{"key":"atsukohakari/atsuko-test-@main","list":['
 	.. '{"path":"Scripts/Hat/NeptunianV.lua","size":263512},'
 	.. '{"path":"Reanimation/Hat/FDless.lua","size":900},'
 	.. '{"path":"Alignment/alignment.lua","size":900},'

@@ -1,7 +1,7 @@
 local genv = (typeof(getgenv) == "function" and getgenv()) or _G
 local Uhh = genv.AtsukoUhh
 if type(Uhh) ~= "table" or (tonumber(Uhh.version) or 0) < 1 then
-	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
+	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 	local ok, src = pcall(function()
 		if type(genv.AtsukoHubRead) == "function" then
 			local got = genv.AtsukoHubRead("Hub/UhhMoveset.lua")

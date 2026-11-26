@@ -109,7 +109,7 @@ local function genvOf()
 end
 
 local function hubRead(genv, path)
-	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
+	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 	local ok, src = pcall(function()
 		if type(genv.AtsukoHubRead) == "function" then
 			local got = genv.AtsukoHubRead(path)

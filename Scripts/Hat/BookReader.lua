@@ -41,7 +41,7 @@ local function loadLumen()
 	if type(R) == "table" and type(R.rig) == "function" then
 		return R
 	end
-	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/Atsuko/main/"
+	local base = type(genv.AtsukoHubRaw) == "string" and genv.AtsukoHubRaw or "https://raw.githubusercontent.com/atsukohakari/atsuko-test-/main/"
 	local ok, src = pcall(function()
 		if type(genv.AtsukoHubRead) == "function" then
 			local got = genv.AtsukoHubRead("Hub/Reanimate.lua")
