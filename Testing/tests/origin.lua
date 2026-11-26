@@ -11,6 +11,8 @@ local block = string.sub(src, first, last)
 
 local function detect(opts)
 	local disk = opts.disk or {}
+	Core = { SAVE_NAMES = { ["settings.json"] = true } }
+	LOCAL_DIR = "Atsuko Hub"
 	HAS_FS = opts.fs ~= false
 	HUB_DIR = "Hub"
 	HUB_VERSION = "1.6.1"

@@ -708,7 +708,7 @@ do
 	T.eq(string.sub(nameA, -4), ".png")
 	T.eq(#nameA, #(Art.CACHE_DIR .. "/") + 16 + 4, "16 characters then the ending")
 	T.eq(string.sub(Art.cacheName(a, "x", "jpg"), -4), ".jpg")
-	T.eq(string.sub(Art.cacheName(a, "x", "png", "Atsuko Hub/cache/art_thumb"), 1, 26), "Atsuko Hub/cache/art_thumb/")
+	T.eq(string.sub(Art.cacheName(a, "x", "png", "Atsuko Hub/cache/art_thumb"), 1, #"Atsuko Hub/cache/art_thumb/"), "Atsuko Hub/cache/art_thumb/")
 	local big1 = W.fatPng(100000)
 	local big2 = string.sub(big1, 1, 50000) .. "Y" .. string.sub(big1, 50002)
 	T.eq(#big1, #big2)
