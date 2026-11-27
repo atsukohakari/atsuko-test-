@@ -6,6 +6,25 @@ local S, L = hub.S, hub.L
 local Toast, Pill, Dock, Shell = core.ctx.Toast, core.ctx.Pill, core.ctx.Dock, core.ctx.Shell
 env.run(6)
 
+T.section("toasts: the island is the default, classic still works")
+T.eq(S.notifyStyle, "island", "notifications go to the island by default")
+T.ok(core.IslandNotify ~= nil, "the island notifications loaded")
+do
+	local before = #Toast.list
+	core.ctx.notify("Island test", "this goes to the island", "ok")
+	local cur = core.IslandNotify.current()
+	T.ok(cur ~= nil and (cur.title == "Island test" or #core.IslandNotify.queued() > 0), "a hub notification lands in the island")
+	T.eq(#Toast.list, before, "and no corner pop-up is made")
+	local hist = core.IslandNotify.history()
+	T.eq(hist[1] and hist[1].title, "Island test", "it's in the history")
+	S.notifications = false
+	core.ctx.notify("Hidden", "notifications are off", "info")
+	T.ok(core.IslandNotify.history()[1].title ~= "Hidden", "with notifications off nothing shows")
+	S.notifications = true
+	env.run(5)
+end
+S.notifyStyle = "classic"
+
 local function ud(u)
 	return string.format("%g,%g,%g,%g", u.X.Scale, u.X.Offset, u.Y.Scale, u.Y.Offset)
 end

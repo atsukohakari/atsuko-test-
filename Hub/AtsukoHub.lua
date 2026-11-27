@@ -663,6 +663,7 @@ local DEFAULTS = {
 	animations = true,
 	toggleKey = "Alt",
 	notifications = true,
+	notifyStyle = "island",
 	respawnOnStop = true,
 	oneAtATime = false,
 	smartStop = true,
@@ -926,6 +927,7 @@ function Core.normalizeSettings()
 	S.opacity = math.clamp(tonumber(S.opacity) or 0, 0, 0.6)
 	S.animSpeed = math.clamp(tonumber(S.animSpeed) or 1, 0.5, 2)
 	S.toastTime = math.clamp(tonumber(S.toastTime) or 3.2, 1.5, 8)
+	if S.notifyStyle ~= "island" and S.notifyStyle ~= "classic" then S.notifyStyle = "island" end
 	S.fpsCap = math.clamp(math.floor(tonumber(S.fpsCap) or 0), 0, 360)
 	S.rainbowBgPeriod = math.clamp(math.floor(tonumber(S.rainbowBgPeriod) or 90), 30, 120)
 	if not Core.spotOf(Core.TOAST_SPOTS, S.toastPos) then S.toastPos = "top" end
@@ -1099,8 +1101,8 @@ function Log.text()
 	return table.concat(out, "\n")
 end
 
-local function notify(title, text, kind, dur)
-	Bus.fire("notify", title, text, kind, dur)
+local function notify(title, text, kind, dur, opts)
+	Bus.fire("notify", title, text, kind, dur, opts)
 end
 
 Core.errors = {}
@@ -6856,7 +6858,33 @@ function Toast.show(title, text, kind)
 	end
 end
 
-Bus.on("notify", function(title, text, kind)
+Core.notifyEarly = {}
+function Core.notifyIsland(title, text, kind, dur, opts)
+	if not S.notifications or S.notifyStyle ~= "island" or not HUB.alive then return false end
+	local mod = Core.IslandNotify
+	if mod then
+		local ok, item = pcall(mod.push, title, text, kind, dur, opts)
+		return ok and item ~= nil
+	end
+	if Core.islandNotifyFailed then return false end
+	if #Core.notifyEarly < 12 then
+		Core.notifyEarly[#Core.notifyEarly + 1] = { title, text, kind, dur, opts }
+	end
+	return true
+end
+
+function Core.flushNotices()
+	local early = Core.notifyEarly
+	Core.notifyEarly = {}
+	for _, n in ipairs(early) do
+		if not Core.notifyIsland(n[1], n[2], n[3], n[4], n[5]) then
+			Toast.show(n[1], n[2], n[3])
+		end
+	end
+end
+
+Bus.on("notify", function(title, text, kind, dur, opts)
+	if Core.notifyIsland(title, text, kind, dur, opts) then return end
 	Toast.show(title, text, kind)
 end)
 
@@ -8717,6 +8745,12 @@ function Panel.refreshHead()
 	if t ~= Head.title.Text or (s or "") ~= Head.sub.Text then Head.set(t, s) end
 end
 
+function Panel.underline(pg, i)
+	local x, w = pg.tabX[i] or 3, pg.tabW[i] or 60
+	local u = (pg.tabU and pg.tabU[i]) or (w - 16)
+	return { Position = UDim2.fromOffset(x + (w - u) / 2, 28), Size = UDim2.fromOffset(u, 2) }
+end
+
 function Panel.buildTabs(pg, force)
 	if not pg.tabs or not pg.tabBar then return end
 	local barW = Shell.pageW(pg) - 24
@@ -8734,14 +8768,15 @@ function Panel.buildTabs(pg, force)
 		ws[i] = textWidth(name, size, FONT_M) + 14
 		total += ws[i]
 	end
-	pg.tabX, pg.tabW = {}, {}
+	pg.tabX, pg.tabW, pg.tabU = {}, {}, {}
 	local x = 3
 	for i = 1, n do
 		local w = ws[i] / total * inner * 0.6 + inner / n * 0.4
 		pg.tabX[i], pg.tabW[i] = x, w
+		pg.tabU[i] = math.max(12, math.min(w - 8, ws[i] - 10))
 		x += w
 	end
-	UI.tween(pg.pill, 0, { Size = UDim2.fromOffset(pg.tabW[pg.tab], 24), Position = UDim2.fromOffset(pg.tabX[pg.tab], 3) })
+	UI.tween(pg.pill, 0, Panel.underline(pg, pg.tab))
 
 	for i, name in ipairs(pg.tabs) do
 		local b = UI.button(pg.tabBar, {
@@ -8780,7 +8815,7 @@ function Panel.setTab(pg, i)
 	local old = pg.tab
 	pg.tab = i
 	local animate = Panel.open and Panel.page == pg.id and S.animations
-	if pg.tabX and pg.tabX[i] then UI.tween(pg.pill, animate and 0.35 or 0, { Position = UDim2.fromOffset(pg.tabX[i], 3), Size = UDim2.fromOffset(pg.tabW[i], 24) }) end
+	if pg.tabX and pg.tabX[i] then UI.tween(pg.pill, animate and 0.3 or 0, Panel.underline(pg, i)) end
 	for j, b in ipairs(pg.tabButtons) do
 		UI.tween(b, animate and 0.2 or 0, { TextColor3 = (j == i) and T.text or (Panel.locked(pg, j) and T.dim or T.sub) })
 	end
@@ -9084,10 +9119,11 @@ local function newPage(def)
 	}
 	page.root = UI.new("Frame", { Name = def.id, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Visible = false }, P.content)
 	if def.tabs then
-		page.tabBar = UI.new("Frame", { Name = "Tabs", BackgroundColor3 = T.tabBg, Position = UDim2.fromOffset(2, 0), Size = UDim2.new(1, -4, 0, 30) }, page.root)
-		UI.corner(page.tabBar, 10)
-		page.pill = UI.new("Frame", { Name = "Pill", BackgroundColor3 = T.tabSel, Size = UDim2.fromOffset(60, 24), Position = UDim2.fromOffset(3, 3) }, page.tabBar)
-		UI.corner(page.pill, 8)
+		page.tabBar = UI.new("Frame", { Name = "Tabs", BackgroundColor3 = T.tabBg, BackgroundTransparency = 1, Position = UDim2.fromOffset(2, 0), Size = UDim2.new(1, -4, 0, 30) }, page.root)
+		UI.new("Frame", { Name = "Line", BackgroundColor3 = T.line, BorderSizePixel = 0, AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 0, 1, 0), Size = UDim2.new(1, 0, 0, 1) }, page.tabBar)
+		page.pill = UI.new("Frame", { Name = "Pill", BackgroundColor3 = T.text, BorderSizePixel = 0, Size = UDim2.fromOffset(40, 2), Position = UDim2.fromOffset(13, 28), ZIndex = 2 }, page.tabBar)
+		UI.corner(page.pill, 1)
+		UI.accent(page.pill, "BackgroundColor3")
 		page.tabButtons = {}
 		page.frame = UI.new("Frame", { Name = "Body", BackgroundTransparency = 1, Position = UDim2.fromOffset(0, 40), Size = UDim2.new(1, 0, 1, -40) }, page.root)
 	else
@@ -11195,24 +11231,22 @@ end
 
 function Core.scriptRow(sf, e, order, viewIndex)
 	local sel = S.reanimSel == e.path
-	local row = UI.button(sf, { Name = "Row", BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, 52), LayoutOrder = order })
-	UI.corner(row, 14)
-	local st = UI.stroke(row, accentColor(), 1.5, sel and 0.15 or 1)
-	UI.accent(st, "Color")
-	local box = UI.new("Frame", { BackgroundTransparency = sel and 0.55 or 0.82, Size = UDim2.fromOffset(36, 36), Position = UDim2.fromOffset(8, 8) }, row)
-	UI.corner(box, 11)
-	UI.accent(box, "BackgroundColor3")
-	local ic = UI.icon(sel and "person-standing" or "file-code", 17, T.text, box, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5) })
-	UI.accent(ic, "ImageColor3")
-	UI.label(row, { Text = e.name, Font = FONT_B, TextSize = 13, Position = UDim2.fromOffset(54, 9), Size = UDim2.new(1, -124, 0, 17), TextTruncate = Enum.TextTruncate.AtEnd })
+	local row = UI.button(sf, { Name = "Row", BackgroundColor3 = T.card, BackgroundTransparency = sel and 0 or 1, Size = UDim2.new(1, 0, 0, 54), LayoutOrder = order })
+	UI.corner(row, 8)
+	local st = UI.stroke(row, accentColor(), 1, 1)
+	UI.new("Frame", { Name = "Line", BackgroundColor3 = T.line, BorderSizePixel = 0, AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 8, 1, 3), Size = UDim2.new(1, -16, 0, 1) }, row)
+	local box = UI.new("Frame", { BackgroundColor3 = T.card2, BackgroundTransparency = 0, Size = UDim2.fromOffset(38, 38), Position = UDim2.fromOffset(8, 8) }, row)
+	UI.corner(box, 6)
+	local ic = UI.icon(sel and "person-standing" or "file-code", 17, T.sub, box, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5) })
+	local name = UI.label(row, { Text = e.name, Font = FONT_B, TextSize = 14, TextColor3 = sel and accentColor() or T.text, Position = UDim2.fromOffset(56, 9), Size = UDim2.new(1, -126, 0, 18), TextTruncate = Enum.TextTruncate.AtEnd })
 	local base = Core.rowSub(e, viewIndex)
 	local sub = UI.label(row, {
 		Name = "Sub",
 		Text = sel and ("Selected  ·  " .. base) or base,
 		TextSize = 11,
-		TextColor3 = sel and T.text or T.sub,
-		Position = UDim2.fromOffset(54, 27),
-		Size = UDim2.new(1, -234, 0, 14),
+		TextColor3 = T.sub,
+		Position = UDim2.fromOffset(56, 29),
+		Size = UDim2.new(1, -236, 0, 15),
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 	local state = UI.label(row, {
@@ -11235,9 +11269,9 @@ function Core.scriptRow(sf, e, order, viewIndex)
 		UI.tween(info, 0.15, { BackgroundTransparency = on and 0.2 or 1 })
 	end)
 	info.Activated:Connect(function() Detail.open(e) end)
-	UI.pressable(row, 0.97)
+	UI.pressable(row, 0.98)
 	UI.onHover(row, function(on)
-		UI.tween(row, 0.15, { BackgroundColor3 = on and T.card2 or T.card })
+		if S.reanimSel ~= e.path then UI.tween(row, 0.15, { BackgroundTransparency = on and 0.5 or 1 }) end
 	end)
 	row.Activated:Connect(function()
 		if S.reanimSel == e.path then
@@ -11251,7 +11285,7 @@ function Core.scriptRow(sf, e, order, viewIndex)
 		list = {}
 		Scripts.refs[e.path] = list
 	end
-	list[#list + 1] = { view = viewIndex, dot = dot, heart = heart, stroke = st, box = box, icon = ic, sub = sub, state = state, base = base, e = e }
+	list[#list + 1] = { view = viewIndex, dot = dot, heart = heart, stroke = st, box = box, icon = ic, sub = sub, state = state, base = base, e = e, row = row, name = name }
 end
 
 function Scripts.updateStatus()
@@ -11277,11 +11311,11 @@ function Scripts.updateStatus()
 			r.state.TextColor3 = Core.toneColor(tone)
 			if r.sel ~= sel then
 				r.sel = sel
-				UI.tween(r.stroke, 0.2, { Transparency = sel and 0.15 or 1 })
-				UI.tween(r.box, 0.2, { BackgroundTransparency = sel and 0.55 or 0.82 })
+				if r.row then UI.tween(r.row, 0.2, { BackgroundTransparency = sel and 0 or 1 }) end
+				if r.name then r.name.TextColor3 = sel and accentColor() or T.text end
 				UI.setIcon(r.icon, sel and "person-standing" or "file-code")
 				r.sub.Text = sel and ("Selected  ·  " .. r.base) or r.base
-				r.sub.TextColor3 = sel and T.text or T.sub
+				r.sub.TextColor3 = T.sub
 			end
 		end
 	end
@@ -11289,18 +11323,13 @@ end
 
 function Core.actionBar(parent, icon)
 	local bar = UI.new("Frame", { Name = "ActionBar", BackgroundColor3 = T.card, AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.new(1, 0, 0, 58), ZIndex = 2 }, parent)
-	UI.corner(bar, 16)
-	local st = UI.stroke(bar, accentColor(), 1, 0.6)
-	UI.accent(st, "Color")
-	local glow = UI.new("Frame", { Name = "Glow", BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), ZIndex = 2 }, bar)
-	UI.corner(glow, 16)
-	UI.accent(glow, "BackgroundColor3")
-	UI.new("UIGradient", { Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.84), NumberSequenceKeypoint.new(0.6, 0.96), NumberSequenceKeypoint.new(1, 1) }) }, glow)
-	local ib = UI.new("Frame", { Name = "Icon", BackgroundTransparency = 0.78, Position = UDim2.fromOffset(10, 10), Size = UDim2.fromOffset(38, 38), ZIndex = 3 }, bar)
-	UI.corner(ib, 12)
-	UI.accent(ib, "BackgroundColor3")
+	UI.corner(bar, 12)
+	UI.stroke(bar, T.stroke, 1, 0.5)
+	local glow = UI.new("Frame", { Name = "Glow", BorderSizePixel = 0, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), ZIndex = 2, Visible = false }, bar)
+	UI.corner(glow, 12)
+	local ib = UI.new("Frame", { Name = "Icon", BackgroundColor3 = T.card2, BackgroundTransparency = 0, Position = UDim2.fromOffset(10, 10), Size = UDim2.fromOffset(38, 38), ZIndex = 3 }, bar)
+	UI.corner(ib, 6)
 	local ic = UI.icon(icon, 18, T.text, ib, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), ZIndex = 4 })
-	UI.accent(ic, "ImageColor3")
 	local title = UI.label(bar, { Name = "Title", Font = FONT_B, TextSize = 13, Position = UDim2.fromOffset(58, 10), Size = UDim2.new(1, -196, 0, 18), TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = 3 })
 	local sub = UI.label(bar, { Name = "Sub", TextSize = 10, TextColor3 = T.sub, Position = UDim2.fromOffset(58, 29), Size = UDim2.new(1, -196, 0, 15), TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = 3 })
 	return bar, title, sub, ic
@@ -18361,7 +18390,11 @@ do
 	end
 	local NoticeMod = Core.loadModule("notify_router")
 	if NoticeMod then
-		Core.notices = NoticeMod.new({ toast = function(title, text, kind, dur) notify(title, text, kind or "info", dur) end, duration = function() return Toast.time() end })
+		Core.notices = NoticeMod.new({
+			toast = function(title, text, kind, dur, opts) notify(title, text, kind or "info", dur, opts) end,
+			duration = function() return Toast.time() end,
+			buttons = function() return S.notifications and S.notifyStyle == "island" and Core.IslandNotify ~= nil end,
+		})
 	end
 	function Core.setChatHook(on)
 		if not on then
@@ -18786,17 +18819,19 @@ function PlayersPage.clearFx()
 end
 
 function Core.playerRow(sf, p, order, right)
-	local row = UI.button(sf, { Name = "P_" .. p.Name, BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, 48), LayoutOrder = order })
-	UI.corner(row, 12)
-	local st = UI.stroke(row, accentColor(), 1, PlayersPage.sel == p and 0.4 or 1)
-	local av = UI.new("ImageLabel", { BackgroundColor3 = T.card2, Size = UDim2.fromOffset(32, 32), Position = UDim2.fromOffset(9, 8), Image = Core.headshot(p) }, row)
-	UI.corner(av, 16)
-	UI.label(row, { Text = p.DisplayName, Font = FONT_B, TextSize = 13, Position = UDim2.fromOffset(50, 8), Size = UDim2.new(1, -110, 0, 17), TextTruncate = Enum.TextTruncate.AtEnd })
+	local picked = PlayersPage.sel == p
+	local row = UI.button(sf, { Name = "P_" .. p.Name, BackgroundColor3 = T.card, BackgroundTransparency = picked and 0 or 1, Size = UDim2.new(1, 0, 0, 54), LayoutOrder = order })
+	UI.corner(row, 8)
+	local st = UI.stroke(row, accentColor(), 1, 1)
+	UI.new("Frame", { Name = "Line", BackgroundColor3 = T.line, BorderSizePixel = 0, AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 8, 1, 3), Size = UDim2.new(1, -16, 0, 1) }, row)
+	local av = UI.new("ImageLabel", { BackgroundColor3 = T.card2, Size = UDim2.fromOffset(38, 38), Position = UDim2.fromOffset(8, 8), Image = Core.headshot(p) }, row)
+	UI.corner(av, 19)
+	UI.label(row, { Text = p.DisplayName, Font = FONT_B, TextSize = 14, Position = UDim2.fromOffset(56, 9), Size = UDim2.new(1, -120, 0, 18), TextTruncate = Enum.TextTruncate.AtEnd })
 	if Core.hasBadge(p.UserId) then
-		local tw = math.min(math.ceil(textWidth(p.DisplayName, 13, FONT_B)), math.max(40, Shell.leftW - 150))
-		Core.userBadge(row, 14, { Position = UDim2.fromOffset(50 + tw + 5, 9) })
+		local tw = math.min(math.ceil(textWidth(p.DisplayName, 14, FONT_B)), math.max(40, Shell.leftW - 150))
+		Core.userBadge(row, 14, { Position = UDim2.fromOffset(56 + tw + 5, 11) })
 	end
-	UI.label(row, { Text = "@" .. p.Name .. (p == LP and ", you" or ""), TextSize = 10, TextColor3 = T.sub, Position = UDim2.fromOffset(50, 26), Size = UDim2.new(1, -110, 0, 14), TextTruncate = Enum.TextTruncate.AtEnd })
+	UI.label(row, { Text = "@" .. p.Name, TextSize = 12, TextColor3 = T.sub, Position = UDim2.fromOffset(56, 29), Size = UDim2.new(1, -120, 0, 15), TextTruncate = Enum.TextTruncate.AtEnd })
 	local tag = UI.label(row, { Name = "Right", Text = right or "", Font = FONT_B, TextSize = 10, TextColor3 = T.sub, TextXAlignment = Enum.TextXAlignment.Right, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -30, 0.5, 0), Size = UDim2.fromOffset(70, 16) })
 	UI.icon("chevron-right", 13, T.dim, row, { AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0) })
 	local marks = {}
@@ -18807,8 +18842,13 @@ function Core.playerRow(sf, p, order, right)
 	if not right and #marks > 0 then
 		tag.Text = marks[1] .. (#marks > 1 and ("  +" .. (#marks - 1)) or "")
 		UI.accent(tag, "TextColor3")
+	elseif not right and p == LP then
+		tag.Text = "You"
 	end
-	Ctl.hoverable(row)
+	UI.pressable(row, 0.98)
+	UI.onHover(row, function(on)
+		if PlayersPage.sel ~= p then UI.tween(row, 0.15, { BackgroundTransparency = on and 0.5 or 1 }) end
+	end)
 	row.Activated:Connect(function() PlayersPage.open(p) end)
 	PlayersPage.rows[#PlayersPage.rows + 1] = { p = p, row = row, stroke = st }
 end
@@ -18883,7 +18923,7 @@ function PlayersPage.open(p)
 	end
 	PlayersPage.sel = p
 	for _, r in ipairs(PlayersPage.rows) do
-		if r.row.Parent then UI.tween(r.stroke, 0.2, { Transparency = r.p == p and 0.4 or 1 }) end
+		if r.row.Parent then UI.tween(r.row, 0.2, { BackgroundTransparency = r.p == p and 0 or 1 }) end
 	end
 	if PlayersPage.detail then PlayersPage.detail:Destroy() end
 	local f = UI.new("Frame", { Name = "PlayerDetail", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1) })
@@ -18970,7 +19010,7 @@ function PlayersPage.open(p)
 		PlayersPage.sel = nil
 		PlayersPage.redraw = nil
 		for _, r in ipairs(PlayersPage.rows) do
-			if r.row.Parent then UI.tween(r.stroke, 0.2, { Transparency = 1 }) end
+			if r.row.Parent then UI.tween(r.row, 0.2, { BackgroundTransparency = 1 }) end
 		end
 	end)
 end
@@ -19563,10 +19603,24 @@ do
 	end))
 
 	section(v, "Notifications", 18)
-	reg(Ctl.toggle(v, 19, "Notifications", nil, function() return S.notifications end, function(x)
-		S.notifications = x
+	reg(Ctl.choice(v, 19, "Notifications", { { "island", "Island" }, { "classic", "Classic" }, { "off", "Off" } }, function()
+		if not S.notifications then return "off" end
+		return S.notifyStyle
+	end, function(x)
+		if x == "off" then
+			S.notifications = false
+		else
+			S.notifications = true
+			S.notifyStyle = x
+		end
 		saveSettings()
+		if x ~= "off" then notify("Notifications", x == "island" and "They show up in the island now" or "They show up in the corner now", "info") end
 	end))
+	Ctl.action(v, 22, "Recent notifications", "bell", false, function()
+		if not (Core.IslandNotify and Core.IslandNotify.openHistory()) then
+			notify("Notifications", "Nothing to show yet", "info")
+		end
+	end)
 	reg(Ctl.slider(v, 20, "How long they stay", 1.5, 8, 0.5, function() return S.toastTime end, function(x, final)
 		S.toastTime = x
 		if final then
@@ -19582,9 +19636,9 @@ do
 		end)
 	end))
 
-	section(v, "Sounds", 22)
+	section(v, "Sounds", 23)
 	do
-		local box = card(v, 70, 23)
+		local box = card(v, 70, 24)
 		box.Name = "LoginVoice"
 		box.AutomaticSize = Enum.AutomaticSize.Y
 		UI.label(box, { Text = "Login voice", TextSize = 12, Position = UDim2.fromOffset(12, 8), Size = UDim2.new(0.5, -12, 0, 18) })
@@ -20890,14 +20944,13 @@ end
 function NP.button(parent, icon, size, iconSize, pos, filled)
 	local b = UI.button(parent, {
 		Name = icon,
-		BackgroundColor3 = filled and accentColor() or T.card2,
+		BackgroundColor3 = filled and T.text or T.card2,
 		BackgroundTransparency = filled and 0 or 1,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = pos,
 		Size = UDim2.fromOffset(size, size),
 	})
 	UI.corner(b, size // 2)
-	if filled then UI.accent(b, "BackgroundColor3") end
 	local ic = UI.icon(icon, iconSize, filled and T.ink or T.text, b, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5) })
 	UI.pressable(b, 0.86)
 	if not filled then
@@ -20964,9 +21017,8 @@ function NP.bar(parent, v, props, seekable)
 		track[k] = val
 	end
 	UI.corner(track, 2)
-	local fill = UI.new("Frame", { Name = "Fill", BorderSizePixel = 0, Size = UDim2.fromScale(0, 1) }, track)
+	local fill = UI.new("Frame", { Name = "Fill", BackgroundColor3 = T.text, BorderSizePixel = 0, Size = UDim2.fromScale(0, 1) }, track)
 	UI.corner(fill, 2)
-	UI.accent(fill, "BackgroundColor3")
 	v.fill = fill
 	if not seekable then return track end
 	local knob = UI.new("Frame", { Name = "Knob", BackgroundColor3 = T.text, AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.fromOffset(12, 12), Position = UDim2.fromScale(0, 0.5) }, track)
@@ -21604,6 +21656,108 @@ do
 			disc.Rotation = (disc.Rotation + dt * 70) % 360
 		end
 	end))
+end
+
+do
+	local v = MP.nowV
+	local nv = MP.views[1]
+	local hero = v.hero
+	local prog = hero:FindFirstChild("Progress")
+	local ctl = hero:FindFirstChild("Controls")
+	local vc = hero:FindFirstChild("Volume")
+	local hb = hero:FindFirstChild("Like")
+	hero.BackgroundTransparency = 1
+	for _, c in ipairs(hero:GetChildren()) do
+		if c:IsA("UIStroke") then c.Transparency = 1 end
+		if c.Name == "Shade" then c.Visible = false end
+	end
+	v.backdrop.Visible = false
+	v.srcText.Visible = false
+	v.live.Visible = false
+	v.disc.Visible = false
+	MP.placeDisc = function() v.disc.Visible = false end
+	MP.discSpin = false
+	if vc then
+		vc.BackgroundTransparency = 1
+	end
+	if hb then
+		hb.BackgroundTransparency = 1
+	end
+	local function round(o, r)
+		local c = o and o:FindFirstChildOfClass("UICorner")
+		if c then UI.setRadius(c, r) end
+	end
+	round(v.art.frame, 6)
+	round(v.art.img, 6)
+	round(v.art.shade, 6)
+	for _, c in ipairs(v.art.frame:GetChildren()) do
+		if c:IsA("UIStroke") then c.Color, c.Transparency = Color3.new(1, 1, 1), 0.92 end
+		if c.Name == "Glow" then round(c, 6) end
+	end
+	v.title.TextSize = 18
+	v.artist.TextSize = 13
+	v.ctx.TextColor3 = T.sub
+	local ly = nv:FindFirstChild("LyricLine")
+	if ly then
+		ly.BackgroundTransparency = 1
+		local bar = ly:FindFirstChild("Bar")
+		if bar then bar.Visible = false end
+		local now, nxt = ly:FindFirstChild("Now"), ly:FindFirstChild("Next")
+		if now then now.Position = UDim2.fromOffset(4, 10) now.Size = UDim2.new(1, -40, 0, 20) end
+		if nxt then nxt.Position = UDim2.fromOffset(4, 32) nxt.Size = UDim2.new(1, -40, 0, 16) end
+		UI.new("Frame", { Name = "Line", BackgroundColor3 = T.line, BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 1) }, ly)
+	end
+	local oldExtra = v.extra
+	v.extra = function(i, src)
+		oldExtra(i, src)
+		MP.discSpin = false
+		v.disc.Visible = false
+	end
+
+	MP.layout = function(w, h)
+		local cw = w - 20
+		local a, y
+		if (h or 999) >= 420 then
+			a = math.clamp(cw - 8, 140, 360)
+			v.art.frame.AnchorPoint = Vector2.new(0.5, 0)
+			v.art.frame.Position = UDim2.new(0.5, 0, 0, 4)
+			v.art.frame.Size = UDim2.fromOffset(a, a)
+			y = 4 + a + 16
+			v.title.Position, v.title.Size = UDim2.fromOffset(6, y), UDim2.new(1, -56, 0, 22)
+			v.artist.Position, v.artist.Size = UDim2.fromOffset(6, y + 25), UDim2.new(1, -56, 0, 17)
+			v.ctx.Position, v.ctx.Size = UDim2.fromOffset(6, y + 45), UDim2.new(1, -12, 0, 14)
+			hb.Position = UDim2.new(1, -4, 0, y)
+			y += 64
+		else
+			a = math.clamp(math.floor((cw - 24) * 0.3), 84, 112)
+			v.art.frame.AnchorPoint = Vector2.new(0, 0)
+			v.art.frame.Position = UDim2.fromOffset(4, 4)
+			v.art.frame.Size = UDim2.fromOffset(a, a)
+			local x = 18 + a
+			v.title.Position, v.title.Size = UDim2.fromOffset(x, 10), UDim2.new(1, -(x + 46), 0, 22)
+			v.artist.Position, v.artist.Size = UDim2.fromOffset(x, 35), UDim2.new(1, -(x + 46), 0, 17)
+			v.ctx.Position, v.ctx.Size = UDim2.fromOffset(x, 55), UDim2.new(1, -(x + 8), 0, 14)
+			hb.Position = UDim2.new(1, -4, 0, 8)
+			y = 14 + a
+		end
+		prog.Position, prog.Size = UDim2.fromOffset(0, y), UDim2.new(1, 0, 0, 34)
+		y += 30
+		ctl.Position, ctl.Size = UDim2.fromOffset(0, y), UDim2.new(1, 0, 0, 60)
+		y += 62
+		vc.Position, vc.Size = UDim2.fromOffset(0, y), UDim2.new(1, 0, 0, 36)
+		y += 42
+		hero.Size = UDim2.new(1, 0, 0, y)
+		local size = v.art.frame.Size.X.Offset
+		local n = #v.art.bars
+		local gap = math.max(2, math.floor(size / 24))
+		local bw = math.max(2, math.floor((size * 0.7 - (n - 1) * gap) / n))
+		local x0 = math.floor((size - (n * bw + (n - 1) * gap)) / 2)
+		for k, b in ipairs(v.art.bars) do
+			b.w = bw
+			b.f.Position = UDim2.new(0, x0 + (k - 1) * (bw + gap), 1, -math.floor(size * 0.16))
+			b.f.Size = UDim2.new(0, bw, b.h, 0)
+		end
+	end
 end
 
 MP.upKey = nil
@@ -23412,7 +23566,7 @@ Core.island = Island
 Core.provide({
 	Core = Core, Util = Util, FS = FS, Net = Net, Bus = Bus, Log = Log, UI = UI, T = T, S = S, L = L, X = X, GENV = GENV, LP = LP, HUB = HUB,
 	Root = Root, Edge = Edge, EdgeIcon = edgeIcon, Dock = Dock, Pill = Pill, Panel = Panel, Win = Win, Toast = Toast, Shell = Shell, Aside = Aside, Drag = Drag,
-	Player = Player, Spot = Spot, NP = NP, MP = MP, Home = Home, Island = Island,
+	Player = Player, Spot = Spot, NP = NP, MP = MP, Home = Home, Island = Island, Sfx = Sfx,
 	saveSettings = saveSettings, notify = notify, accentColor = accentColor, hubConn = hubConn,
 	FONT_M = FONT_M, FONT_B = FONT_B, TOUCH = TOUCH, MOUSE1 = MOUSE1,
 	TextService = Core.TextService, TweenService = TweenService, UserInputService = UserInputService, RunService = RunService, Players = Players,
@@ -23422,12 +23576,23 @@ for _, name in ipairs({ "inputmode", "edge", "island" }) do
 	local mod, err = Core.loadModule(name)
 	if not mod then Log.add("error", "Hub", name .. ": " .. tostring(err)) end
 end
+do
+	local mod, err = Core.loadModule("island_notify")
+	if mod then
+		Core.IslandNotify = mod
+	else
+		Core.islandNotifyFailed = true
+		Log.add("error", "Hub", "island notifications: " .. tostring(err))
+	end
+	Core.flushNotices()
+end
 
 function Core.placeIsland()
 	if Island.place then Island.place() end
 end
 Island.onMove = function()
 	Toast.place()
+	if Core.IslandNotify and Core.IslandNotify.place then pcall(Core.IslandNotify.place) end
 end
 
 Core.provide({ NP = NP, Player = Player, Cmd = Cmd })

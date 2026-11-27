@@ -12,6 +12,7 @@ function Router.new(opts)
 	self.now = opts.now or os.clock
 	self.toast = opts.toast or function() end
 	self.duration = opts.duration
+	self.buttons = opts.buttons
 	self.ring = {}
 	self.armedUntil = -1e9
 	self.general = opts.general == true
@@ -85,6 +86,17 @@ function Router:handle(key, value)
 	local verdict = self:classify(title, text)
 	if verdict == "toast" then
 		local seconds = tonumber(okD and dur or nil)
+		local list = self:buttonsOf(value)
+		if list then
+			local okB, can = pcall(function()
+				return type(self.buttons) == "function" and self.buttons() == true
+			end)
+			if not (okB and can) then
+				return "pass"
+			end
+			pcall(self.toast, tostring(title), tostring(text), "info", seconds, { buttons = list })
+			return "swallow"
+		end
 		pcall(self.toast, tostring(title), tostring(text), "info", seconds)
 		return "swallow"
 	end
@@ -92,6 +104,35 @@ function Router:handle(key, value)
 		self:retime(value)
 	end
 	return verdict
+end
+
+function Router:buttonsOf(value)
+	local ok, b1, b2, cb = pcall(function()
+		return value.Button1, value.Button2, value.Callback
+	end)
+	if not ok then
+		return nil
+	end
+	local list = {}
+	for _, label in ipairs({ b1 or false, b2 or false }) do
+		if label ~= false and tostring(label) ~= "" then
+			local text = tostring(label)
+			list[#list + 1] = {
+				text = text,
+				fn = function()
+					if cb ~= nil then
+						pcall(function()
+							cb:Invoke(text)
+						end)
+					end
+				end,
+			}
+		end
+	end
+	if #list == 0 then
+		return nil
+	end
+	return list
 end
 
 function Router:retime(value)
