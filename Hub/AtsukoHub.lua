@@ -7341,6 +7341,16 @@ do
 	UI.pressable(f, 0.94)
 end
 
+function Pill.setArt(id)
+	local img = Pill.logo
+	if not img then return end
+	local want = id
+	if want == nil then want = Logo.id end
+	if want == nil then want = "" end
+	Pill.artId = id
+	if img.Image ~= want then img.Image = want end
+end
+
 function Pill.update(fps, ping, running, song, playing, clock)
 	local function col(v, good, ok)
 		if v == nil then return T.sub end
@@ -21128,11 +21138,12 @@ function NP.viz(dt)
 end
 
 function NP.barText()
-	if not S.musicBar or not NP.active() then return nil, false end
+	if not S.musicBar or not NP.active() then return nil, false, nil end
 	local i = NP.info()
-	if not i.has then return nil, false end
+	if not i.has then return nil, false, nil end
 	local artist = string.match(i.artist or "", "^([^,]+)") or ""
-	return i.title .. (artist ~= "" and ("  ·  " .. artist) or ""), i.playing
+	local art = type(i.art) == "string" and i.art ~= "" and i.art or nil
+	return i.title .. (artist ~= "" and ("  ·  " .. artist) or ""), i.playing, art
 end
 
 function NP.loadQueue(force)
@@ -23739,8 +23750,9 @@ function Core.frame(dt)
 		Runner.sync()
 		local ping = Core.getPing()
 		if Pill.frame.Visible then
-			local song, playing = NP.barText()
+			local song, playing, art = NP.barText()
 			Pill.update(fps, ping, Runner.count(), song, playing, S.barClock and Util.shortTime(S.clock24) or nil)
+			Pill.setArt(song and art or nil)
 		end
 		if Panel.open then
 			if Panel.page == "home" then Home.tick(fps, ping) end
