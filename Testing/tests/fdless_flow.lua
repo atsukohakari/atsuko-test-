@@ -163,6 +163,9 @@ local function newWorld(opts)
 			return nil, "no such module"
 		end
 		local mod = loadmodule(rel)
+		if rel == "Reanimation/providers/registry.lua" and type(mod.OFF) == "table" then
+			mod.OFF = {}
+		end
 		if type(mod.init) == "function" then
 			mod.init(context)
 		end
@@ -617,7 +620,7 @@ do
 	task.wait(2)
 	T.eq(w.R.reg:state(), "idle")
 	T.eq(#w.started, 0, "the script was not started")
-	T.ok(hasToast(w, "Pick Script Reanimate or FDless first"), "the player is asked to pick")
+	T.ok(hasToast(w, "Pick a reanimation first"), "the player is asked to pick")
 	cleanup(w)
 end
 

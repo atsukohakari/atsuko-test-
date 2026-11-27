@@ -1,4 +1,6 @@
 local Registry = loadmodule("Reanimation/providers/registry.lua")
+local SHIPPED_OFF = Registry.OFF
+Registry.OFF = {}
 
 local function fake(id, kind, over)
 	local p = {
@@ -1389,3 +1391,6 @@ do
 	end
 	reg:stop()
 end
+
+T.section("reg_state: the shipped hub has Script Reanimate off")
+T.eq(SHIPPED_OFF.atsuko, true)

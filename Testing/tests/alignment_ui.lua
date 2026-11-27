@@ -236,7 +236,7 @@ for _, item in ipairs(Ui.JOBS) do
 end
 T.eq(Ui.whoText("gun"), "Every script with a gun uses it, the next time it starts: AK-47, Addict, Banisher, Commander V2, Dubstep Gun, Linked Sword, Master Chief, Neptunian V Gun, Snake Banisher V3, Studio Dummy V4, The Hotline, The Sniper. Wear the hat and the script picks it up.")
 T.eq(Ui.whoText("sword"), "Every script with a sword uses it, the next time it starts: Last Star, Linked Sword, Neptunian V, Neptunian V Gun. Wear the hat and the script picks it up.")
-T.eq(Ui.whoText("rig"), "It goes on that body part on every reanimation (Script Reanimate and FDless), for every hat script, the next time you reanimate.")
+T.eq(Ui.whoText("rig"), "It goes on that body part on every reanimation, for every hat script, the next time you reanimate.")
 T.ok(string.find(Ui.whoText("script"), "Only the script you pick", 1, true) == 1)
 local gunRow, gunWhy = Ui.rowFromDraft(draftWith({ target = "gun", mesh = "55", part = "Torso", count = "3", align = "0 1 0" }), A)
 T.eq(gunWhy, nil)
@@ -707,7 +707,6 @@ do
 	end)
 	local expected = {
 		{ 2, "info", "Alignment file" },
-		{ 3, "note", "Set your hats once" },
 		{ 4, "choice", "Used for" },
 		{ 5, "choice", "Weapon" },
 		{ 6, "note", "It goes on that body part on every reanimation" },
@@ -719,12 +718,10 @@ do
 		{ 13, "input", FIELD.tex },
 		{ 14, "input", FIELD.acc },
 		{ 15, "input", FIELD.align },
-		{ 16, "note", "Studs for x y z, degrees for the three turns." },
 		{ 17, "input", FIELD.count },
 		{ 18, "buttons", "Add hat" },
 		{ 21, "action", "Read the hats I'm wearing" },
 		{ 40, "buttons", "Copy rows" },
-		{ 41, "note", "Your hats are saved in Atsuko Hub/alignment_user.lua" },
 	}
 	T.eq(#inFrame, #expected)
 	for i, want in ipairs(expected) do
@@ -734,19 +731,21 @@ do
 		local name = got.title or got.label or (got.items and got.items[1].text) or got.text
 		T.ok(string.find(name, want[3], 1, true) == 1, "name " .. i .. ": " .. tostring(name))
 	end
-	T.eq(inFrame[2].text, "Set your hats once: the rig hats go on your body parts on every reanimation. A weapon hat is used by every script with that weapon: the gun hat by every script that has a gun (Master Chief's rifle and shotgun too), the sword hat by every script that has a sword, and the shotgun and rifle hats by the scripts that have those. Any is all of them at once: the gun in the gun scripts and the sword in the sword scripts. One script gives a hat a job in a single script only. Limb reanimates don't use hats for their body. New hats can only be added while you're reanimated.")
-	T.same(inFrame[3].options, Ui.TARGETS, "three choices: rig, weapon, one script")
-	T.eq(inFrame[3].get(), "rig", "the rig is picked first")
-	T.same(inFrame[4].options, Ui.WEAPONS, "the weapon row has gun, sword, shotgun and rifle")
-	T.eq(inFrame[4].row.Visible, false, "and only shows for a weapon")
-	T.eq(inFrame[6].icon, "users")
-	T.eq(inFrame[7].icon, "crosshair")
-	T.eq(inFrame[6].row.Visible, false, "the script row only shows for one script")
-	T.eq(inFrame[7].row.Visible, false, "and the job row too")
-	T.eq(inFrame[14].text, "Studs for x y z, degrees for the three turns. Leave it empty to keep the reanimate's own default.")
-	T.eq(inFrame[19].text, "Your hats are saved in Atsuko Hub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
+	for _, rec in ipairs(inFrame) do
+		if rec.kind == "note" then
+			T.ok(not string.find(rec.text or "", "Set your hats once", 1, true) and not string.find(rec.text or "", "Studs for x y z", 1, true) and not string.find(rec.text or "", "Your hats are saved in", 1, true), "no help text: " .. tostring(rec.text))
+		end
+	end
+	T.same(inFrame[2].options, Ui.TARGETS, "three choices: rig, weapon, one script")
+	T.eq(inFrame[2].get(), "rig", "the rig is picked first")
+	T.same(inFrame[3].options, Ui.WEAPONS, "the weapon row has gun, sword, shotgun and rifle")
+	T.eq(inFrame[3].row.Visible, false, "and only shows for a weapon")
+	T.eq(inFrame[5].icon, "users")
+	T.eq(inFrame[6].icon, "crosshair")
+	T.eq(inFrame[5].row.Visible, false, "the script row only shows for one script")
+	T.eq(inFrame[6].row.Visible, false, "and the job row too")
+	T.eq(inFrame[14].height, 38)
 	T.eq(inFrame[16].height, 38)
-	T.eq(inFrame[18].height, 38)
 	local picker = block.frame:FindFirstChild("Picker")
 	T.ok(picker ~= nil, "the picker list sits under the two rows")
 	T.eq(picker.LayoutOrder, 9)

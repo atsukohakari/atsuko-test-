@@ -188,7 +188,7 @@ local reanimation = (function()
 		end
 		local FD = hubFD(aligns)
 		if not FD then
-			say("Pick Script Reanimate or FDless on the Hat tab first", "error")
+			say("Pick a reanimation on the Hat tab first", "error")
 			error("no reanimation to run on", 0)
 		end
 		local prior = genv.AtsukoScriptAligns

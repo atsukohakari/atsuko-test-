@@ -213,7 +213,7 @@ function Kit.start(cfg)
 	if not onHub then
 		Lumen = Kit.lib("Hub/Reanimate.lua", "LumenReanim", 10)
 		if not (Lumen and type(Lumen.rig) == "function") then
-			K.say("Pick Script Reanimate or FDless on the Hat tab first", "error", 5)
+			K.say("Pick a reanimation on the Hat tab first", "error", 5)
 			return nil
 		end
 	end

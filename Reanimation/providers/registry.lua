@@ -10,7 +10,8 @@ Registry.NAME_OF = { atsuko = "Script Reanimate", fdless = "FDless", gelatek = "
 Registry.DEFAULT_OF = { limb = "gelatek" }
 Registry.SETTING_OF = { hat = "hatReanim", limb = "reanimLimb" }
 Registry.MUST_PICK = { hat = true }
-Registry.PICK_TEXT = { hat = "Pick Script Reanimate or FDless first, at the top of the Hat tab" }
+Registry.PICK_TEXT = { hat = "Pick a reanimation first, at the top of the Hat tab" }
+Registry.OFF = { atsuko = true }
 Registry.POLL = 1
 Registry.START_LIMIT = 45
 Registry.STOP_LIMIT = 12
@@ -376,6 +377,23 @@ function Registry:slots(kind)
 	return out
 end
 
+function Registry.isOff(id)
+	return Registry.OFF[id] == true
+end
+
+function Registry.offText(id)
+	return (Registry.NAME_OF[id] or tostring(id)) .. " is off for now"
+end
+
+function Registry:firstOn(kind)
+	for _, candidate in ipairs(self:list(kind)) do
+		if not Registry.OFF[candidate.id] then
+			return candidate
+		end
+	end
+	return nil
+end
+
 function Registry:selected(kind)
 	local key = Registry.SETTING_OF[kind]
 	if not key then
@@ -383,6 +401,9 @@ function Registry:selected(kind)
 	end
 	local want = self.S[key]
 	local p = type(want) == "string" and self.providers[want] or nil
+	if p and p.kind == kind and Registry.OFF[p.id] then
+		return self:firstOn(kind)
+	end
 	if p and p.kind == kind then
 		return p
 	end
@@ -393,10 +414,7 @@ function Registry:selected(kind)
 	if p and p.kind == kind then
 		return p
 	end
-	for _, candidate in ipairs(self:list(kind)) do
-		return candidate
-	end
-	return nil
+	return self:firstOn(kind)
 end
 
 function Registry:mustPick(kind)
@@ -417,6 +435,9 @@ function Registry:select(kind, id)
 	end
 	if p.kind ~= kind then
 		return false, p.name .. " is not a " .. kind .. " reanimation"
+	end
+	if Registry.OFF[id] then
+		return false, Registry.offText(id)
 	end
 	local changed = self.S[key] ~= id
 	self.S[key] = id
@@ -634,6 +655,11 @@ function Registry:start(kind, entry, ctl)
 	if not p or p.kind ~= kind then
 		p = self:selected(kind)
 	end
+	if p and Registry.OFF[p.id] then
+		local why = Registry.offText(p.id)
+		self:say(p.name, why, "info", 4)
+		return false, why
+	end
 	if not p and not ctl.force and Registry.MUST_PICK[kind] then
 		local want = self.S[Registry.SETTING_OF[kind]]
 		if type(want) == "string" and self.failed[want] and Registry.KIND_OF[want] == kind then
@@ -759,6 +785,9 @@ function Registry:canSwap(kind, entry, force)
 		return false
 	end
 	if force and force ~= p.id then
+		return false
+	end
+	if Registry.OFF[p.id] then
 		return false
 	end
 	local okA, avail = pcall(p.available, self.X)

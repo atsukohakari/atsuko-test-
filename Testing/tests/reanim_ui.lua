@@ -1,6 +1,10 @@
 local G = loadmodule("Testing/mocks/gui_mock.lua")
 local Registry = loadmodule("Reanimation/providers/registry.lua")
+local SHIPPED_OFF = Registry.OFF
+Registry.OFF = {}
 local UiMod = loadmodule("Hub/modules/reanim_ui.lua")
+local SHIPPED_DESC = UiMod.SHOW_DESC
+UiMod.SHOW_DESC = true
 
 local FD_LABELS = {
 	"Fling", "Click to fling", "Fling direction", "Fling targeting", "Highlight targets", "Body while flinging",
@@ -394,7 +398,7 @@ do
 	T.eq(w.S.reanimOpts.fdless.flingtargetting, 1, "the other values still work")
 	local noteText
 	for _, rec in ipairs(C.live("note")) do
-		if string.find(rec.text, "How a target is grabbed", 1, true) then
+		if string.find(rec.text, "falls back by itself", 1, true) then
 			noteText = rec.text
 		end
 	end
@@ -402,7 +406,7 @@ do
 	local w2 = newWorld({ X = X })
 	UiMod.options(w2.parent, 1, "fdless", w2.R)
 	for _, rec in ipairs(w2.C.live("note")) do
-		if string.find(rec.text, "How a target is grabbed", 1, true) then
+		if string.find(rec.text, "falls back by itself", 1, true) then
 			noteText = rec.text
 		end
 	end
@@ -1026,3 +1030,42 @@ do
 	w.env.Bus.fire("reanim")
 	T.eq(#w.C.made, before, "a detached chooser does not rebuild")
 end
+
+T.section("reanim_ui: Script Reanimate is off for now")
+do
+	Registry.OFF = SHIPPED_OFF
+	local w = newWorld()
+	local atsuko, fdless
+	for _, slot in ipairs(w.reg:slots("hat")) do
+		if slot.id == "atsuko" then
+			atsuko = slot
+		elseif slot.id == "fdless" then
+			fdless = slot
+		end
+	end
+	T.ok(atsuko ~= nil, "its card is still there")
+	local text, tone = UiMod.stateOf(atsuko, w.reg)
+	T.eq(text, "Off for now", "and says it's off")
+	T.eq(tone, "bad")
+	T.eq((UiMod.stateOf(fdless, w.reg)), "Ready", "FDless is ready")
+	T.eq(w.reg:selected("hat").id, "fdless", "the old Script Reanimate pick runs on FDless")
+	Registry.OFF = {}
+end
+
+T.section("reanim_ui: no descriptions on the cards")
+do
+	T.eq(SHIPPED_DESC, false, "descriptions are off in the hub")
+	UiMod.SHOW_DESC = SHIPPED_DESC
+	local w = newWorld()
+	UiMod.section(w.parent, 1, w.R)
+	local kids = childrenOf(w.parent)
+	T.eq(#kids, 3, "the section is a heading and the two choosers, no help text")
+	UiMod.options(w.parent, 20, "fdless", w.R)
+	for _, rec in ipairs(w.C.live("note")) do
+		T.ok(string.find(rec.text or "", "falls back by itself", 1, true) ~= nil or string.find(rec.text or "", "has no options", 1, true) ~= nil, "only a status note is left: " .. tostring(rec.text))
+	end
+	for _, rec in ipairs(w.C.live("toggle")) do
+		T.eq(rec.desc, nil, rec.title .. " has no description")
+	end
+end
+UiMod.SHOW_DESC = true

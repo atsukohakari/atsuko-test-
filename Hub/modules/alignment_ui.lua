@@ -190,7 +190,7 @@ function Mod.whoText(target)
 	if target == "script" then
 		return "Only the script you pick uses it, for the job you pick: a bullet, an aura, a part of InternalWar's titan."
 	end
-	return "It goes on that body part on every reanimation (Script Reanimate and FDless), for every hat script, the next time you reanimate."
+	return "It goes on that body part on every reanimation, for every hat script, the next time you reanimate."
 end
 
 function Mod.scriptKey(name)
@@ -477,7 +477,6 @@ function Mod.build(parent, order)
 	end
 
 	block.status = Ctl.info(frame, 2, "Alignment file", Mod.statusText(svc:status(), where()))
-	Ctl.note(frame, 3, "Set your hats once: the rig hats go on your body parts on every reanimation. A weapon hat is used by every script with that weapon: the gun hat by every script that has a gun (Master Chief's rifle and shotgun too), the sword hat by every script that has a sword, and the shotgun and rifle hats by the scripts that have those. Any is all of them at once: the gun in the gun scripts and the sword in the sword scripts. One script gives a hat a job in a single script only. Limb reanimates don't use hats for their body. New hats can only be added while you're reanimated.")
 
 	local applyTarget
 
@@ -589,7 +588,6 @@ function Mod.build(parent, order)
 	field(13, "tex", "Texture id", "optional")
 	field(14, "acc", "Hat name on your character", "optional")
 	field(15, "align", "Alignment: x y z rx ry rz", "0 0 0 0 0 0")
-	Ctl.note(frame, 16, "Studs for x y z, degrees for the three turns. Leave it empty to keep the reanimate's own default.")
 	field(17, "count", "How many of this hat", "1")
 
 	function applyTarget()
@@ -881,7 +879,6 @@ function Mod.build(parent, order)
 		end },
 		{ "refresh-cw", "Reload", reload },
 	}, 38)
-	Ctl.note(frame, 41, "Your hats are saved in Atsuko Hub/alignment_user.lua and go first, before the shipped ones. When you line a hat up with Alignment, the spot is saved there too, for that hat only.")
 
 	return block
 end

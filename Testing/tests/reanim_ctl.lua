@@ -1,4 +1,6 @@
 local Registry = loadmodule("Reanimation/providers/registry.lua")
+local SHIPPED_OFF = Registry.OFF
+Registry.OFF = {}
 local Controller = loadmodule("Hub/modules/reanim.lua")
 
 local function fakeProvider(id, kind, over)
@@ -375,7 +377,7 @@ do
 	T.eq(w.reg:state(), "idle", "starting a hat script does nothing yet")
 	T.eq(#w.ran, 0)
 	T.eq(w.R.busy, nil)
-	T.ok(toastWith(w, "Reanimation|Pick Script Reanimate or FDless first, at the top of the Hat tab|info") ~= nil, flat(w.toasts))
+	T.ok(toastWith(w, "Reanimation|Pick a reanimation first, at the top of the Hat tab|info") ~= nil, flat(w.toasts))
 	T.eq(w.S.reanimSel, w.third.path, "the script stays selected for when you have picked")
 end
 do
@@ -389,7 +391,7 @@ do
 	w.R.start(w.third)
 	T.eq(#asked, 1, "the hub is asked to show the pick window")
 	T.eq(asked[1].kind, "hat")
-	T.eq(toastWith(w, "Pick Script Reanimate or FDless first"), nil, "and no toast, the window says it")
+	T.eq(toastWith(w, "Pick a reanimation first"), nil, "and no toast, the window says it")
 	T.eq(#w.ran, 0)
 	local ok = w.reg:select("hat", "fdless")
 	T.eq(ok, true)
@@ -407,7 +409,7 @@ do
 		return false
 	end
 	w.R.start(w.third)
-	T.ok(toastWith(w, "Pick Script Reanimate or FDless first") ~= nil, "a pick window that can't open falls back to the toast")
+	T.ok(toastWith(w, "Pick a reanimation first") ~= nil, "a pick window that can't open falls back to the toast")
 end
 do
 	local w = newWorld()
@@ -416,7 +418,7 @@ do
 		error("the window broke")
 	end
 	w.R.start(w.third)
-	T.ok(toastWith(w, "Pick Script Reanimate or FDless first") ~= nil, "and so does one that throws")
+	T.ok(toastWith(w, "Pick a reanimation first") ~= nil, "and so does one that throws")
 end
 do
 	local w = newWorld()
@@ -456,7 +458,7 @@ do
 	w.S.hatReanim = ""
 	local ok, why = w.reg:start("hat", { path = "x", name = "x" }, {})
 	T.eq(ok, false)
-	T.eq(why, "Pick Script Reanimate or FDless first, at the top of the Hat tab", "the registry itself refuses too")
+	T.eq(why, "Pick a reanimation first, at the top of the Hat tab", "the registry itself refuses too")
 	T.eq(w.reg:state(), "idle")
 	w.S.hatReanim = "nope"
 	T.eq(w.reg:selected("hat"), nil, "a pick that does not exist counts as no pick")
@@ -1509,4 +1511,35 @@ do
 	T.eq(w.gelatek.running, false, "the limb reanimation was put back")
 	T.eq(w.R.current(), nil)
 	T.eq(w.R.busy, nil)
+end
+
+T.section("reanim_ctl: Script Reanimate is off for now")
+do
+	Registry.OFF = SHIPPED_OFF
+	T.eq(SHIPPED_OFF.atsuko, true, "the shipped hub has Script Reanimate turned off")
+	T.eq(SHIPPED_OFF.fdless, nil, "FDless stays on")
+	local w = newWorld()
+	T.eq(w.S.hatReanim, "atsuko", "someone who picked Script Reanimate before")
+	T.eq(w.reg:selected("hat").id, "fdless", "runs on FDless now")
+	T.eq(w.reg:mustPick("hat"), false, "without being asked to pick again")
+	local ok, why = w.reg:select("hat", "atsuko")
+	T.eq(ok, false, "Script Reanimate can't be picked")
+	T.eq(why, "Script Reanimate is off for now")
+	T.eq(w.S.hatReanim, "atsuko", "their old pick is kept for when it comes back")
+	T.eq(w.reg:select("hat", "fdless"), true, "FDless can still be picked")
+	w.S.hatReanim = "atsuko"
+	w.R.start(w.third)
+	task.wait(3)
+	T.eq(w.reg:activeProvider() and w.reg:activeProvider().id, "fdless", "a script starts on FDless")
+	T.eq(flat(w.atsuko.calls), "", "and Script Reanimate is never started")
+	w.R.toggle()
+	task.wait(4)
+	local f = newWorld()
+	f.S.hatReanim = ""
+	T.eq(f.reg:selected("hat"), nil, "someone who never picked still picks once")
+	local forced = f.reg:start("hat", nil, { force = "atsuko" })
+	T.eq(forced, false, "a script that only runs on Script Reanimate is told it's off")
+	T.ok(string.find(f.toasts[#f.toasts] or "", "Script Reanimate is off for now", 1, true) ~= nil, "in so many words: " .. tostring(f.toasts[#f.toasts]))
+	T.eq(flat(f.atsuko.calls), "", "and it isn't started")
+	Registry.OFF = {}
 end

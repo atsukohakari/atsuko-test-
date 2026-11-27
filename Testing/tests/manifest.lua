@@ -198,7 +198,10 @@ T.eq(nep.name, "Neptunian V")
 T.eq(nep.kind, "hat")
 T.eq(nep.needsfd, true)
 T.same(nep.credit, { "Tory", "NoobyGames12", "MyWorld & rqz" })
-T.ok(nep.desc ~= nil and #nep.desc > 40, "Neptunian V has a description")
+T.eq(nep.desc, nil, "Neptunian V has no description, Main Scripts shows none")
+for path, item in pairs(realScripts) do
+	T.eq(item.desc, nil, path .. " has no description")
+end
 
 T.section("manifest: Neptunian V is in the hub with its credits")
 local nepSource = readsource(REAL_PATH)

@@ -67,7 +67,7 @@ local Lumen = nil
 if not onHub then
 	Lumen = loadLumen()
 	if not Lumen then
-		say("Pick Script Reanimate or FDless on the Hat tab first", "error", 5)
+		say("Pick a reanimation on the Hat tab first", "error", 5)
 		return
 	end
 end

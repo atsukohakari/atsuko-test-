@@ -10,8 +10,7 @@
       ],
       "credit": [
         "STEVETHEREALONE"
-      ],
-      "desc": "Uhhhhhh's own AK-47. \"what comes before 47?\" \"AK.\" M1 - Shoot."
+      ]
     },
     "Scripts/Hat/BanHammer.lua": {
       "name": "Ban Hammer",
@@ -22,8 +21,7 @@
       ],
       "credit": [
         "Tory"
-      ],
-      "desc": "Tory's Exotic Ban Hammer, with its theme song. Wear the Ban Hammer (catalog 14464140694). Click - Swing, R - Fast mode, E - Jump mode, Q - Heavy mode (press the key again to go back)."
+      ]
     },
     "Scripts/Hat/Banisher.lua": {
       "name": "Banisher",
@@ -34,8 +32,7 @@
       ],
       "credit": [
         "STEVETHEREALONE"
-      ],
-      "desc": "Uhhhhhh's own Banisher. hes a very tuff CLANKER. M1 - Primary Attack, R - Secondary Attack, F - Holster/Unholster Gun, Left Ctrl - Run."
+      ]
     },
     "Scripts/Hat/BookReader.lua": {
       "name": "Book Reader",
@@ -47,8 +44,7 @@
       "credit": [
         "Dark Eccentric",
         "Atsuko Hub"
-      ],
-      "desc": "Hold a book open in front of your face like you're reading it, and walk around with it. Rebuilt from Dark Eccentric's Fe Book Reader showcase (Episode 131, youtube.com/@DarkEccentric) because the original file is lost. Wear the How To Read Book (catalog 18701259915), any hat with book in its name, or say add book <hat id>."
+      ]
     },
     "Scripts/Hat/DubstepGun.lua": {
       "name": "Dubstep Gun (Hub)",
@@ -59,8 +55,7 @@
       ],
       "credit": [
         "Supr14"
-      ],
-      "desc": "Dubstep Gun rebuilt for the hub, with emote support."
+      ]
     },
     "Scripts/Hat/Addict.lua": {
       "name": "Addict",
@@ -77,8 +72,7 @@
         "Emper",
         "MyWorld & rqz",
         "STEVETHEREALONE"
-      ],
-      "desc": "Combat script with a sniper and a pistol. Z: sniper, X: pistol, C: slash, T: sit."
+      ]
     },
     "Scripts/Hat/CommanderV2.lua": {
       "name": "Commander V2",
@@ -92,8 +86,7 @@
         "Shackluster",
         "Melon",
         "MyWorld & rqz"
-      ],
-      "desc": "Commander CR converted for hats. Z: shoot, X: shockwave, C: rain, V: slam, E: dash, Q: warp, T: taunt."
+      ]
     },
     "Scripts/Hat/DubstepGunOriginal.lua": {
       "name": "Dubstep Gun (Original)",
@@ -107,8 +100,7 @@
         "Supr14",
         "MyWorld & rqz",
         "BloxinStud10"
-      ],
-      "desc": "The original Dubstep Gun. Click: shoot. Z, X, C, V, B, L and K: change the song."
+      ]
     },
     "Scripts/Hat/InternalWar.lua": {
       "name": "InternalWar",
@@ -123,8 +115,7 @@
         "MelonScripter",
         "Emper",
         "MyWorld & rqz"
-      ],
-      "desc": "Combat script with a floating Titan made of hats. Z: punch, E: throw, R: uppercut, T: roar, Y: take on."
+      ]
     },
     "Scripts/Hat/LastStar.lua": {
       "name": "Last Star",
@@ -140,8 +131,7 @@
         "GunsForGunsKidd",
         "DangerRedile",
         "MyWorld & rqz"
-      ],
-      "desc": "Winged sword script. Six sword hats follow the wings. Includes phone controls."
+      ]
     },
     "Scripts/Hat/MasterChief.lua": {
       "name": "Master Chief",
@@ -156,8 +146,7 @@
         "MelonScripter",
         "Emper",
         "MyWorld & rqz"
-      ],
-      "desc": "Rifle and shotgun script. Click: shoot, Q: switch weapon, Z: grenade, X: dash, 2: run."
+      ]
     },
     "Scripts/Hat/NeptunianV.lua": {
       "name": "Neptunian V",
@@ -171,8 +160,7 @@
         "Tory",
         "NoobyGames12",
         "MyWorld & rqz"
-      ],
-      "desc": "Sword combat script with a three-hit combo, skills and five modes. F: equip."
+      ]
     },
     "Scripts/Hat/NeptunianVGun.lua": {
       "name": "Neptunian V Gun",
@@ -186,8 +174,7 @@
         "NoobyGames12",
         "gObl00x (random_hacke6)",
         "MyWorld & rqz"
-      ],
-      "desc": "Sword and gun combat script. Click: combo, Q: switch between sword and gun."
+      ]
     },
     "Scripts/Hat/RealityOrbGlitcher.lua": {
       "name": "Reality Orb Glitcher",
@@ -200,8 +187,7 @@
       "credit": [
         "BloxinStud10",
         "MyWorld & rqz"
-      ],
-      "desc": "A glitcher with a floating orb made of the hats you wear. Q E R T Y: modes, Z: flower, N and M: fly, L: mute."
+      ]
     },
     "Scripts/Hat/TheHotline.lua": {
       "name": "The Hotline",
@@ -214,8 +200,7 @@
       "credit": [
         "Gelatek Hub",
         "MyWorld & rqz"
-      ],
-      "desc": "Gun script from Gelatek Hub. Click: shoot, Z: grenade, T: taunt."
+      ]
     },
     "Scripts/Hat/FakeVR.lua": {
       "name": "FakeVR",
@@ -230,8 +215,7 @@
         "im_patrick",
         "saucekid",
         "Atsuko Hub"
-      ],
-      "desc": "Full-body VR in the style of CLOVR with RERilla style two-rig arms: the arms stay on your body and point where you aim, and you can throw any accessory except your hair. Legs with planted feet, first person, crouch, sprint, smooth flying, phone and real VR controls."
+      ]
     },
     "Scripts/Hat/LinkedSword.lua": {
       "name": "Linked Sword",
@@ -242,8 +226,7 @@
       ],
       "credit": [
         "STEVETHEREALONE"
-      ],
-      "desc": "Uhhhhhh's own Linked Sword. He has been fighting since 2006! M1 - Linked Sword, Z - Superball, X - Rocket Launcher, C - Timebomb."
+      ]
     },
     "Scripts/Hat/R6.lua": {
       "name": "R6",
@@ -254,8 +237,7 @@
       ],
       "credit": [
         "STEVETHEREALONE"
-      ],
-      "desc": "Uhhhhhh's 2015 Roblox: the real 2015 animations and sounds. \"Ahh, the time when Roblox started using Motor6Ds for their animations.\""
+      ]
     },
     "Scripts/Hat/SnakeBanisherV3.lua": {
       "name": "Snake Banisher V3",
@@ -267,8 +249,7 @@
       "credit": [
         "MLG Super Killer",
         "Epic"
-      ],
-      "desc": "Snake Banisher V3 with LC Gun 1 and LC Gun 2"
+      ]
     },
     "Scripts/Hat/StudioDummyV4-Test.lua": {
       "name": "Studio Dummy V4",
@@ -280,8 +261,7 @@
       "credit": [
         "Vulnerali / padero",
         "andrfix"
-      ],
-      "desc": "Studio Dummy V4, rig version: modes, guns, fly, the screen and emotes"
+      ]
     },
     "Scripts/_unlisted/TheSniper.lua": {
       "name": "The Sniper",
@@ -294,8 +274,7 @@
       "credit": [
         "Gelatek Hub",
         "MyWorld & rqz"
-      ],
-      "desc": "Sniper script from Gelatek Hub, hidden from the list. Click: fire, F: aim, Z: scope, C: crouch, R: reload."
+      ]
     }
   }
 }

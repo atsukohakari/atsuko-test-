@@ -9981,9 +9981,6 @@ function Detail.refresh()
 	D.chip.Size = UDim2.fromOffset(28 + math.ceil(textWidth(chipText, 9, FONT_B)), 20)
 	local loaded = rec ~= nil
 	D.unloadSet("power", "Unload", loaded and T.text or T.dim)
-	if D.optRespawn.desc then
-		D.optRespawn.desc.Text = (rec and rec.kind == "commands") and "Used when you unload it. Its own Stop handles the rest." or "Ends reanimates fully (skipped if it stops itself)"
-	end
 	Detail.tick()
 	local fav = S.favorites[e.path] == true
 	UI.setIcon(D.heartIcon, fav and "heart-fill" or "heart")
@@ -10067,7 +10064,7 @@ D.back.Activated:Connect(function()
 	Detail.close()
 end)
 
-D.optRespawn = Ctl.toggle(D.scroll, 4, "Respawn when stopped", "Ends reanimates fully (skipped if it stops itself)", function()
+D.optRespawn = Ctl.toggle(D.scroll, 4, "Respawn when stopped", nil, function()
 	return Detail.entry ~= nil and Runner.wantsRespawn(Detail.entry.path)
 end, function(v)
 	if not Detail.entry then return end
@@ -10134,8 +10131,9 @@ D.about = UI.new("Frame", {
 UI.corner(D.about, 12)
 UI.pad(D.about, 12, 12, 10, 12)
 UI.list(D.about, 5)
-UI.label(D.about, { Text = "ABOUT", Font = FONT_B, TextSize = 10, TextColor3 = T.dim, Size = UDim2.new(1, 0, 0, 14), LayoutOrder = 1 })
+UI.label(D.about, { Text = "INFO", Font = FONT_B, TextSize = 10, TextColor3 = T.dim, Size = UDim2.new(1, 0, 0, 14), LayoutOrder = 1 })
 D.aboutText = UI.label(D.about, {
+	Visible = false,
 	TextSize = 11,
 	TextColor3 = T.text,
 	TextWrapped = true,
@@ -10161,7 +10159,7 @@ function Core.fillAbout(e)
 		D.aboutInfo.Text = e.path
 		return
 	end
-	D.aboutText.Text = meta.about or "No description yet. Add a line like  -- @desc what it does  at the top of the file."
+	D.aboutText.Text = ""
 	local bits = { meta.lines .. " lines" }
 	if e.size > 0 then bits[#bits + 1] = Util.fmtSize(e.size) end
 	if meta.author and meta.author ~= "" then bits[#bits + 1] = "by " .. meta.author end
@@ -11775,7 +11773,6 @@ function Core.askReanim(kind, after)
 	Win.show("reanimpick", {
 		title = "Pick a reanimation",
 		icon = "person-standing",
-		sub = kind == "limb" and "For your limb scripts" or "For every hat script",
 		w = 300,
 		h = 300,
 		minW = 240,
@@ -11783,29 +11780,20 @@ function Core.askReanim(kind, after)
 		maxW = 420,
 		maxH = 460,
 		build = function(_, body)
-			UI.label(body, {
-				Name = "Note",
-				Text = kind == "limb" and "Pick the reanimate your limb scripts run on." or "No hat script brings its own reanimate. Pick the one they all run on, you can change it at the top of the Hat tab.",
-				TextSize = 11,
-				TextColor3 = T.sub,
-				TextWrapped = true,
-				Size = UDim2.new(1, 0, 0, 0),
-				AutomaticSize = Enum.AutomaticSize.Y,
-				LayoutOrder = 1,
-			})
 			for i, slot in ipairs(slots) do
 				local p = slot.provider
-				local card = UI.button(body, { Name = "Pick_" .. slot.id, BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, p and 44 or 66), LayoutOrder = 1 + i })
+				local off = type(reg.isOff) == "function" and reg.isOff(slot.id)
+				local card = UI.button(body, { Name = "Pick_" .. slot.id, BackgroundColor3 = T.card, Size = UDim2.new(1, 0, 0, (p and not off) and 44 or 66), LayoutOrder = 1 + i })
 				UI.corner(card, 14)
 				local st = UI.stroke(card, accentColor(), 1.5, 0.65)
 				UI.accent(st, "Color")
 				UI.label(card, { Name = "Name", Text = slot.name, Font = FONT_B, TextSize = 13, Position = UDim2.fromOffset(14, p and 13 or 10), Size = UDim2.new(1, -28, 0, 18), TextTruncate = Enum.TextTruncate.AtEnd })
 				UI.label(card, {
 					Name = "Blurb",
-					Visible = not p,
-					Text = p and "" or ("Couldn't load: " .. Util.firstLine(tostring(slot.failed))),
+					Visible = off or not p,
+					Text = off and "Off for now" or (p and "" or ("Couldn't load: " .. Util.firstLine(tostring(slot.failed)))),
 					TextSize = 11,
-					TextColor3 = T.red,
+					TextColor3 = off and T.dim or T.red,
 					Position = UDim2.fromOffset(14, 30),
 					Size = UDim2.new(1, -28, 0, 28),
 					TextWrapped = true,
@@ -20374,31 +20362,27 @@ function Core.buildScriptSetup()
 		return reg(c)
 	end
 	section(v, "Reanimation", 1)
-	Ctl.note(v, 2, "Your reanimations and their options are at the top of the Hat tab.")
 	Ctl.buttons(v, 3, {
 		{ "person-standing", "Hat tab", function() Panel.setTab(Scripts, 1) end },
 	})
 	section(v, "Run & Stop", 4)
-	keep(Ctl.toggle(v, 5, "Respawn when stopped", "Ends reanimates that can't stop themselves. Each script can change it.", function() return S.respawnOnStop end, function(x)
+	keep(Ctl.toggle(v, 5, "Respawn when stopped", nil, function() return S.respawnOnStop end, function(x)
 		S.respawnOnStop = x
 		saveSettings()
 	end))
-	keep(Ctl.toggle(v, 6, "One script at a time", "Running a script stops the others first", function() return S.oneAtATime end, function(x)
+	keep(Ctl.toggle(v, 6, "One script at a time", nil, function() return S.oneAtATime end, function(x)
 		S.oneAtATime = x
 		saveSettings()
 	end))
-	local smart = keep(Ctl.toggle(v, 7, "Smart Stop", "Tracks a script's loops, events and parts so Stop really stops it", function() return S.smartStop end, function(x)
+	keep(Ctl.toggle(v, 7, "Smart Stop", nil, function() return S.smartStop end, function(x)
 		S.smartStop = x
 		saveSettings()
 	end))
-	if not (X.setfenv and (X.hookmetamethod or (X.getconnections and X.isexecutorclosure))) then
-		smart.desc.Text = "Limited on this executor: loops stop, some events may keep running"
-	end
 	keep(Ctl.toggle(v, 8, "Show script prints in Console", nil, function() return S.capturePrints end, function(x)
 		S.capturePrints = x
 		saveSettings()
 	end))
-	keep(Ctl.toggle(v, 9, "Look for new scripts by itself", "Checks every few minutes while the hub is open", function() return S.autoRefresh end, function(x)
+	keep(Ctl.toggle(v, 9, "Look for new scripts by itself", nil, function() return S.autoRefresh end, function(x)
 		S.autoRefresh = x
 		saveSettings()
 	end))
@@ -20421,7 +20405,6 @@ function Core.buildScriptSetup()
 		notify("Recent list cleared", "", "ok", 1.5)
 	end, true)
 	section(v, "Live view", 14)
-	Ctl.note(v, 15, "Other hub users in your server see your fake body and every effect your scripts make, and you see theirs.")
 	local liveState = Ctl.note(v, 16, "Off")
 	local function relayRefresh()
 		local R = Core.Relay
@@ -20435,18 +20418,18 @@ function Core.buildScriptSetup()
 			task.wait(2)
 		end
 	end)
-	keep(Ctl.toggle(v, 17, "Show mine to hub users", "Your fake body, effects and their sounds", function() return S.relayShare end, function(x)
+	keep(Ctl.toggle(v, 17, "Show mine to hub users", nil, function() return S.relayShare end, function(x)
 		S.relayShare = x
 		saveSettings()
 	end))
-	keep(Ctl.toggle(v, 18, "See other hub users'", "Their body stays smooth even while they respawn", function() return S.relaySee end, function(x)
+	keep(Ctl.toggle(v, 18, "See other hub users'", nil, function() return S.relaySee end, function(x)
 		S.relaySee = x
 		saveSettings()
 		if not x and Core.Relay and Core.Relay.live then
 			for u in pairs(Core.Relay.live.peers) do Core.Relay.live.remove(u) end
 		end
 	end))
-	keep(Ctl.toggle(v, 19, "Hide their real body", "Only their live body shows, not the one that keeps respawning", function() return S.relayHideReal end, function(x)
+	keep(Ctl.toggle(v, 19, "Hide their real body", nil, function() return S.relayHideReal end, function(x)
 		S.relayHideReal = x
 		saveSettings()
 	end))
@@ -20454,7 +20437,7 @@ function Core.buildScriptSetup()
 		S.relayVolume = x
 		saveSettings()
 	end, function(x) return math.floor(x * 100 + 0.5) .. "%" end))
-	Ctl.input(v, 21, "Relay link", "from Hub/relay.txt", function() return S.relayUrl end, function(x)
+	Ctl.input(v, 21, "Relay link", "", function() return S.relayUrl end, function(x)
 		x = Util.trim(tostring(x or ""))
 		if x == S.relayUrl then return end
 		S.relayUrl = x

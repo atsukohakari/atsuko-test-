@@ -1,5 +1,7 @@
 local Mod = {}
 
+Mod.SHOW_DESC = false
+
 Mod.TITLES = { hat = "Hat Reanimate", limb = "Limb Reanimate" }
 Mod.USED_BY = {
 	hat = "Every script in the Hat tab runs on the one you pick here.",
@@ -147,6 +149,9 @@ function Mod.stateOf(slot, reg)
 			return "Stopping...", "warn"
 		end
 	end
+	if type(reg.isOff) == "function" and reg.isOff(p.id) then
+		return "Off for now", "bad"
+	end
 	local okA, avail, reason = pcall(p.available, reg.X)
 	if not okA then
 		return "Not available: " .. firstLine(avail), "bad"
@@ -211,7 +216,7 @@ function Mod.options(parent, order, id, R)
 	end
 
 	local function describe(def)
-		if def.desc then
+		if def.desc and Mod.SHOW_DESC then
 			Ctl.note(parent, n, def.desc)
 			n = n + 1
 		end
@@ -228,15 +233,17 @@ function Mod.options(parent, order, id, R)
 			later = true
 		end
 	end
-	Ctl.note(parent, n, p.name .. " options" .. (later and ". Changes apply the next time you reanimate." or ""))
-	n = n + 1
+	if Mod.SHOW_DESC then
+		Ctl.note(parent, n, p.name .. " options" .. (later and ". Changes apply the next time you reanimate." or ""))
+		n = n + 1
+	end
 	for _, group in ipairs(Mod.groupsOf(defs)) do
 		ctx.section(parent, group.name, n)
 		n = n + 1
 		for _, def in ipairs(group.defs) do
 			local label = def.label or def.key
 			if def.type == "toggle" then
-				put(Ctl.toggle(parent, n, label, def.desc, function()
+				put(Ctl.toggle(parent, n, label, Mod.SHOW_DESC and def.desc or nil, function()
 					return value(def) == true
 				end, function(v)
 					apply(def, v)
@@ -259,11 +266,11 @@ function Mod.options(parent, order, id, R)
 					apply(def, v)
 				end, locked))
 				n = n + 1
-				if def.desc then
-					local text = def.desc
-					local why = locked and locked(value(def)) or nil
+				local why = locked and locked(value(def)) or nil
+				if (def.desc and Mod.SHOW_DESC) or why then
+					local text = Mod.SHOW_DESC and def.desc or nil
 					if why then
-						text = text .. ". " .. why .. ", so it falls back by itself."
+						text = (text and (text .. ". ") or "") .. why .. ", so it falls back by itself."
 					end
 					Ctl.note(parent, n, text)
 					n = n + 1
@@ -323,7 +330,9 @@ function Mod.chooser(parent, order, kind, R)
 	}, parent)
 	UI.list(frame, 6)
 	ctx.section(frame, Mod.TITLES[kind], 1)
-	ctx.Ctl.note(frame, 2, Mod.USED_BY[kind])
+	if Mod.SHOW_DESC then
+		ctx.Ctl.note(frame, 2, Mod.USED_BY[kind])
+	end
 	local body = UI.new("Frame", {
 		Name = "Body",
 		BackgroundTransparency = 1,
@@ -623,7 +632,9 @@ function Mod.section(parent, order, R)
 	R = R or ctx.Core.Reanim
 	local group = {}
 	ctx.section(parent, "Reanimation", order)
-	ctx.Ctl.note(parent, order + 1, "Choose which reanimate runs your scripts. Tap one to select it, then change its options below it.")
+	if Mod.SHOW_DESC then
+		ctx.Ctl.note(parent, order + 1, "Choose which reanimate runs your scripts. Tap one to select it, then change its options below it.")
+	end
 	group.hat = Mod.chooser(parent, order + 2, "hat", R)
 	group.limb = Mod.chooser(parent, order + 3, "limb", R)
 	group.render = function()
